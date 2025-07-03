@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
   Copy, 
-  Paste, 
+  Clipboard, 
   Scissors, 
   Trash2, 
   Edit3, 
@@ -32,7 +32,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
 }) => {
   const menuItems = [
     { icon: Copy, label: 'Copy', action: 'copy' },
-    { icon: Paste, label: 'Paste', action: 'paste' },
+    { icon: Clipboard, label: 'Paste', action: 'paste' },
     { icon: Scissors, label: 'Cut', action: 'cut' },
     { type: 'separator' },
     { icon: Edit3, label: 'Edit Cell', action: 'edit' },
