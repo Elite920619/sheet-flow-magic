@@ -1,10 +1,9 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. */
 
 @layer base {
   :root {
@@ -39,19 +38,12 @@ All colors MUST be HSL.
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -102,4 +94,50 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Custom betting-specific styles */
+@layer utilities {
+  .bg-gray-750 {
+    background-color: rgb(55 65 81 / 0.8);
+  }
+  
+  .odds-button {
+    @apply bg-gray-700 border-gray-600 hover:bg-gray-600 text-white transition-all duration-200 hover:scale-105;
+  }
+  
+  .value-bet-glow {
+    @apply ring-2 ring-green-400/50 shadow-lg shadow-green-400/20;
+  }
+  
+  .confidence-high {
+    @apply bg-green-500 text-white;
+  }
+  
+  .confidence-medium {
+    @apply bg-yellow-500 text-white;
+  }
+  
+  .confidence-low {
+    @apply bg-red-500 text-white;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Loading animations */
+@keyframes pulse-green {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse-green {
+  animation: pulse-green 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

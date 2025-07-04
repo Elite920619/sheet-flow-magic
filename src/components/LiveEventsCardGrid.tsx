@@ -1,0 +1,85 @@
+import React from 'react';
+import { Loader2 } from 'lucide-react';
+import LiveEventCard from './LiveEventCard';
+
+interface LiveEventsCardGridProps {
+  displayedEvents: any[];
+  filteredEventsLength: number;
+  selectedCategory: string;
+  selectedRegion: string;
+  uniqueSportsLength: number;
+  getSportLabel: (sport: string) => string;
+  onEventCardBet: (event: any, betType: string) => void;
+  isLoadingMore: boolean;
+  hasMoreEvents: boolean;
+}
+
+const LiveEventsCardGrid: React.FC<LiveEventsCardGridProps> = ({
+  displayedEvents,
+  filteredEventsLength,
+  selectedCategory,
+  selectedRegion,
+  uniqueSportsLength,
+  getSportLabel,
+  onEventCardBet,
+  isLoadingMore,
+  hasMoreEvents
+}) => {
+  const regions = [
+    { value: 'all', label: 'All Regions', flag: '🌍' },
+    { value: 'us', label: 'United States', flag: '🇺🇸' },
+    { value: 'uk', label: 'United Kingdom', flag: '🇬🇧' },
+    { value: 'eu', label: 'Europe', flag: '🇪🇺' },
+    { value: 'au', label: 'Australia', flag: '🇦🇺' }
+  ];
+
+  const handleCardClick = () => {
+    // Do nothing - only bet buttons should trigger actions
+  };
+
+  return (
+    <div className="p-4">
+      <div className="mb-4 text-sm text-muted-foreground">
+        Showing {displayedEvents.length} of {filteredEventsLength} available events
+        {selectedCategory !== 'all' && ` in ${getSportLabel(selectedCategory)}`}
+        {selectedRegion !== 'all' && ` from ${regions.find(r => r.value === selectedRegion)?.label}`}
+        {' '}from {uniqueSportsLength} different sports
+      </div>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+        {displayedEvents.map((event, index) => (
+          <LiveEventCard
+            key={`${event.id}-${index}`}
+            event={event}
+            isExpanded={false}
+            onToggleExpanded={handleCardClick}
+            onPlaceBet={onEventCardBet}
+            gridIndex={index}
+            gridColumns={4}
+          />
+        ))}
+      </div>
+
+      {/* Auto-loading indicator */}
+      {isLoadingMore && (
+        <div className="flex items-center justify-center py-8">
+          <div className="flex items-center text-sm text-muted-foreground">
+            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            Loading more events...
+          </div>
+        </div>
+      )}
+
+      {/* All Events Loaded Message */}
+      {!hasMoreEvents && displayedEvents.length > 0 && (
+        <div className="flex items-center justify-center py-8">
+          <div className="text-sm text-muted-foreground">
+            All available events loaded ({displayedEvents.length} total)
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default LiveEventsCardGrid;
