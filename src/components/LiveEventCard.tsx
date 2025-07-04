@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -43,17 +44,17 @@ const LiveEventCard: React.FC<LiveEventCardProps> = ({
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Available': return 'bg-green-400 hover:bg-green-500';
-      case 'Limited': return 'bg-orange-400 hover:bg-orange-500';
-      case 'Suspended': return 'bg-red-400 hover:bg-red-500';
-      default: return 'bg-blue-400 hover:bg-blue-500';
+      case 'Available': return 'bg-gradient-to-r from-emerald-500/90 to-green-500/90 hover:from-emerald-600/90 hover:to-green-600/90';
+      case 'Limited': return 'bg-gradient-to-r from-amber-500/90 to-orange-500/90 hover:from-amber-600/90 hover:to-orange-600/90';
+      case 'Suspended': return 'bg-gradient-to-r from-red-500/90 to-red-600/90 hover:from-red-600/90 hover:to-red-700/90';
+      default: return 'bg-gradient-to-r from-blue-500/90 to-indigo-500/90 hover:from-blue-600/90 hover:to-indigo-600/90';
     }
   };
 
   const getConfidenceColor = (confidence: number) => {
-    if (confidence >= 80) return 'bg-gradient-to-r from-green-400 to-green-500 text-white';
-    if (confidence >= 60) return 'bg-gradient-to-r from-orange-400 to-orange-500 text-white';
-    return 'bg-gradient-to-r from-red-400 to-red-500 text-white';
+    if (confidence >= 80) return 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-lg shadow-emerald-500/25';
+    if (confidence >= 60) return 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/25';
+    return 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg shadow-red-500/25';
   };
 
   const handleBetClick = (betType: string, e: React.MouseEvent) => {
@@ -81,53 +82,57 @@ const LiveEventCard: React.FC<LiveEventCardProps> = ({
 
   return (
     <Card 
-      className="bg-card/80 border-border backdrop-blur-sm hover:shadow-md transition-all duration-300 transform hover:scale-105"
+      className="glass-dark card-enhanced hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300 transform hover:scale-[1.02] group border-slate-700/50"
       onClick={handleCardClick}
     >
-      <CardContent className="p-3 flex flex-col h-full">
+      <CardContent className="p-4 flex flex-col h-full">
         {/* Header */}
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-2">
-            <Badge className="bg-gradient-to-r from-blue-400 to-blue-500 text-white text-xs px-2 py-0.5">
+            <Badge className="bg-gradient-to-r from-blue-500/90 to-indigo-500/90 text-white text-xs px-3 py-1 font-medium border-0 shadow-md">
               {event.league}
             </Badge>
             {isPlayoffGame && (
-              <Badge className="bg-gradient-to-r from-purple-400 to-purple-500 text-white text-xs px-2 py-0.5">
+              <Badge className="bg-gradient-to-r from-purple-500/90 to-violet-500/90 text-white text-xs px-2 py-1 border-0 shadow-md">
                 <Trophy className="h-3 w-3" />
               </Badge>
             )}
           </div>
-          <Badge className={`${getStatusColor(event.betStatus)} text-white text-xs px-2 py-0.5 animate-pulse`}>
-            <Activity className="h-2 w-2 mr-1" />
+          <Badge className={`${getStatusColor(event.betStatus)} text-white text-xs px-3 py-1 animate-pulse border-0 shadow-lg`}>
+            <Activity className="h-3 w-3 mr-1" />
             Live
           </Badge>
         </div>
 
         {/* Teams & Score */}
-        <div className="flex-1 mb-2">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-sm font-medium text-gray-800 truncate flex items-center">
-              <Plane className="h-3 w-3 mr-1 text-green-600" />
+        <div className="flex-1 mb-3">
+          <div className="flex items-center justify-between mb-2 p-2 rounded-lg bg-slate-800/30 group-hover:bg-slate-800/50 transition-all duration-300">
+            <span className="text-sm font-medium text-slate-200 truncate flex items-center">
+              <div className="p-1 rounded bg-emerald-500/20 mr-2">
+                <Plane className="h-3 w-3 text-emerald-400" />
+              </div>
               {event.awayTeam}
             </span>
-            <span className="text-lg font-bold text-blue-600">{event.awayScore}</span>
+            <span className="text-lg font-bold text-blue-400 bg-slate-900/50 px-2 py-1 rounded">{event.awayScore}</span>
           </div>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-gray-800 truncate flex items-center">
-              <Home className="h-3 w-3 mr-1 text-blue-600" />
+          <div className="flex items-center justify-between p-2 rounded-lg bg-slate-800/30 group-hover:bg-slate-800/50 transition-all duration-300">
+            <span className="text-sm font-medium text-slate-200 truncate flex items-center">
+              <div className="p-1 rounded bg-blue-500/20 mr-2">
+                <Home className="h-3 w-3 text-blue-400" />
+              </div>
               {event.homeTeam}
             </span>
-            <span className="text-lg font-bold text-blue-600">{event.homeScore}</span>
+            <span className="text-lg font-bold text-blue-400 bg-slate-900/50 px-2 py-1 rounded">{event.homeScore}</span>
           </div>
         </div>
 
-        {/* Betting Options - Show 2 or 3 columns based on draw odds availability and game type */}
-        <div className="space-y-1 mb-2">
-          <div className={`grid gap-1 text-xs ${hasValidDrawOdds && sportSupportsDraws ? 'grid-cols-3' : 'grid-cols-2'}`}>
+        {/* Betting Options - Enhanced dark mode styling */}
+        <div className="space-y-2 mb-3">
+          <div className={`grid gap-2 text-xs ${hasValidDrawOdds && sportSupportsDraws ? 'grid-cols-3' : 'grid-cols-2'}`}>
             <Button
               size="sm"
               variant="outline"
-              className="p-2 h-10 flex flex-col justify-center bg-blue-800 text-white hover:bg-blue-600"
+              className="p-3 h-12 flex flex-col justify-center bg-gradient-to-br from-blue-600/80 to-blue-700/80 text-white hover:from-blue-500/80 hover:to-blue-600/80 border-blue-500/50 shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-105"
               onClick={(e) => handleBetClick('home', e)}
             >
               <span className="font-bold text-sm">{convertToDecimal(event.moneylineHome)}x</span>
@@ -136,7 +141,7 @@ const LiveEventCard: React.FC<LiveEventCardProps> = ({
               <Button
                 size="sm"
                 variant="outline"
-                className="p-2 h-10 flex flex-col justify-center bg-orange-800 text-white hover:bg-orange-600"
+                className="p-3 h-12 flex flex-col justify-center bg-gradient-to-br from-amber-600/80 to-orange-600/80 text-white hover:from-amber-500/80 hover:to-orange-500/80 border-amber-500/50 shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-105"
                 onClick={(e) => handleBetClick('draw', e)}
               >
                 <span className="font-bold text-sm">{convertToDecimal(event.moneylineDraw)}x</span>
@@ -145,7 +150,7 @@ const LiveEventCard: React.FC<LiveEventCardProps> = ({
             <Button
               size="sm"
               variant="outline"
-              className="p-2 h-10 flex flex-col justify-center bg-green-800 text-white hover:bg-green-600"
+              className="p-3 h-12 flex flex-col justify-center bg-gradient-to-br from-emerald-600/80 to-green-600/80 text-white hover:from-emerald-500/80 hover:to-green-500/80 border-emerald-500/50 shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-105"
               onClick={(e) => handleBetClick('away', e)}
             >
               <span className="font-bold text-sm">{convertToDecimal(event.moneylineAway)}x</span>
@@ -153,17 +158,19 @@ const LiveEventCard: React.FC<LiveEventCardProps> = ({
           </div>
         </div>
 
-        {/* Bottom Info */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2 text-gray-600 text-xs">
-            <Clock className="h-3 w-3" />
-            <span>{event.timeLeft}</span>
-            <span className="text-gray-400">•</span>
-            <span className="font-medium">{event.region}</span>
+        {/* Bottom Info - Enhanced styling */}
+        <div className="flex items-center justify-between pt-2 border-t border-slate-700/50">
+          <div className="flex items-center space-x-3 text-slate-400 text-xs">
+            <div className="flex items-center space-x-1">
+              <Clock className="h-3 w-3" />
+              <span className="font-medium">{event.timeLeft}</span>
+            </div>
+            <span className="text-slate-600">•</span>
+            <span className="font-medium text-slate-300">{event.region}</span>
           </div>
           <div className="flex items-center space-x-1">
-            <Badge className={`text-xs px-2 py-0.5 ${getConfidenceColor(event.analysis.confidence)}`}>
-              <Star className="h-2 w-2 mr-1" />
+            <Badge className={`text-xs px-3 py-1 ${getConfidenceColor(event.analysis.confidence)} border-0`}>
+              <Star className="h-3 w-3 mr-1" />
               {event.analysis.confidence}%
             </Badge>
           </div>

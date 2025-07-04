@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 
@@ -20,27 +21,31 @@ const LiveEventsSidebar: React.FC<LiveEventsSidebarProps> = ({
   onCategorySelect,
 }) => {
   return (
-    <div className="w-48 bg-card/95 backdrop-blur-sm border-r border-border shadow-sm">
-      <div className="p-2 space-y-1 max-h-[calc(100vh-12rem)] overflow-y-auto">
+    <div className="w-48 bg-gradient-to-b from-slate-900/95 to-slate-950/95 backdrop-blur-sm border-r border-slate-700/50 shadow-xl">
+      <div className="p-3 space-y-2 max-h-[calc(100vh-12rem)] overflow-y-auto">
         {categoryFilters.map((category) => (
           <button
             key={category.value}
             onClick={() => onCategorySelect(category.value)}
-            className={`w-full text-left p-2 rounded-lg transition-all duration-200 flex items-center justify-between text-sm ${
+            className={`w-full text-left p-3 rounded-lg transition-all duration-300 flex items-center justify-between text-sm group ${
               selectedCategory === category.value
-                ? "bg-gradient-to-r from-blue-400 to-blue-500 text-white shadow-sm"
-                : "hover:bg-muted text-muted-foreground hover:text-blue-400"
+                ? "bg-gradient-to-r from-blue-500/90 to-indigo-500/90 text-white shadow-lg shadow-blue-500/25"
+                : "hover:bg-slate-800/60 text-slate-300 hover:text-white hover:shadow-md"
             }`}
           >
-            <div className="flex items-center space-x-2">
-              <span className="text-xs">{category.icon}</span>
+            <div className="flex items-center space-x-3">
+              <span className={`text-lg transition-transform duration-300 ${
+                selectedCategory === category.value ? "scale-110" : "group-hover:scale-105"
+              }`}>
+                {category.icon}
+              </span>
               <span className="font-medium">{category.label}</span>
             </div>
             <Badge
-              className={`text-xs px-1.5 py-0.5 ${
+              className={`text-xs px-2 py-1 font-medium border-0 transition-all duration-300 ${
                 selectedCategory === category.value
-                  ? "bg-white/20 text-white"
-                  : "bg-muted text-foreground"
+                  ? "bg-white/20 text-white shadow-md"
+                  : "bg-slate-700/60 text-slate-300 group-hover:bg-slate-600/60 group-hover:text-white"
               }`}
             >
               {category.count}

@@ -22,7 +22,7 @@ export const useTheme = () => {
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setTheme] = useState<Theme>(() => {
     const savedTheme = localStorage.getItem('theme') as Theme;
-    return savedTheme || 'light';
+    return savedTheme || 'dark'; // Default to dark mode
   });
 
   useEffect(() => {
@@ -35,18 +35,39 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       document.documentElement.classList.remove('dark');
     }
 
-    // Add custom CSS for hover effects
+    // Enhanced CSS for dark mode focus
     const style = document.createElement('style');
     style.innerHTML = `
       .profile-status-hover {
-        transition: all 0.2s ease-in-out;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
       .profile-status-hover:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
       }
       .dark .profile-status-hover:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        background: linear-gradient(135deg, rgb(51 65 85) 0%, rgb(30 41 59) 100%);
+      }
+      
+      /* Enhanced dark mode scrollbar */
+      .dark ::-webkit-scrollbar {
+        width: 8px;
+      }
+      .dark ::-webkit-scrollbar-track {
+        background: rgb(15 23 42);
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background: rgb(51 65 85);
+        border-radius: 4px;
+      }
+      .dark ::-webkit-scrollbar-thumb:hover {
+        background: rgb(71 85 105);
+      }
+      
+      /* Dark mode selection */
+      .dark ::selection {
+        background-color: rgb(59 130 246 / 0.3);
       }
     `;
     document.head.appendChild(style);
