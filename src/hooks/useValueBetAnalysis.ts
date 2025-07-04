@@ -47,6 +47,23 @@ export const useValueBetAnalysis = () => {
   const [foundValueBets, setFoundValueBets] = useState<FoundValueBet[]>([]);
   const { toast } = useToast();
 
+  const calculateTimeLeft = (commenceTime: string): string => {
+    const now = new Date();
+    const gameTime = new Date(commenceTime);
+    const diffMs = gameTime.getTime() - now.getTime();
+
+    if (diffMs < 0) {
+      return 'Live';
+    }
+
+    const hours = Math.floor(diffMs / (1000 * 60 * 60));
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) return `${days}d`;
+    if (hours > 0) return `${hours}h`;
+    return `${Math.floor(diffMs / (1000 * 60))}m`;
+  };
+
   const analyzeValueBets = async (targetOdds: number, estimatedWinProbability: number): Promise<FoundValueBet[]> => {
     setIsAnalyzing(true);
     setFoundValueBets([]);
@@ -121,7 +138,7 @@ export const useValueBetAnalysis = () => {
                           value: valuePercentage > 0 ? `+${valuePercentage.toFixed(1)}%` : `${valuePercentage.toFixed(1)}%`,
                           confidence: finalConfidence.toString(),
                           sportsbook: bookmaker.title,
-                          timeLeft: this.calculateTimeLeft(game.commence_time),
+                          timeLeft: calculateTimeLeft(game.commence_time),
                           sport: sport.key,
                           region: region.toUpperCase()
                         };
@@ -197,23 +214,6 @@ export const useValueBetAnalysis = () => {
     } finally {
       setIsAnalyzing(false);
     }
-  };
-
-  private calculateTimeLeft = (commenceTime: string): string => {
-    const now = new Date();
-    const gameTime = new Date(commenceTime);
-    const diffMs = gameTime.getTime() - now.getTime();
-
-    if (diffMs < 0) {
-      return 'Live';
-    }
-
-    const hours = Math.floor(diffMs / (1000 * 60 * 60));
-    const days = Math.floor(hours / 24);
-
-    if (days > 0) return `${days}d`;
-    if (hours > 0) return `${hours}h`;
-    return `${Math.floor(diffMs / (1000 * 60))}m`;
   };
 
   const analyzeValueBet = async (input: ValueBetInput): Promise<ValueBetResult | null> => {
