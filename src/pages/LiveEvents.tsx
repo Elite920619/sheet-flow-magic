@@ -88,25 +88,25 @@ const LiveEvents = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground relative">
+    <div className="min-h-screen bg-slate-950 text-foreground relative">
       <CanvasBackground />
       <Header />
 
-      <div className="relative z-10 h-[calc(100vh-4rem)] flex flex-col">
+      <div className="relative z-10 h-[calc(100vh-4rem)] flex flex-col bg-slate-950">
         <LiveEventsHeader
           sortedEventsLength={sortedEvents.length}
           availableMarkets={availableMarkets}
           uniqueSportsLength={uniqueSportsLength}
         />
         
-        <div className="flex">
+        <div className="flex bg-slate-950">
           <LiveEventsSidebar
             categoryFilters={currentCategories}
             selectedCategory={selectedCategory}
             onCategorySelect={handleCategorySelect}
           />
 
-          <div className="flex-1 max-h-[calc(100vh-8rem)] overflow-y-auto">
+          <div className="flex-1 max-h-[calc(100vh-8rem)] overflow-y-auto bg-slate-950">
             <LiveEventsContent
               isLoading={isLoading}
               isRefreshing={isRefreshing}

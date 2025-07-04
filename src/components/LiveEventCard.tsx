@@ -82,94 +82,94 @@ const LiveEventCard: React.FC<LiveEventCardProps> = ({
 
   return (
     <Card 
-      className="premium-card glass-dark hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 transform hover:scale-[1.03] group border-slate-800/50"
+      className="bg-slate-900/70 border-slate-800/50 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300 transform hover:scale-[1.02] group"
       onClick={handleCardClick}
     >
-      <CardContent className="p-5 flex flex-col h-full">
+      <CardContent className="p-4 flex flex-col h-full">
         {/* Header */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-3">
-            <Badge className="bg-gradient-to-r from-blue-600/90 to-indigo-600/90 text-white text-xs px-4 py-2 font-semibold border-0 shadow-xl glow-blue">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center space-x-2">
+            <Badge className="bg-gradient-to-r from-blue-600/90 to-indigo-600/90 text-white text-xs px-3 py-1 font-medium border-0 shadow-lg">
               {event.league}
             </Badge>
             {isPlayoffGame && (
-              <Badge className="bg-gradient-to-r from-purple-600/90 to-violet-600/90 text-white text-xs px-3 py-2 border-0 shadow-xl glow-purple">
+              <Badge className="bg-gradient-to-r from-purple-600/90 to-violet-600/90 text-white text-xs px-2 py-1 border-0 shadow-lg">
                 <Trophy className="h-3 w-3" />
               </Badge>
             )}
           </div>
-          <Badge className={`${getStatusColor(event.betStatus)} text-white text-xs px-4 py-2 animate-pulse-premium border-0 shadow-2xl`}>
+          <Badge className={`${getStatusColor(event.betStatus)} text-white text-xs px-3 py-1 animate-pulse border-0 shadow-lg`}>
             <Activity className="h-3 w-3 mr-1" />
             Live
           </Badge>
         </div>
 
         {/* Teams & Score */}
-        <div className="flex-1 mb-4">
-          <div className="flex items-center justify-between mb-3 p-3 rounded-xl bg-slate-950/50 group-hover:bg-slate-900/60 transition-all duration-500 border border-slate-800/30">
-            <span className="text-sm font-semibold text-premium-light truncate flex items-center">
-              <div className="p-2 rounded-lg bg-emerald-600/30 mr-3 glow-emerald">
-                <Plane className="h-4 w-4 text-emerald-400" />
+        <div className="flex-1 mb-3">
+          <div className="flex items-center justify-between mb-2 p-2 rounded-lg bg-slate-950/50 group-hover:bg-slate-900/60 transition-all duration-300 border border-slate-800/30">
+            <span className="text-sm font-medium text-slate-200 truncate flex items-center">
+              <div className="p-1 rounded bg-emerald-600/30 mr-2">
+                <Plane className="h-3 w-3 text-emerald-400" />
               </div>
               {event.awayTeam}
             </span>
-            <span className="text-xl font-bold text-blue-400 bg-slate-950/70 px-3 py-2 rounded-lg border border-slate-800/50">{event.awayScore}</span>
+            <span className="text-lg font-bold text-blue-400 bg-slate-950/70 px-2 py-1 rounded border border-slate-800/50">{event.awayScore}</span>
           </div>
-          <div className="flex items-center justify-between p-3 rounded-xl bg-slate-950/50 group-hover:bg-slate-900/60 transition-all duration-500 border border-slate-800/30">
-            <span className="text-sm font-semibold text-premium-light truncate flex items-center">
-              <div className="p-2 rounded-lg bg-blue-600/30 mr-3 glow-blue">
-                <Home className="h-4 w-4 text-blue-400" />
+          <div className="flex items-center justify-between p-2 rounded-lg bg-slate-950/50 group-hover:bg-slate-900/60 transition-all duration-300 border border-slate-800/30">
+            <span className="text-sm font-medium text-slate-200 truncate flex items-center">
+              <div className="p-1 rounded bg-blue-600/30 mr-2">
+                <Home className="h-3 w-3 text-blue-400" />
               </div>
               {event.homeTeam}
             </span>
-            <span className="text-xl font-bold text-blue-400 bg-slate-950/70 px-3 py-2 rounded-lg border border-slate-800/50">{event.homeScore}</span>
+            <span className="text-lg font-bold text-blue-400 bg-slate-950/70 px-2 py-1 rounded border border-slate-800/50">{event.homeScore}</span>
           </div>
         </div>
 
-        {/* Betting Options - Ultra-premium dark mode styling */}
-        <div className="space-y-3 mb-4">
-          <div className={`grid gap-3 text-xs ${hasValidDrawOdds && sportSupportsDraws ? 'grid-cols-3' : 'grid-cols-2'}`}>
+        {/* Betting Options */}
+        <div className="space-y-2 mb-3">
+          <div className={`grid gap-2 text-xs ${hasValidDrawOdds && sportSupportsDraws ? 'grid-cols-3' : 'grid-cols-2'}`}>
             <Button
               size="sm"
               variant="outline"
-              className="p-4 h-14 flex flex-col justify-center bg-gradient-to-br from-blue-700/90 to-blue-800/90 text-white hover:from-blue-600/90 hover:to-blue-700/90 border-blue-600/50 shadow-2xl backdrop-blur-xl transition-all duration-400 hover:scale-110 glow-blue"
+              className="p-3 h-12 flex flex-col justify-center bg-gradient-to-br from-blue-700/90 to-blue-800/90 text-white hover:from-blue-600/90 hover:to-blue-700/90 border-blue-600/50 shadow-lg transition-all duration-300 hover:scale-105"
               onClick={(e) => handleBetClick('home', e)}
             >
-              <span className="font-bold text-base">{convertToDecimal(event.moneylineHome)}x</span>
+              <span className="font-bold text-sm">{convertToDecimal(event.moneylineHome)}x</span>
             </Button>
             {hasValidDrawOdds && sportSupportsDraws && (
               <Button
                 size="sm"
                 variant="outline"
-                className="p-4 h-14 flex flex-col justify-center bg-gradient-to-br from-amber-700/90 to-orange-700/90 text-white hover:from-amber-600/90 hover:to-orange-600/90 border-amber-600/50 shadow-2xl backdrop-blur-xl transition-all duration-400 hover:scale-110"
+                className="p-3 h-12 flex flex-col justify-center bg-gradient-to-br from-amber-700/90 to-orange-700/90 text-white hover:from-amber-600/90 hover:to-orange-600/90 border-amber-600/50 shadow-lg transition-all duration-300 hover:scale-105"
                 onClick={(e) => handleBetClick('draw', e)}
               >
-                <span className="font-bold text-base">{convertToDecimal(event.moneylineDraw)}x</span>
+                <span className="font-bold text-sm">{convertToDecimal(event.moneylineDraw)}x</span>
               </Button>
             )}
             <Button
               size="sm"
               variant="outline"
-              className="p-4 h-14 flex flex-col justify-center bg-gradient-to-br from-emerald-700/90 to-green-700/90 text-white hover:from-emerald-600/90 hover:to-green-600/90 border-emerald-600/50 shadow-2xl backdrop-blur-xl transition-all duration-400 hover:scale-110 glow-emerald"
+              className="p-3 h-12 flex flex-col justify-center bg-gradient-to-br from-emerald-700/90 to-green-700/90 text-white hover:from-emerald-600/90 hover:to-green-600/90 border-emerald-600/50 shadow-lg transition-all duration-300 hover:scale-105"
               onClick={(e) => handleBetClick('away', e)}
             >
-              <span className="font-bold text-base">{convertToDecimal(event.moneylineAway)}x</span>
+              <span className="font-bold text-sm">{convertToDecimal(event.moneylineAway)}x</span>
             </Button>
           </div>
         </div>
 
-        {/* Bottom Info - Ultra-premium styling */}
-        <div className="flex items-center justify-between pt-3 border-t border-slate-800/50">
-          <div className="flex items-center space-x-4 text-premium-subtle text-xs">
-            <div className="flex items-center space-x-2">
-              <Clock className="h-4 w-4" />
-              <span className="font-semibold text-premium-muted">{event.timeLeft}</span>
+        {/* Bottom Info */}
+        <div className="flex items-center justify-between pt-2 border-t border-slate-800/50">
+          <div className="flex items-center space-x-3 text-slate-400 text-xs">
+            <div className="flex items-center space-x-1">
+              <Clock className="h-3 w-3" />
+              <span className="font-medium text-slate-300">{event.timeLeft}</span>
             </div>
             <span className="text-slate-700">•</span>
-            <span className="font-semibold text-premium-muted">{event.region}</span>
+            <span className="font-medium text-slate-300">{event.region}</span>
           </div>
-          <div className="flex items-center space-x-2">
-            <Badge className={`text-xs px-4 py-2 ${getConfidenceColor(event.analysis.confidence)} border-0`}>
+          <div className="flex items-center space-x-1">
+            <Badge className={`text-xs px-3 py-1 ${getConfidenceColor(event.analysis.confidence)} border-0`}>
               <Star className="h-3 w-3 mr-1" />
               {event.analysis.confidence}%
             </Badge>
