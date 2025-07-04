@@ -23,6 +23,10 @@ interface LiveEventsContentProps {
   onEventClick: (event: any) => void;
   onPlaceBet: (event: any, betType?: string) => void;
   onRefresh: () => void;
+  onCategoryChange: (category: string) => void;
+  upcomingSportsCategories: any[];
+  activeTab: 'live' | 'upcoming';
+  onTabChange: (tab: 'live' | 'upcoming') => void;
 }
 
 const LiveEventsContent = ({ 
@@ -34,14 +38,17 @@ const LiveEventsContent = ({
   uniqueSportsLength,
   onEventClick,
   onPlaceBet,
-  onRefresh
+  onRefresh,
+  onCategoryChange,
+  upcomingSportsCategories,
+  activeTab,
+  onTabChange
 }: LiveEventsContentProps) => {
   const [selectedRegion, setSelectedRegion] = useState<string>('all');
   const [showBettingModal, setShowBettingModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [selectedBetType, setSelectedBetType] = useState<string>('');
   const [showingProgressiveResults, setShowingProgressiveResults] = useState(false);
-  const [activeTab, setActiveTab] = useState<'live' | 'upcoming'>('live');
 
   // Initialize bet status updater and odds sync
   const { checkBetStatuses, pendingBetsCount } = useBetStatusUpdater();
@@ -63,7 +70,7 @@ const LiveEventsContent = ({
     isLoadingMore: isLoadingMoreLive,
     handleLoadMore: handleLoadMoreLive
   } = useLiveEventsFiltering({
-    sortedEvents,
+    sortedEvents: activeTab === 'live' ? sortedEvents : [],
     selectedCategory,
     selectedRegion
   });
@@ -76,7 +83,7 @@ const LiveEventsContent = ({
     isLoadingMore: isLoadingMoreUpcoming,
     handleLoadMore: handleLoadMoreUpcoming
   } = useLiveEventsFiltering({
-    sortedEvents: upcomingEvents,
+    sortedEvents: activeTab === 'upcoming' ? sortedEvents : [],
     selectedCategory,
     selectedRegion
   });
@@ -131,7 +138,7 @@ const LiveEventsContent = ({
     syncBetData();
   }, []);
 
-  // Get current data based on active tab
+  // Get current data and unique sports based on active tab
   const currentEvents = activeTab === 'live' ? sortedEvents : upcomingEvents;
   const currentFilteredEvents = activeTab === 'live' ? filteredLiveEventsByRegion : filteredUpcomingEventsByRegion;
   const currentDisplayedEvents = activeTab === 'live' ? displayedLiveEvents : displayedUpcomingEvents;
@@ -139,10 +146,11 @@ const LiveEventsContent = ({
   const currentIsRefreshing = activeTab === 'live' ? isRefreshing : isRefreshingUpcoming;
   const currentHasMoreEvents = activeTab === 'live' ? hasMoreLiveEvents : hasMoreUpcomingEvents;
   const currentIsLoadingMore = activeTab === 'live' ? isLoadingMoreLive : isLoadingMoreUpcoming;
+  const currentUniqueSportsLength = activeTab === 'live' ? uniqueSportsLength : [...new Set(upcomingEvents.map(event => event.sport))].length;
 
   return (
     <div className="flex flex-col">
-      <Tabs value={activeTab} onValueChange={(value: 'live' | 'upcoming') => setActiveTab(value)} className="flex flex-col">
+      <Tabs value={activeTab} onValueChange={onTabChange} className="flex flex-col">
         {/* Always show tabs header regardless of loading state or events */}
         <LiveEventsTabsHeader
           isRefreshing={currentIsRefreshing}
@@ -150,7 +158,7 @@ const LiveEventsContent = ({
           onRegionChange={setSelectedRegion}
           pendingBetsCount={pendingBetsCount}
           activeTab={activeTab}
-          onTabChange={setActiveTab}
+          onTabChange={onTabChange}
         />
         
         {/* Live Events Tab */}
@@ -181,7 +189,7 @@ const LiveEventsContent = ({
               filteredEventsLength={filteredLiveEventsByRegion.length}
               selectedCategory={selectedCategory}
               selectedRegion={selectedRegion}
-              uniqueSportsLength={uniqueSportsLength}
+              uniqueSportsLength={currentUniqueSportsLength}
               getSportLabel={getSportLabel}
               onEventCardBet={handleEventCardBet}
               isLoadingMore={isLoadingMoreLive}
@@ -211,7 +219,7 @@ const LiveEventsContent = ({
               filteredEventsLength={filteredUpcomingEventsByRegion.length}
               selectedCategory={selectedCategory}
               selectedRegion={selectedRegion}
-              uniqueSportsLength={uniqueSportsLength}
+              uniqueSportsLength={currentUniqueSportsLength}
               getSportLabel={getSportLabel}
               onEventCardBet={handleEventCardBet}
               isLoadingMore={isLoadingMoreUpcoming}

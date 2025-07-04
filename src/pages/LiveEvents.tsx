@@ -10,8 +10,11 @@ import { useLiveEvents } from "@/hooks/useLiveEvents";
 import { useEnhancedCredits } from "@/hooks/useEnhancedCredits";
 import { useSportCategories } from "@/hooks/useSportCategories";
 import { useLiveEventsState } from "@/hooks/useLiveEventsState";
+import { useUpcomingEvents } from "@/hooks/useUpcomingEvents";
 
 const LiveEvents = () => {
+  const [activeTab, setActiveTab] = React.useState<'live' | 'upcoming'>('live');
+
   const {
     selectedBet,
     setSelectedBet,
@@ -33,11 +36,21 @@ const LiveEvents = () => {
   } = useLiveEventsState();
 
   const { liveEvents, isLoading, isRefreshing, refreshEvents } = useLiveEvents();
+  const { upcomingEvents } = useUpcomingEvents();
   const { credits, deposit, isDepositing, checkSufficientFunds } = useEnhancedCredits();
-  const { sportsCategories, getSportLabel } = useSportCategories(liveEvents);
+  
+  // Get categories for live events
+  const { sportsCategories: liveSportsCategories, getSportLabel } = useSportCategories(liveEvents);
+  
+  // Get categories for upcoming events
+  const { sportsCategories: upcomingSportsCategories } = useSportCategories(upcomingEvents);
 
-  // Filter and sort events
-  const sortedEvents = liveEvents
+  // Use the correct categories based on active tab
+  const currentCategories = activeTab === 'live' ? liveSportsCategories : upcomingSportsCategories;
+
+  // Filter and sort events based on active tab
+  const currentEvents = activeTab === 'live' ? liveEvents : upcomingEvents;
+  const sortedEvents = currentEvents
     .filter((event) => selectedCategory === "all" || event.sport === selectedCategory)
     .sort((a, b) => {
       const timeA = a.timeLeft?.match(/\d+/)?.[0] || "0";
@@ -48,7 +61,13 @@ const LiveEvents = () => {
     });
 
   const availableMarkets = sortedEvents.filter((e) => e.betStatus === "Available").length;
-  const uniqueSportsLength = [...new Set(liveEvents.map(event => event.sport))].length;
+  const uniqueSportsLength = [...new Set(currentEvents.map(event => event.sport))].length;
+
+  const handleTabChange = (tab: 'live' | 'upcoming') => {
+    setActiveTab(tab);
+    // Reset category to 'all' when switching tabs to ensure valid selection
+    handleCategorySelect('all');
+  };
 
   const handlePlaceBet = (betData: any) => {
     // Check if this is an insufficient funds case
@@ -82,7 +101,7 @@ const LiveEvents = () => {
         
         <div className="flex">
           <LiveEventsSidebar
-            categoryFilters={sportsCategories}
+            categoryFilters={currentCategories}
             selectedCategory={selectedCategory}
             onCategorySelect={handleCategorySelect}
           />
@@ -98,6 +117,10 @@ const LiveEvents = () => {
               onEventClick={handleEventClick}
               onPlaceBet={handlePlaceBet}
               onRefresh={refreshEvents}
+              onCategoryChange={handleCategorySelect}
+              upcomingSportsCategories={upcomingSportsCategories}
+              activeTab={activeTab}
+              onTabChange={handleTabChange}
             />
           </div>
         </div>
