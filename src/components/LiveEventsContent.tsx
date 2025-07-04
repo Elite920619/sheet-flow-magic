@@ -25,6 +25,8 @@ interface LiveEventsContentProps {
   onRefresh: () => void;
   onCategoryChange: (category: string) => void;
   upcomingSportsCategories: any[];
+  activeTab: 'live' | 'upcoming';
+  onTabChange: (tab: 'live' | 'upcoming') => void;
 }
 
 const LiveEventsContent = ({ 
@@ -38,14 +40,15 @@ const LiveEventsContent = ({
   onPlaceBet,
   onRefresh,
   onCategoryChange,
-  upcomingSportsCategories
+  upcomingSportsCategories,
+  activeTab,
+  onTabChange
 }: LiveEventsContentProps) => {
   const [selectedRegion, setSelectedRegion] = useState<string>('all');
   const [showBettingModal, setShowBettingModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [selectedBetType, setSelectedBetType] = useState<string>('');
   const [showingProgressiveResults, setShowingProgressiveResults] = useState(false);
-  const [activeTab, setActiveTab] = useState<'live' | 'upcoming'>('live');
 
   // Initialize bet status updater and odds sync
   const { checkBetStatuses, pendingBetsCount } = useBetStatusUpdater();
@@ -67,7 +70,7 @@ const LiveEventsContent = ({
     isLoadingMore: isLoadingMoreLive,
     handleLoadMore: handleLoadMoreLive
   } = useLiveEventsFiltering({
-    sortedEvents,
+    sortedEvents: activeTab === 'live' ? sortedEvents : [],
     selectedCategory,
     selectedRegion
   });
@@ -80,7 +83,7 @@ const LiveEventsContent = ({
     isLoadingMore: isLoadingMoreUpcoming,
     handleLoadMore: handleLoadMoreUpcoming
   } = useLiveEventsFiltering({
-    sortedEvents: upcomingEvents,
+    sortedEvents: activeTab === 'upcoming' ? sortedEvents : [],
     selectedCategory,
     selectedRegion
   });
@@ -106,15 +109,6 @@ const LiveEventsContent = ({
       });
     }
   }, [isLoading, sortedEvents, displayedLiveEvents, selectedCategory, selectedRegion, activeTab]);
-
-  // Handle tab change and update categories
-  const handleTabChange = (tab: 'live' | 'upcoming') => {
-    setActiveTab(tab);
-    // Reset to 'all' when switching tabs to ensure valid category
-    if (tab === 'upcoming') {
-      onCategoryChange('all');
-    }
-  };
 
   const handleRefresh = () => {
     console.log(`Refreshing ${activeTab} events data with progressive updates...`);
@@ -156,7 +150,7 @@ const LiveEventsContent = ({
 
   return (
     <div className="flex flex-col">
-      <Tabs value={activeTab} onValueChange={handleTabChange} className="flex flex-col">
+      <Tabs value={activeTab} onValueChange={onTabChange} className="flex flex-col">
         {/* Always show tabs header regardless of loading state or events */}
         <LiveEventsTabsHeader
           isRefreshing={currentIsRefreshing}
@@ -164,7 +158,7 @@ const LiveEventsContent = ({
           onRegionChange={setSelectedRegion}
           pendingBetsCount={pendingBetsCount}
           activeTab={activeTab}
-          onTabChange={handleTabChange}
+          onTabChange={onTabChange}
         />
         
         {/* Live Events Tab */}
