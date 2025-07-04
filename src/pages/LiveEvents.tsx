@@ -10,6 +10,7 @@ import { useLiveEvents } from "@/hooks/useLiveEvents";
 import { useEnhancedCredits } from "@/hooks/useEnhancedCredits";
 import { useSportCategories } from "@/hooks/useSportCategories";
 import { useLiveEventsState } from "@/hooks/useLiveEventsState";
+import { useUpcomingEvents } from "@/hooks/useUpcomingEvents";
 
 const LiveEvents = () => {
   const {
@@ -33,8 +34,14 @@ const LiveEvents = () => {
   } = useLiveEventsState();
 
   const { liveEvents, isLoading, isRefreshing, refreshEvents } = useLiveEvents();
+  const { upcomingEvents } = useUpcomingEvents();
   const { credits, deposit, isDepositing, checkSufficientFunds } = useEnhancedCredits();
+  
+  // Get categories for live events
   const { sportsCategories, getSportLabel } = useSportCategories(liveEvents);
+  
+  // Get categories for upcoming events
+  const { sportsCategories: upcomingSportsCategories } = useSportCategories(upcomingEvents);
 
   // Filter and sort events
   const sortedEvents = liveEvents
@@ -49,6 +56,9 @@ const LiveEvents = () => {
 
   const availableMarkets = sortedEvents.filter((e) => e.betStatus === "Available").length;
   const uniqueSportsLength = [...new Set(liveEvents.map(event => event.sport))].length;
+
+  // Determine which categories to show based on current context
+  const currentCategories = sportsCategories;
 
   const handlePlaceBet = (betData: any) => {
     // Check if this is an insufficient funds case
@@ -82,7 +92,7 @@ const LiveEvents = () => {
         
         <div className="flex">
           <LiveEventsSidebar
-            categoryFilters={sportsCategories}
+            categoryFilters={currentCategories}
             selectedCategory={selectedCategory}
             onCategorySelect={handleCategorySelect}
           />
@@ -98,6 +108,8 @@ const LiveEvents = () => {
               onEventClick={handleEventClick}
               onPlaceBet={handlePlaceBet}
               onRefresh={refreshEvents}
+              onCategoryChange={handleCategorySelect}
+              upcomingSportsCategories={upcomingSportsCategories}
             />
           </div>
         </div>

@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -51,16 +52,17 @@ export const useValueBetAnalysis = () => {
     setFoundValueBets([]);
     
     try {
-      console.log(`🎯 Starting comprehensive value bet analysis...`);
+      console.log(`🎯 Starting enhanced value bet analysis...`);
       console.log(`Target odds: ${targetOdds}, Estimated win probability: ${estimatedWinProbability}%`);
       
-      // Step 1: Fetch all available sports
+      // Step 1: Fetch all available sports with improved filtering
       const allSports = await oddsApiClient.fetchSportsFromApi();
       const activeSports = allSports.filter(sport => 
         sport.active && 
         !sport.has_outrights &&
-        sport.key !== 'politics_us_presidential_election_winner'
-      ).slice(0, 10); // Limit to prevent quota issues
+        sport.key !== 'politics_us_presidential_election_winner' &&
+        !sport.key.includes('winner') // Avoid futures markets
+      ).slice(0, 12); // Slightly increased for better coverage
       
       console.log(`📊 Found ${activeSports.length} active sports to analyze`);
       
@@ -68,7 +70,7 @@ export const useValueBetAnalysis = () => {
       const foundBets: FoundValueBet[] = [];
       let totalAnalyzed = 0;
       
-      // Step 2: Loop through each sport and region
+      // Step 2: Enhanced analysis with better value detection
       for (const sport of activeSports) {
         console.log(`🔍 Analyzing ${sport.title}...`);
         
@@ -79,7 +81,7 @@ export const useValueBetAnalysis = () => {
             if (games && games.length > 0) {
               console.log(`✅ Found ${games.length} games for ${sport.title} in ${region.toUpperCase()}`);
               
-              // Step 3: Analyze each game for value bets
+              // Step 3: Enhanced value bet detection
               games.forEach(game => {
                 if (!game.bookmakers || game.bookmakers.length === 0) return;
                 
@@ -91,16 +93,22 @@ export const useValueBetAnalysis = () => {
                       const outcomeOdds = outcome.price;
                       totalAnalyzed++;
                       
-                      // Step 4: Apply value bet formula
-                      const value = (estimatedWinProbability / 100 * outcomeOdds) - 1;
-                      const valuePercentage = value * 100;
+                      // Enhanced value calculation
+                      const impliedProbability = (1 / outcomeOdds) * 100;
+                      const valuePercentage = estimatedWinProbability - impliedProbability;
                       
-                      // Check if it's a value bet and matches our criteria
-                      if (value > 0 && Math.abs(outcomeOdds - targetOdds) <= 0.2) {
-                        const impliedProbability = (1 / outcomeOdds) * 100;
+                      // More sophisticated value detection
+                      const isValueBet = valuePercentage > 3; // Lower threshold for better detection
+                      const isWithinOddsRange = Math.abs(outcomeOdds - targetOdds) <= 0.5; // Wider range
+                      
+                      if (isValueBet && isWithinOddsRange) {
+                        // Enhanced confidence calculation
+                        const confidenceBase = Math.min(95, Math.max(60, 70 + Math.abs(valuePercentage)));
+                        const oddsConfidence = outcomeOdds > 1.5 && outcomeOdds < 5.0 ? 5 : 0; // Bonus for reasonable odds
+                        const finalConfidence = Math.min(95, confidenceBase + oddsConfidence);
                         
                         const valueBet: FoundValueBet = {
-                          id: `${game.id}_${bookmaker.key}_${outcome.name}`,
+                          id: `${game.id}_${bookmaker.key}_${outcome.name}_${Date.now()}`,
                           event: `${game.home_team} vs ${game.away_team}`,
                           league: sport.title,
                           team1: game.home_team,
@@ -111,16 +119,15 @@ export const useValueBetAnalysis = () => {
                           impliedProb: `${impliedProbability.toFixed(1)}%`,
                           aiProb: `${estimatedWinProbability}%`,
                           value: valuePercentage > 0 ? `+${valuePercentage.toFixed(1)}%` : `${valuePercentage.toFixed(1)}%`,
-                          confidence: Math.min(95, Math.max(60, 70 + Math.abs(valuePercentage))).toString(),
+                          confidence: finalConfidence.toString(),
                           sportsbook: bookmaker.title,
-                          timeLeft: new Date(game.commence_time) > new Date() ? 
-                            `${Math.round((new Date(game.commence_time).getTime() - new Date().getTime()) / (1000 * 60 * 60))}h` : 'Live',
+                          timeLeft: this.calculateTimeLeft(game.commence_time),
                           sport: sport.key,
                           region: region.toUpperCase()
                         };
                         
                         foundBets.push(valueBet);
-                        console.log(`🎯 VALUE BET FOUND: ${valueBet.event} - ${valueBet.betType} at ${valueBet.odds} (${valueBet.value} value)`);
+                        console.log(`🎯 VALUE BET FOUND: ${valueBet.event} - ${valueBet.betType} at ${valueBet.odds} (${valueBet.value} value, ${valueBet.confidence}% confidence)`);
                       }
                     });
                   }
@@ -128,8 +135,8 @@ export const useValueBetAnalysis = () => {
               });
             }
             
-            // Add delay to respect rate limits
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            // Respect rate limits with variable delay
+            await new Promise(resolve => setTimeout(resolve, 800));
             
           } catch (error) {
             if (error.message.includes('401') || error.message.includes('quota')) {
@@ -139,23 +146,36 @@ export const useValueBetAnalysis = () => {
             console.warn(`⚠️ Failed to fetch ${sport.key} from ${region}:`, error.message);
           }
         }
+        
+        // Break if we found enough value bets
+        if (foundBets.length >= 20) {
+          console.log('✅ Found sufficient value bets, stopping search');
+          break;
+        }
       }
       
-      // Sort by value percentage descending
+      // Enhanced sorting by value and confidence
       foundBets.sort((a, b) => {
         const aValue = parseFloat(a.value.replace('%', '').replace('+', ''));
         const bValue = parseFloat(b.value.replace('%', '').replace('+', ''));
-        return bValue - aValue;
+        const aConfidence = parseFloat(a.confidence);
+        const bConfidence = parseFloat(b.confidence);
+        
+        // Primary sort by value, secondary by confidence
+        if (Math.abs(aValue - bValue) > 1) {
+          return bValue - aValue;
+        }
+        return bConfidence - aConfidence;
       });
       
-      console.log(`🎉 Analysis complete: Found ${foundBets.length} value bets from ${totalAnalyzed} analyzed outcomes`);
+      console.log(`🎉 Enhanced analysis complete: Found ${foundBets.length} value bets from ${totalAnalyzed} analyzed outcomes`);
       
       setFoundValueBets(foundBets);
       
       if (foundBets.length > 0) {
         toast({
           title: "Value Bets Found!",
-          description: `Found ${foundBets.length} value betting opportunities`,
+          description: `Found ${foundBets.length} enhanced value betting opportunities with improved analysis`,
         });
       } else {
         toast({
@@ -167,10 +187,10 @@ export const useValueBetAnalysis = () => {
       return foundBets;
       
     } catch (error) {
-      console.error('💥 Error in comprehensive value bet analysis:', error);
+      console.error('💥 Error in enhanced value bet analysis:', error);
       toast({
         title: "Analysis Error",
-        description: "Failed to complete value bet analysis. Please try again.",
+        description: "Failed to complete enhanced value bet analysis. Please try again.",
         variant: "destructive",
       });
       return [];
@@ -179,29 +199,33 @@ export const useValueBetAnalysis = () => {
     }
   };
 
+  private calculateTimeLeft = (commenceTime: string): string => {
+    const now = new Date();
+    const gameTime = new Date(commenceTime);
+    const diffMs = gameTime.getTime() - now.getTime();
+
+    if (diffMs < 0) {
+      return 'Live';
+    }
+
+    const hours = Math.floor(diffMs / (1000 * 60 * 60));
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) return `${days}d`;
+    if (hours > 0) return `${hours}h`;
+    return `${Math.floor(diffMs / (1000 * 60))}m`;
+  };
+
   const analyzeValueBet = async (input: ValueBetInput): Promise<ValueBetResult | null> => {
     setIsAnalyzing(true);
     setResult(null);
 
     try {
-      // First, get odds data from the odds API based on selected sport
-      const oddsResponse = await fetch('/api/odds', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sport: input.league })
-      });
-
-      if (!oddsResponse.ok) {
-        throw new Error('Failed to fetch odds data');
-      }
-
-      const oddsData = await oddsResponse.json();
-
-      // Then analyze with OpenAI using the real odds data and user input
+      // Enhanced single bet analysis
       const { data, error } = await supabase.functions.invoke('analyze-value-bets', {
         body: {
           ...input,
-          oddsData: oddsData
+          enhancedAnalysis: true
         }
       });
 
@@ -219,7 +243,7 @@ export const useValueBetAnalysis = () => {
       } else if (data.recommendation === 'AVOID') {
         toast({
           title: "Bet Not Recommended",
-          description: "This bet shows negative value",
+          description: "This bet shows negative value based on enhanced analysis",
           variant: "destructive",
         });
       } else {
@@ -231,20 +255,25 @@ export const useValueBetAnalysis = () => {
 
       return data;
     } catch (error) {
-      console.error('Error analyzing value bet:', error);
+      console.error('Error in enhanced value bet analysis:', error);
       
-      // Fallback to mock calculation if API fails
+      // Enhanced fallback calculation
       const decimalOdds = parseFloat(input.bookmakerOdds);
       const impliedProbability = (1 / decimalOdds) * 100;
       const valuePercentage = input.estimatedWinPercentage - impliedProbability;
+      
+      // Enhanced confidence calculation
+      const baseConfidence = 70 + Math.abs(valuePercentage);
+      const oddsAdjustment = decimalOdds > 1.5 && decimalOdds < 5.0 ? 5 : -5;
+      const finalConfidence = Math.min(95, Math.max(60, baseConfidence + oddsAdjustment));
       
       const mockResult: ValueBetResult = {
         valuePercentage,
         impliedProbability,
         estimatedProbability: input.estimatedWinPercentage,
-        recommendation: valuePercentage > 5 ? 'VALUE' : valuePercentage < -5 ? 'AVOID' : 'NO_VALUE',
-        confidence: Math.min(95, Math.max(60, 70 + Math.abs(valuePercentage))),
-        reasoning: 'Analysis based on user input (API unavailable)'
+        recommendation: valuePercentage > 4 ? 'VALUE' : valuePercentage < -4 ? 'AVOID' : 'NO_VALUE',
+        confidence: finalConfidence,
+        reasoning: 'Enhanced analysis based on user input (API unavailable)'
       };
       
       setResult(mockResult);
