@@ -7,7 +7,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 0 0% 98%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -48,40 +48,41 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 215 28% 3%;
+    --foreground: 213 31% 91%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 216 28% 4%;
+    --card-foreground: 213 31% 91%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 216 28% 4%;
+    --popover-foreground: 213 31% 91%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 216 28% 4%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 214 32% 8%;
+    --secondary-foreground: 213 31% 91%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 214 32% 8%;
+    --muted-foreground: 217 32% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 214 32% 12%;
+    --accent-foreground: 213 31% 91%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 213 31% 91%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
+    --border: 214 32% 12%;
+    --input: 214 32% 12%;
+    --ring: 217.2 91.2% 59.8%;
+    
+    --sidebar-background: 215 28% 2%;
+    --sidebar-foreground: 213 31% 91%;
+    --sidebar-primary: 217.2 91.2% 59.8%;
+    --sidebar-primary-foreground: 216 28% 4%;
+    --sidebar-accent: 214 32% 8%;
+    --sidebar-accent-foreground: 213 31% 91%;
+    --sidebar-border: 214 32% 12%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
@@ -93,51 +94,154 @@
 
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
-/* Custom betting-specific styles */
+/* Enhanced dark mode styles for superior visual appeal */
 @layer utilities {
   .bg-gray-750 {
-    background-color: rgb(55 65 81 / 0.8);
+    background-color: rgb(15 23 42 / 0.9);
   }
   
   .odds-button {
-    @apply bg-gray-700 border-gray-600 hover:bg-gray-600 text-white transition-all duration-200 hover:scale-105;
+    @apply bg-slate-900/90 border-slate-700/50 hover:bg-slate-800/90 text-white transition-all duration-300 hover:scale-105 backdrop-blur-md shadow-2xl hover:shadow-3xl;
+  }
+  
+  .dark .odds-button {
+    @apply bg-slate-950/80 border-slate-700/30 hover:bg-slate-900/80 shadow-2xl shadow-black/50;
   }
   
   .value-bet-glow {
-    @apply ring-2 ring-green-400/50 shadow-lg shadow-green-400/20;
+    @apply ring-2 ring-emerald-400/60 shadow-2xl shadow-emerald-400/30;
+  }
+  
+  .dark .value-bet-glow {
+    @apply ring-emerald-400/80 shadow-emerald-400/40;
   }
   
   .confidence-high {
-    @apply bg-green-500 text-white;
+    @apply bg-gradient-to-r from-emerald-600 to-green-600 text-white shadow-2xl shadow-emerald-600/40;
   }
   
   .confidence-medium {
-    @apply bg-yellow-500 text-white;
+    @apply bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-2xl shadow-amber-600/40;
   }
   
   .confidence-low {
-    @apply bg-red-500 text-white;
+    @apply bg-gradient-to-r from-red-600 to-red-700 text-white shadow-2xl shadow-red-600/40;
+  }
+
+  /* Ultra-dark mode card enhancements */
+  .dark .card-enhanced {
+    @apply bg-slate-950/70 backdrop-blur-xl border-slate-800/50 shadow-2xl shadow-black/60;
+  }
+
+  /* Premium glassmorphism effect */
+  .glass-dark {
+    @apply bg-slate-950/40 backdrop-blur-xl border border-slate-800/40 shadow-2xl shadow-black/50;
+  }
+
+  /* Ultra-premium gradients for dark mode */
+  .gradient-dark-primary {
+    background: linear-gradient(135deg, rgb(15 23 42) 0%, rgb(2 6 23) 100%);
+  }
+
+  .gradient-dark-secondary {
+    background: linear-gradient(135deg, rgb(30 41 59) 0%, rgb(15 23 42) 100%);
+  }
+
+  /* Premium background variations */
+  .bg-ultra-dark {
+    background: linear-gradient(135deg, rgb(2 6 23) 0%, rgb(15 23 42) 50%, rgb(30 41 59) 100%);
+  }
+
+  .bg-deep-slate {
+    background: linear-gradient(135deg, rgb(7 12 23) 0%, rgb(15 23 42) 100%);
+  }
+
+  /* Enhanced text colors for ultra-dark backgrounds */
+  .text-premium-light {
+    @apply text-slate-100;
+  }
+
+  .text-premium-muted {
+    @apply text-slate-300;
+  }
+
+  .text-premium-subtle {
+    @apply text-slate-400;
   }
 }
 
-/* Smooth scrolling */
+/* Smooth scrolling and enhanced interactions */
 html {
   scroll-behavior: smooth;
 }
 
-/* Loading animations */
-@keyframes pulse-green {
+/* Premium loading animations */
+@keyframes pulse-premium {
   0%, 100% {
     opacity: 1;
+    transform: scale(1);
   }
   50% {
-    opacity: 0.5;
+    opacity: 0.7;
+    transform: scale(1.02);
   }
 }
 
-.animate-pulse-green {
-  animation: pulse-green 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+.animate-pulse-premium {
+  animation: pulse-premium 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Ultra-dark mode specific animations */
+@keyframes shimmer-ultra-dark {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.shimmer-ultra-dark {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.02), transparent);
+  background-size: 200px 100%;
+  animation: shimmer-ultra-dark 2s infinite;
+}
+
+/* Enhanced scrollbar for ultra-dark theme */
+.dark ::-webkit-scrollbar {
+  width: 10px;
+}
+.dark ::-webkit-scrollbar-track {
+  background: rgb(2 6 23);
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: rgb(30 41 59);
+  border-radius: 6px;
+  border: 1px solid rgb(15 23 42);
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgb(51 65 85);
+}
+
+/* Ultra-dark mode selection */
+.dark ::selection {
+  background-color: rgb(59 130 246 / 0.4);
+  color: rgb(248 250 252);
+}
+
+/* Premium glow effects */
+.glow-blue {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.glow-emerald {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+}
+
+.glow-purple {
+  box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
 }
