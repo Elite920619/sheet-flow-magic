@@ -14,28 +14,6 @@ const LiveEventsLoadingState: React.FC = () => {
             <Skeleton className="h-4 w-48" />
           </div>
         </div>
-        
-        <div className="space-y-2">
-          <div className="text-xs text-blue-700 font-medium">Filtering Process:</div>
-          <div className="grid grid-cols-2 gap-2 text-xs">
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span>Checking bookmakers</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
-              <span>Validating team names</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-              <span>Verifying start times</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
-              <span>Removing placeholders</span>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Header Skeleton */}
