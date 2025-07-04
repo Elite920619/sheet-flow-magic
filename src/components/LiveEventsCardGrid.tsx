@@ -39,13 +39,6 @@ const LiveEventsCardGrid: React.FC<LiveEventsCardGridProps> = ({
 
   return (
     <div className="p-4">
-      <div className="mb-4 text-sm text-muted-foreground">
-        Showing {displayedEvents.length} of {filteredEventsLength} available events
-        {selectedCategory !== 'all' && ` in ${getSportLabel(selectedCategory)}`}
-        {selectedRegion !== 'all' && ` from ${regions.find(r => r.value === selectedRegion)?.label}`}
-        {' '}from {uniqueSportsLength} different sports
-      </div>
-      
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
         {displayedEvents.map((event, index) => (
           <LiveEventCard
