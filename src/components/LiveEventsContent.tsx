@@ -172,32 +172,7 @@ const LiveEventsContent = ({
             </div>
           )}
 
-          {/* Show progressive results notice when data is available */}
-          {showingProgressiveResults && (
-            <div className="p-4 mb-2">
-              <div className="bg-gradient-to-r from-blue-100 to-green-100 border border-blue-300 rounded-lg p-3">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-blue-800">
-                    ✅ Showing {displayedLiveEvents.length} verified real live events 
-                    {selectedCategory !== 'all' && ` in ${getSportLabel(selectedCategory)}`}
-                    {selectedRegion !== 'all' && ` from selected region`}
-                  </p>
-                  {isRefreshing && (
-                    <div className="flex items-center text-xs text-blue-600">
-                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600 mr-2"></div>
-                      Updating with new events...
-                    </div>
-                  )}
-                </div>
-                <p className="text-xs text-blue-600 mt-1">
-                  {isRefreshing 
-                    ? 'Adding fresh data while keeping existing events visible' 
-                    : 'Results updated continuously • Auto-refresh every 5 minutes'
-                  }
-                </p>
-              </div>
-            </div>
-          )}
+
 
           {/* Show events grid when we have events */}
           {!isLoading && filteredLiveEventsByRegion.length > 0 && (
@@ -228,49 +203,6 @@ const LiveEventsContent = ({
 
         {/* Upcoming Games Tab */}
         <TabsContent value="upcoming" className="flex-1">
-          {/* Show loading state during initial load */}
-          {isLoadingUpcoming && (
-            <div className="flex flex-col">
-              <div className="p-4 text-center">
-                <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-foreground mb-2">
-                    Loading Upcoming Games from All Sports
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    Fetching upcoming games from multiple sports and regions...
-                  </p>
-                </div>
-              </div>
-              <UpcomingEventsLoadingState />
-            </div>
-          )}
-
-          {/* Show upcoming events notice when data is available */}
-          {!isLoadingUpcoming && upcomingEvents.length > 0 && (
-            <div className="p-4 mb-2">
-              <div className="bg-gradient-to-r from-green-100 to-blue-100 border border-green-300 rounded-lg p-3">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-green-800">
-                    ✅ Showing {displayedUpcomingEvents.length} upcoming games 
-                    {selectedCategory !== 'all' && ` in ${getSportLabel(selectedCategory)}`}
-                    {selectedRegion !== 'all' && ` from selected region`}
-                  </p>
-                  {isRefreshingUpcoming && (
-                    <div className="flex items-center text-xs text-green-600">
-                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-green-600 mr-2"></div>
-                      Updating with new games...
-                    </div>
-                  )}
-                </div>
-                <p className="text-xs text-green-600 mt-1">
-                  {isRefreshingUpcoming 
-                    ? 'Adding fresh data while keeping existing games visible' 
-                    : 'Results updated continuously • Auto-refresh every 5 minutes'
-                  }
-                </p>
-              </div>
-            </div>
-          )}
 
           {/* Show upcoming events grid when we have events */}
           {!isLoadingUpcoming && filteredUpcomingEventsByRegion.length > 0 && (
