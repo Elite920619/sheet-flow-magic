@@ -35,18 +35,16 @@ const ValueBetsInputForm = ({
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
         <div>
-          <Label htmlFor="odds" className="text-slate-300 text-xs">Target Bookmaker Odds</Label>
           <Input
             id="odds"
             value={bookmakerOdds}
             onChange={(e) => onOddsChange(e.target.value)}
-            placeholder="e.g., 2.2, 1.85, 3.5"
+            placeholder="Target Bookmaker Odds"
             className="bg-slate-800/50 border-slate-700/50 text-slate-200 text-xs h-8"
           />
         </div>
         
         <div>
-          <Label htmlFor="winPercent" className="text-slate-300 text-xs">Your Estimated Win %</Label>
           <Input
             id="winPercent"
             type="number"
@@ -54,7 +52,7 @@ const ValueBetsInputForm = ({
             max="100"
             value={estimatedWinPercent}
             onChange={(e) => onWinPercentChange(e.target.value)}
-            placeholder="e.g., 65"
+            placeholder="Estimated Win %"
             className="bg-slate-800/50 border-slate-700/50 text-slate-200 text-xs h-8"
           />
         </div>
