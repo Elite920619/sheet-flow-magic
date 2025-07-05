@@ -62,15 +62,6 @@ const LiveEventsCardGrid: React.FC<LiveEventsCardGridProps> = ({
           </div>
         </div>
       )}
-
-      {/* All Events Loaded Message */}
-      {!hasMoreEvents && displayedEvents.length > 0 && (
-        <div className="flex items-center justify-center py-8">
-          <div className="text-sm text-muted-foreground">
-            All available events loaded ({displayedEvents.length} total)
-          </div>
-        </div>
-      )}
     </div>
   );
 };
