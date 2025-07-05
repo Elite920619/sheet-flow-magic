@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import CanvasBackground from '@/components/CanvasBackground';
@@ -170,14 +171,14 @@ const Settings = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background text-foreground relative">
+      <div className="h-screen bg-transparent text-foreground relative overflow-hidden">
         <CanvasBackground />
         <Header />
         
         <div className="relative z-10 flex items-center justify-center h-[calc(100vh-4rem)]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent mx-auto"></div>
-            <p className="mt-4 text-muted-foreground">Loading settings...</p>
+            <p className="mt-4 text-slate-400">Loading settings...</p>
           </div>
         </div>
       </div>
@@ -185,83 +186,83 @@ const Settings = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground relative">
+    <div className="h-screen bg-transparent text-foreground relative overflow-hidden">
       <CanvasBackground />
       <Header />
       
       <div className="relative z-10 container mx-auto px-4 py-8">
         <div className="mb-8">
           <div className="flex items-center space-x-3 mb-2">
-            <Settings2 className="h-8 w-8 text-blue-500" />
-            <h1 className="text-3xl font-bold text-foreground">Settings</h1>
+            <Settings2 className="h-8 w-8 text-blue-400" />
+            <h1 className="text-3xl font-bold text-slate-200">Settings</h1>
           </div>
-          <p className="text-muted-foreground">
+          <p className="text-slate-400">
             Manage your account settings and betting preferences
           </p>
         </div>
 
         <Tabs defaultValue="general" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6 bg-card/90 backdrop-blur-sm border border-border">
-            <TabsTrigger value="general" className="text-foreground">General</TabsTrigger>
-            <TabsTrigger value="betting" className="text-foreground">Betting</TabsTrigger>
-            <TabsTrigger value="account" className="text-foreground">Account</TabsTrigger>
-            <TabsTrigger value="security" className="text-foreground">Security</TabsTrigger>
-            <TabsTrigger value="notifications" className="text-foreground">Notifications</TabsTrigger>
-            <TabsTrigger value="appearance" className="text-foreground">Appearance</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6 bg-slate-900/50 backdrop-blur-sm border border-slate-800/50">
+            <TabsTrigger value="general" className="text-slate-300 data-[state=active]:bg-slate-800 data-[state=active]:text-slate-100">General</TabsTrigger>
+            <TabsTrigger value="betting" className="text-slate-300 data-[state=active]:bg-slate-800 data-[state=active]:text-slate-100">Betting</TabsTrigger>
+            <TabsTrigger value="account" className="text-slate-300 data-[state=active]:bg-slate-800 data-[state=active]:text-slate-100">Account</TabsTrigger>
+            <TabsTrigger value="security" className="text-slate-300 data-[state=active]:bg-slate-800 data-[state=active]:text-slate-100">Security</TabsTrigger>
+            <TabsTrigger value="notifications" className="text-slate-300 data-[state=active]:bg-slate-800 data-[state=active]:text-slate-100">Notifications</TabsTrigger>
+            <TabsTrigger value="appearance" className="text-slate-300 data-[state=active]:bg-slate-800 data-[state=active]:text-slate-100">Appearance</TabsTrigger>
           </TabsList>
 
           {/* General Settings */}
           <TabsContent value="general">
-            <Card className="bg-card/90 backdrop-blur-sm border-border shadow-sm">
+            <Card className="bg-slate-900/50 backdrop-blur-sm border-slate-800/50 shadow-sm">
               <CardHeader>
-                <CardTitle className="flex items-center text-foreground">
-                  <User className="h-5 w-5 mr-2 text-blue-500" />
+                <CardTitle className="flex items-center text-slate-200">
+                  <User className="h-5 w-5 mr-2 text-blue-400" />
                   Personal Information
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="firstName" className="text-foreground">First Name</Label>
+                    <Label htmlFor="firstName" className="text-slate-300">First Name</Label>
                     <Input
                       id="firstName"
                       value={formData.firstName}
                       onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                      className="bg-background border-border text-foreground"
+                      className="bg-slate-800/50 border-slate-700/50 text-slate-200"
                       placeholder="Enter your first name"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="lastName" className="text-foreground">Last Name</Label>
+                    <Label htmlFor="lastName" className="text-slate-300">Last Name</Label>
                     <Input
                       id="lastName"
                       value={formData.lastName}
                       onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                      className="bg-background border-border text-foreground"
+                      className="bg-slate-800/50 border-slate-700/50 text-slate-200"
                       placeholder="Enter your last name"
                     />
                   </div>
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="username" className="text-foreground">Username</Label>
+                  <Label htmlFor="username" className="text-slate-300">Username</Label>
                   <Input
                     id="username"
                     value={formData.username}
                     onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                    className="bg-background border-border text-foreground"
+                    className="bg-slate-800/50 border-slate-700/50 text-slate-200"
                     placeholder="Choose a unique username"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="country" className="text-foreground">Country</Label>
+                    <Label htmlFor="country" className="text-slate-300">Country</Label>
                     <Select value={formData.country} onValueChange={(value) => setFormData({ ...formData, country: value })}>
-                      <SelectTrigger className="bg-background border-border text-foreground">
+                      <SelectTrigger className="bg-slate-800/50 border-slate-700/50 text-slate-200">
                         <SelectValue placeholder="Select your country" />
                       </SelectTrigger>
-                      <SelectContent className="bg-card border-border">
+                      <SelectContent className="bg-slate-900 border-slate-800/50">
                         <SelectItem value="us">United States</SelectItem>
                         <SelectItem value="ca">Canada</SelectItem>
                         <SelectItem value="uk">United Kingdom</SelectItem>
@@ -271,12 +272,12 @@ const Settings = () => {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="timezone" className="text-foreground">Timezone</Label>
+                    <Label htmlFor="timezone" className="text-slate-300">Timezone</Label>
                     <Select value={formData.timezone} onValueChange={(value) => setFormData({ ...formData, timezone: value })}>
-                      <SelectTrigger className="bg-background border-border text-foreground">
+                      <SelectTrigger className="bg-slate-800/50 border-slate-700/50 text-slate-200">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-card border-border">
+                      <SelectContent className="bg-slate-900 border-slate-800/50">
                         <SelectItem value="EST">Eastern Time (EST)</SelectItem>
                         <SelectItem value="CST">Central Time (CST)</SelectItem>
                         <SelectItem value="MST">Mountain Time (MST)</SelectItem>
