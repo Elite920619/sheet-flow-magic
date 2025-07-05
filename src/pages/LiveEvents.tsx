@@ -91,7 +91,7 @@ const LiveEvents = () => {
       <CanvasBackground />
       <Header />
 
-      <div className="relative z-10 h-[calc(100vh-12rem)] flex flex-col bg-blur/80">
+      <div className="relative z-10 h-[calc(100vh-8rem)] flex flex-col bg-blur/80">
         <LiveEventsHeader
           sortedEventsLength={sortedEvents.length}
           availableMarkets={availableMarkets}
