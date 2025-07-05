@@ -1,4 +1,3 @@
-
 import React from "react";
 import Header from "@/components/Header";
 import CanvasBackground from "@/components/CanvasBackground";
@@ -88,25 +87,25 @@ const LiveEvents = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-foreground relative">
+    <div className="min-h-screen text-foreground relative" style={{ background: 'linear-gradient(135deg, rgb(2 6 23) 0%, rgb(15 23 42) 50%, rgb(30 41 59) 100%)' }}>
       <CanvasBackground />
       <Header />
 
-      <div className="relative z-10 h-[calc(100vh-4rem)] flex flex-col bg-slate-950">
+      <div className="relative z-10 h-[calc(100vh-4rem)] flex flex-col">
         <LiveEventsHeader
           sortedEventsLength={sortedEvents.length}
           availableMarkets={availableMarkets}
           uniqueSportsLength={uniqueSportsLength}
         />
         
-        <div className="flex bg-slate-950">
+        <div className="flex">
           <LiveEventsSidebar
             categoryFilters={currentCategories}
             selectedCategory={selectedCategory}
             onCategorySelect={handleCategorySelect}
           />
 
-          <div className="flex-1 max-h-[calc(100vh-8rem)] overflow-y-auto bg-slate-950">
+          <div className="flex-1 max-h-[calc(100vh-8rem)] overflow-y-auto">
             <LiveEventsContent
               isLoading={isLoading}
               isRefreshing={isRefreshing}
