@@ -64,19 +64,6 @@ const LiveEventsLoadingState: React.FC = () => {
           </div>
         ))}
       </div>
-
-      {/* Loading Text */}
-      <div className="text-center py-6">
-        <div className="animate-spin rounded-full h-6 w-6 border-4 border-blue-500 border-t-transparent mx-auto mb-3"></div>
-        <p className="text-slate-300 font-medium text-sm">Fetching and filtering live events from multiple regions...</p>
-        <p className="text-xs text-slate-400 mt-2">Applying comprehensive validation to remove placeholder data</p>
-        <div className="mt-3 max-w-md mx-auto">
-          <div className="bg-slate-800 rounded-full h-1.5">
-            <div className="bg-blue-500 h-1.5 rounded-full animate-pulse" style={{ width: '65%' }}></div>
-          </div>
-          <p className="text-xs text-slate-400 mt-2">Filtering real events with actual betting odds...</p>
-        </div>
-      </div>
     </div>
   );
 };

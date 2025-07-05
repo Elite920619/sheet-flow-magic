@@ -134,20 +134,17 @@ const AIInsights = () => {
   };
 
   return (
-    <div className="min-h-screen bg-transparent text-foreground relative">
+    <div className="max-h-screen bg-transparent text-foreground relative">
       <CanvasBackground />
       <Header />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="relative z-10 max-w-12xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-3">
             <Brain className="h-6 w-6 text-blue-400" />
             <div>
               <h1 className="text-2xl font-bold text-slate-200">AI Insights</h1>
-              <p className="text-slate-400 text-sm">
-                Real-time analysis and betting recommendations
-              </p>
             </div>
           </div>
           <div className="flex items-center space-x-3">
@@ -219,7 +216,7 @@ const AIInsights = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* AI Insights Feed */}
           <div className="lg:col-span-2">
-            <Card className="bg-slate-900/50 backdrop-blur-sm border-slate-800/50 h-full">
+            <Card className="bg-slate-900/50 backdrop-blur-sm border-slate-800/50 max-h-full">
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center justify-between text-slate-200 text-base">
                   <div className="flex items-center">
