@@ -61,9 +61,10 @@ export const useEnhancedBetTracking = () => {
       })) as EnhancedUserBet[];
     },
     enabled: !!user?.id,
-    refetchInterval: (data) => {
+    refetchInterval: (query) => {
       // Refetch every 30 seconds if there are live bets
-      const hasLiveBets = data?.some(bet => bet.is_live);
+      const betsData = query.state.data;
+      const hasLiveBets = betsData?.some(bet => bet.is_live);
       return hasLiveBets ? 30000 : false;
     }
   });
