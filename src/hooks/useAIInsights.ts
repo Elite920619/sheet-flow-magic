@@ -129,7 +129,7 @@ export const useAIInsights = () => {
         confidence: 87,
         expectedValue: "+$45",
         timeLeft: "2h 30m",
-        icon: <Target className="h-4 w-4" />,
+        icon: React.createElement(Target, { className: "h-4 w-4" }),
         match: "Lakers vs Warriors",
         league: "NBA",
         odds: "O 225.5 (-110)",
@@ -143,7 +143,7 @@ export const useAIInsights = () => {
         description: "You've been favoring home teams 73% of the time this week",
         confidence: 92,
         recommendation: "Consider analyzing away team value",
-        icon: <AlertTriangle className="h-4 w-4" />,
+        icon: React.createElement(AlertTriangle, { className: "h-4 w-4" }),
       },
       {
         id: '3',
@@ -153,7 +153,7 @@ export const useAIInsights = () => {
         description: "Your NBA predictions are outperforming the market by 12%",
         confidence: 94,
         streak: "7 wins",
-        icon: <CheckCircle className="h-4 w-4" />,
+        icon: React.createElement(CheckCircle, { className: "h-4 w-4" }),
       },
       {
         id: '4',
@@ -164,7 +164,7 @@ export const useAIInsights = () => {
         confidence: 96,
         expectedValue: "+$78",
         timeLeft: "45m",
-        icon: <Zap className="h-4 w-4" />,
+        icon: React.createElement(Zap, { className: "h-4 w-4" }),
         match: "Chiefs vs Ravens",
         league: "NFL",
         odds: "Chiefs -7.5",
@@ -182,15 +182,15 @@ export const useAIInsights = () => {
   const getInsightIcon = (type: string) => {
     switch (type) {
       case 'opportunity':
-        return <Target className="h-4 w-4" />;
+        return React.createElement(Target, { className: "h-4 w-4" });
       case 'warning':
-        return <AlertTriangle className="h-4 w-4" />;
+        return React.createElement(AlertTriangle, { className: "h-4 w-4" });
       case 'success':
-        return <CheckCircle className="h-4 w-4" />;
+        return React.createElement(CheckCircle, { className: "h-4 w-4" });
       case 'alert':
-        return <Zap className="h-4 w-4" />;
+        return React.createElement(Zap, { className: "h-4 w-4" });
       default:
-        return <Target className="h-4 w-4" />;
+        return React.createElement(Target, { className: "h-4 w-4" });
     }
   };
 
