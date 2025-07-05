@@ -35,76 +35,47 @@ const LiveEvents = () => {
   } = useLiveEventsState();
 
   const { liveEvents, isLoading, isRefreshing, refreshEvents } = useLiveEvents();
-  const { upcomingEvents, isLoading: isLoadingUpcoming, isRefreshing: isRefreshingUpcoming, refreshEvents: refreshUpcomingEvents } = useUpcomingEvents();
+  const { upcomingEvents } = useUpcomingEvents();
   const { credits, deposit, isDepositing, checkSufficientFunds } = useEnhancedCredits();
   
-  // Get categories for the current active tab's events with proper filtering
+  // Get categories for live events
+  const { sportsCategories: liveSportsCategories, getSportLabel } = useSportCategories(liveEvents);
+  
+  // Get categories for upcoming events
+  const { sportsCategories: upcomingSportsCategories } = useSportCategories(upcomingEvents);
+
+  // Use the correct categories based on active tab
+  const currentCategories = activeTab === 'live' ? liveSportsCategories : upcomingSportsCategories;
+
+  // Filter and sort events based on active tab
   const currentEvents = activeTab === 'live' ? liveEvents : upcomingEvents;
-  const { sportsCategories, getSportLabel } = useSportCategories(currentEvents);
-
-  // Enhanced filtering and sorting for events based on active tab and selected category
   const sortedEvents = currentEvents
-    .filter((event) => {
-      // First ensure we're showing the right type of events
-      if (activeTab === 'upcoming') {
-        // For upcoming tab, only show truly upcoming events
-        if (event.isLive || event.timeLeft === 'LIVE' || 
-            event.timeLeft.includes('Q') || event.timeLeft.includes('H') ||
-            event.timeLeft.includes("'") || event.timeLeft.includes('P')) {
-          console.log(`🚫 Filtering out live event from upcoming tab: ${event.homeTeam || event.home_team} vs ${event.awayTeam || event.away_team}`);
-          return false;
-        }
-      } else {
-        // For live tab, only show live events
-        if (!event.isLive && event.timeLeft !== 'LIVE' && 
-            !event.timeLeft.includes('Q') && !event.timeLeft.includes('H') &&
-            !event.timeLeft.includes("'") && !event.timeLeft.includes('P')) {
-          return false;
-        }
-      }
-
-      // Then filter by selected category
-      if (selectedCategory === "all") return true;
-      
-      const eventSport = event.sport?.toLowerCase();
-      const selectedSport = selectedCategory?.toLowerCase();
-      
-      console.log(`🔍 Filtering ${activeTab} event: ${event.homeTeam || event.home_team} vs ${event.awayTeam || event.away_team}, sport: "${eventSport}", selected: "${selectedSport}"`);
-      
-      return eventSport === selectedSport;
-    })
+    .filter((event) => selectedCategory === "all" || event.sport === selectedCategory)
     .sort((a, b) => {
-      if (activeTab === 'upcoming') {
-        // Sort upcoming events by commence time
-        const timeA = new Date(a.commenceTime || a.commence_time || 0).getTime();
-        const timeB = new Date(b.commenceTime || b.commence_time || 0).getTime();
-        return timeA - timeB;
-      } else {
-        // Sort live events by time left
-        const timeA = a.timeLeft?.match(/\d+/)?.[0] || "0";
-        const timeB = b.timeLeft?.match(/\d+/)?.[0] || "0";
-        const timeDiff = parseInt(timeA) - parseInt(timeB);
-        if (timeDiff !== 0) return timeDiff;
-        return (a.league || "").localeCompare(b.league || "");
-      }
+      const timeA = a.timeLeft?.match(/\d+/)?.[0] || "0";
+      const timeB = b.timeLeft?.match(/\d+/)?.[0] || "0";
+      const timeDiff = parseInt(timeA) - parseInt(timeB);
+      if (timeDiff !== 0) return timeDiff;
+      return (a.league || "").localeCompare(b.league || "");
     });
 
   const availableMarkets = sortedEvents.filter((e) => e.betStatus === "Available").length;
   const uniqueSportsLength = [...new Set(currentEvents.map(event => event.sport))].length;
 
   const handleTabChange = (tab: 'live' | 'upcoming') => {
-    console.log(`🔄 Switching to ${tab} tab`);
     setActiveTab(tab);
     // Reset category to 'all' when switching tabs to ensure valid selection
     handleCategorySelect('all');
   };
 
   const handlePlaceBet = (betData: any) => {
+    // Check if this is an insufficient funds case
     if (betData.insufficientFunds) {
       handleInsufficientFunds(betData.stake || 50);
       return;
     }
 
+    // Check sufficient funds with the actual stake amount
     const stakeAmount = betData.stake || 50;
     if (!checkSufficientFunds(stakeAmount)) {
       handleInsufficientFunds(stakeAmount);
@@ -127,26 +98,26 @@ const LiveEvents = () => {
           uniqueSportsLength={uniqueSportsLength}
         />
         
-        <div className="flex flex-1">
+        <div className="flex">
           <LiveEventsSidebar
-            categoryFilters={sportsCategories}
+            categoryFilters={currentCategories}
             selectedCategory={selectedCategory}
             onCategorySelect={handleCategorySelect}
           />
 
           <div className="flex-1 max-h-[calc(100vh-12rem)] overflow-y-auto">
             <LiveEventsContent
-              isLoading={activeTab === 'live' ? isLoading : isLoadingUpcoming}
-              isRefreshing={activeTab === 'live' ? isRefreshing : isRefreshingUpcoming}
+              isLoading={isLoading}
+              isRefreshing={isRefreshing}
               sortedEvents={sortedEvents}
               selectedCategory={selectedCategory}
               getSportLabel={getSportLabel}
               uniqueSportsLength={uniqueSportsLength}
               onEventClick={handleEventClick}
               onPlaceBet={handlePlaceBet}
-              onRefresh={activeTab === 'live' ? refreshEvents : refreshUpcomingEvents}
+              onRefresh={refreshEvents}
               onCategoryChange={handleCategorySelect}
-              upcomingSportsCategories={sportsCategories}
+              upcomingSportsCategories={upcomingSportsCategories}
               activeTab={activeTab}
               onTabChange={handleTabChange}
             />

@@ -1,7 +1,6 @@
 import { oddsApiClient } from './odds/apiClient';
 import { LiveEventsService } from './odds/liveEventsService';
 import { DataValidator } from './odds/dataValidator';
-import { enhancedOddsService } from './odds/enhancedOddsService';
 
 export interface ProcessedGameOdds {
   id: string;
@@ -145,8 +144,8 @@ class OddsService {
 
   async fetchUpcomingOdds(): Promise<any[]> {
     try {
-      console.log('🚀 GET->DETECT->SHOW: Fetching upcoming odds with enhanced validation...');
-      return await enhancedOddsService.fetchUpcomingEvents();
+      console.log('Fetching upcoming odds...');
+      return await oddsApiClient.fetchUpcomingOdds();
     } catch (error) {
       console.error('Error fetching upcoming odds:', error);
       return [];
@@ -154,18 +153,18 @@ class OddsService {
   }
 
   async fetchLiveEventsByRegion(region: string): Promise<any[]> {
-    console.log(`🌍 GET->DETECT->SHOW: Fetching live events for region: ${region.toUpperCase()}`);
-    return enhancedOddsService.fetchLiveEventsByRegion(region);
+    console.log(`🌍 Fetching comprehensive live events for region: ${region.toUpperCase()}`);
+    return this.liveEventsService.fetchLiveEventsByRegion(region);
   }
 
   async fetchLiveEvents(): Promise<any[]> {
-    console.log('🚀 GET->DETECT->SHOW: Starting comprehensive live events fetch...');
-    return enhancedOddsService.fetchLiveEvents();
+    console.log('🚀 Starting comprehensive multi-region live events fetch...');
+    return this.liveEventsService.fetchLiveEvents();
   }
 
   async fetchLiveEventsProgressive(onRegionComplete: (events: any[]) => void): Promise<any[]> {
-    console.log('🚀 GET->DETECT->SHOW: Progressive live events fetch...');
-    return enhancedOddsService.fetchLiveEventsProgressive(onRegionComplete);
+    console.log('🚀 Starting progressive multi-region live events fetch...');
+    return this.liveEventsService.fetchLiveEvents(onRegionComplete);
   }
 
   private processGameOdds(game: any, region: string = 'us'): ProcessedGameOdds {

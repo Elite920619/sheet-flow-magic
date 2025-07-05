@@ -18,14 +18,14 @@ interface ValueBetsSidebarProps {
 
 const ValueBetsSidebar = ({ sportsCategories, selectedCategory, onCategorySelect }: ValueBetsSidebarProps) => {
   return (
-    <div className="w-32 bg-transparent border-r border-slate-800/50 shadow-2xl shadow-black/60 backdrop-blur-sm h-[calc(100vh-12rem)]">
+    <div className="w-32 bg-transparent border-r border-slate-800/50 shadow-2xl shadow-black/60 backdrop-blur-sm">
       <ScrollArea className="h-full" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-        <div className="p-1.5 space-y-0.5 h-full flex flex-col" style={{ scrollbarWidth: 'none' }}>
+        <div className="p-1.5 space-y-0.5" style={{ scrollbarWidth: 'none' }}>
           {sportsCategories.map((category) => (
             <button
               key={category.value}
               onClick={() => onCategorySelect(category.value)}
-              className={`w-full text-left p-1.5 rounded-md transition-all duration-300 flex items-center justify-between text-xs group flex-shrink-0 ${
+              className={`w-full text-left p-1.5 rounded-md transition-all duration-300 flex items-center justify-between text-xs group ${
                 selectedCategory === category.value
                   ? "bg-gradient-to-r from-blue-600/90 to-indigo-600/90 text-white shadow-lg shadow-blue-600/30 border border-blue-500/50"
                   : "hover:bg-slate-900/50 text-slate-300 hover:text-white hover:shadow-md hover:shadow-black/40 border border-slate-800/30 hover:border-slate-700/50"
@@ -50,8 +50,6 @@ const ValueBetsSidebar = ({ sportsCategories, selectedCategory, onCategorySelect
               </Badge>
             </button>
           ))}
-          {/* Spacer to stretch sidebar to full height and push content to bottom */}
-          <div className="flex-1 min-h-0" />
         </div>
       </ScrollArea>
     </div>

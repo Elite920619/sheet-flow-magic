@@ -1,43 +1,44 @@
 
 import React from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent } from '@/components/ui/card';
 
 const ValueBetsSkeletonGrid = () => {
   return (
-    <div className="p-3 bg-transparent">
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3">
-        {Array.from({ length: 12 }).map((_, index) => (
-          <div
-            key={index}
-            className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-lg p-4 space-y-3"
-          >
-            {/* Event header */}
-            <div className="flex items-center justify-between">
-              <Skeleton className="h-4 w-20 bg-slate-800/50" />
-              <Skeleton className="h-3 w-12 bg-slate-800/50" />
-            </div>
-            
-            {/* Teams */}
-            <div className="space-y-2">
-              <Skeleton className="h-5 w-3/4 bg-slate-800/50" />
-              <Skeleton className="h-5 w-2/3 bg-slate-800/50" />
-            </div>
-            
-            {/* Odds and value */}
-            <div className="flex items-center justify-between pt-2">
-              <div className="space-y-1">
-                <Skeleton className="h-4 w-16 bg-slate-800/50" />
-                <Skeleton className="h-3 w-12 bg-slate-800/50" />
+    <div className="h-full p-3">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 auto-rows-max">
+        {[...Array(6)].map((_, index) => (
+          <Card key={index} className="bg-slate-900/50 backdrop-blur-sm border-slate-800/50 shadow-sm">
+            <CardContent className="p-3">
+              <div className="flex items-center justify-between mb-2">
+                <Skeleton className="h-3 w-12 bg-slate-700" />
+                <Skeleton className="h-5 w-16 bg-slate-700" />
               </div>
-              <div className="text-right space-y-1">
-                <Skeleton className="h-5 w-14 bg-slate-800/50" />
-                <Skeleton className="h-3 w-10 bg-slate-800/50" />
+              
+              <Skeleton className="h-4 w-3/4 mb-1 bg-slate-700" />
+              <Skeleton className="h-3 w-1/2 mb-3 bg-slate-700" />
+              
+              <div className="grid grid-cols-3 gap-2 mb-3">
+                <div className="text-center">
+                  <Skeleton className="h-3 w-8 mx-auto mb-1 bg-slate-700" />
+                  <Skeleton className="h-2 w-12 mx-auto bg-slate-700" />
+                </div>
+                <div className="text-center">
+                  <Skeleton className="h-3 w-8 mx-auto mb-1 bg-slate-700" />
+                  <Skeleton className="h-2 w-12 mx-auto bg-slate-700" />
+                </div>
+                <div className="text-center">
+                  <Skeleton className="h-3 w-8 mx-auto mb-1 bg-slate-700" />
+                  <Skeleton className="h-2 w-12 mx-auto bg-slate-700" />
+                </div>
               </div>
-            </div>
-            
-            {/* Action button */}
-            <Skeleton className="h-8 w-full bg-slate-800/50 rounded-md" />
-          </div>
+              
+              <div className="flex items-center justify-between">
+                <Skeleton className="h-3 w-16 bg-slate-700" />
+                <Skeleton className="h-6 w-20 bg-slate-700" />
+              </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
     </div>
