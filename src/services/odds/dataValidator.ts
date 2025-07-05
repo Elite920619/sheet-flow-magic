@@ -199,4 +199,36 @@ export class DataValidator {
     
     return validEvents;
   }
+
+  // Validate upcoming events specifically
+  static validateUpcomingEvents(events: any[]): any[] {
+    return events.filter(event => {
+      // Basic validation
+      if (!this.isValidEvent(event)) return false;
+
+      // Additional upcoming-specific validation
+      if (!event.homeTeam || !event.awayTeam) {
+        console.log(`❌ Missing team names in upcoming event: ${event.id}`);
+        return false;
+      }
+
+      // Check for placeholder team names in our format
+      if (!this.hasValidTeamNames(event.homeTeam, event.awayTeam)) {
+        return false;
+      }
+
+      // Check if odds look realistic
+      if (event.moneylineHome && event.moneylineAway) {
+        const homeOdds = parseInt(event.moneylineHome.replace(/[+\-]/g, ''));
+        const awayOdds = parseInt(event.moneylineAway.replace(/[+\-]/g, ''));
+        
+        if (homeOdds < 50 || awayOdds < 50 || homeOdds > 5000 || awayOdds > 5000) {
+          console.log(`❌ Unrealistic odds detected: ${event.homeTeam} vs ${event.awayTeam}`);
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }
 }

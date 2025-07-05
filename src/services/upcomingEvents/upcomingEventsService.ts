@@ -2,6 +2,7 @@
 import { oddsApiClient } from '@/services/odds/apiClient';
 import { UpcomingEventsMockService } from './upcomingEventsMockService';
 import { UpcomingEventsProcessor } from './upcomingEventsProcessor';
+import { DataValidator } from '@/services/odds/dataValidator';
 
 export class UpcomingEventsService {
   private mockService = new UpcomingEventsMockService();
@@ -32,22 +33,28 @@ export class UpcomingEventsService {
           const games = await oddsApiClient.fetchOddsFromApi(sport, 'us');
           
           if (games && games.length > 0) {
+            // Validate real data before processing
+            const validGames = DataValidator.filterValidEvents(games);
+            
             const now = new Date();
-            const upcomingGames = games.filter(game => {
+            const upcomingGames = validGames.filter(game => {
               const gameTime = new Date(game.commence_time);
               const hoursDiff = (gameTime.getTime() - now.getTime()) / (1000 * 60 * 60);
               return hoursDiff > 1 && hoursDiff < 168;
             });
 
             if (upcomingGames.length > 0) {
-              console.log(`✅ Found ${upcomingGames.length} real upcoming games for ${sport}`);
+              console.log(`✅ Found ${upcomingGames.length} valid upcoming games for ${sport}`);
               realEventsFound = true;
               
               const formattedGames = upcomingGames.map(game => 
                 this.processor.formatRealGame(game, sport)
               );
 
-              formattedGames.forEach(game => {
+              // Validate formatted games
+              const validFormattedGames = DataValidator.validateUpcomingEvents(formattedGames);
+              
+              validFormattedGames.forEach(game => {
                 accumulatedEvents.set(game.id, game);
               });
             }
@@ -59,9 +66,11 @@ export class UpcomingEventsService {
         }
       }
 
-      // Always supplement with comprehensive mock data to ensure variety
+      // Always supplement with validated mock data
       const mockEvents = this.mockService.generateComprehensiveUpcomingEvents();
-      mockEvents.forEach(event => {
+      const validMockEvents = DataValidator.validateUpcomingEvents(mockEvents);
+      
+      validMockEvents.forEach(event => {
         // Only add if we don't have real data or to supplement variety
         if (!realEventsFound || Math.random() > 0.3) {
           accumulatedEvents.set(event.id, event);
@@ -69,7 +78,7 @@ export class UpcomingEventsService {
       });
 
       const finalEvents = Array.from(accumulatedEvents.values());
-      console.log(`✅ Upcoming events fetch complete: ${finalEvents.length} total events`);
+      console.log(`✅ Upcoming events fetch complete: ${finalEvents.length} validated events`);
 
       return finalEvents;
 
@@ -78,7 +87,8 @@ export class UpcomingEventsService {
       
       if (!isManualRefresh || existingEvents.length === 0) {
         const fallbackEvents = this.mockService.generateComprehensiveUpcomingEvents();
-        return fallbackEvents;
+        const validFallbackEvents = DataValidator.validateUpcomingEvents(fallbackEvents);
+        return validFallbackEvents;
       }
       
       return existingEvents;

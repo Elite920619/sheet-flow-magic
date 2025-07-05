@@ -36,7 +36,7 @@ const LiveEvents = () => {
   } = useLiveEventsState();
 
   const { liveEvents, isLoading, isRefreshing, refreshEvents } = useLiveEvents();
-  const { upcomingEvents } = useUpcomingEvents();
+  const { upcomingEvents, isLoading: isLoadingUpcoming, isRefreshing: isRefreshingUpcoming, refreshEvents: refreshUpcomingEvents } = useUpcomingEvents();
   const { credits, deposit, isDepositing, checkSufficientFunds } = useEnhancedCredits();
   
   // Get categories for the current active tab's events
@@ -45,7 +45,17 @@ const LiveEvents = () => {
 
   // Filter and sort events based on active tab and selected category
   const sortedEvents = currentEvents
-    .filter((event) => selectedCategory === "all" || event.sport === selectedCategory)
+    .filter((event) => {
+      if (selectedCategory === "all") return true;
+      
+      // Ensure we're comparing the same format
+      const eventSport = event.sport?.toLowerCase();
+      const selectedSport = selectedCategory?.toLowerCase();
+      
+      console.log(`🔍 Filtering event: ${event.homeTeam || event.home_team} vs ${event.awayTeam || event.away_team}, sport: "${eventSport}", selected: "${selectedSport}"`);
+      
+      return eventSport === selectedSport;
+    })
     .sort((a, b) => {
       const timeA = a.timeLeft?.match(/\d+/)?.[0] || "0";
       const timeB = b.timeLeft?.match(/\d+/)?.[0] || "0";
@@ -58,6 +68,7 @@ const LiveEvents = () => {
   const uniqueSportsLength = [...new Set(currentEvents.map(event => event.sport))].length;
 
   const handleTabChange = (tab: 'live' | 'upcoming') => {
+    console.log(`🔄 Switching to ${tab} tab`);
     setActiveTab(tab);
     // Reset category to 'all' when switching tabs to ensure valid selection
     handleCategorySelect('all');
@@ -91,7 +102,7 @@ const LiveEvents = () => {
           uniqueSportsLength={uniqueSportsLength}
         />
         
-        <div className="flex">
+        <div className="flex flex-1">
           <LiveEventsSidebar
             categoryFilters={sportsCategories}
             selectedCategory={selectedCategory}
@@ -100,15 +111,15 @@ const LiveEvents = () => {
 
           <div className="flex-1 max-h-[calc(100vh-12rem)] overflow-y-auto">
             <LiveEventsContent
-              isLoading={isLoading}
-              isRefreshing={isRefreshing}
+              isLoading={activeTab === 'live' ? isLoading : isLoadingUpcoming}
+              isRefreshing={activeTab === 'live' ? isRefreshing : isRefreshingUpcoming}
               sortedEvents={sortedEvents}
               selectedCategory={selectedCategory}
               getSportLabel={getSportLabel}
               uniqueSportsLength={uniqueSportsLength}
               onEventClick={handleEventClick}
               onPlaceBet={handlePlaceBet}
-              onRefresh={refreshEvents}
+              onRefresh={activeTab === 'live' ? refreshEvents : refreshUpcomingEvents}
               onCategoryChange={handleCategorySelect}
               upcomingSportsCategories={sportsCategories}
               activeTab={activeTab}
