@@ -54,7 +54,10 @@ export const useEnhancedBetTracking = () => {
       return data.map(bet => ({
         ...bet,
         market_type: bet.bet_type?.includes('live') ? 'live' : 'pre_match',
-        is_live: bet.status === 'pending' || bet.status === 'in_progress'
+        is_live: bet.status === 'pending' || bet.status === 'in_progress',
+        // Calculate actual_payout based on status since it's not in the database
+        actual_payout: bet.status === 'won' ? bet.potential_payout : 
+                      bet.status === 'lost' ? 0 : undefined
       })) as EnhancedUserBet[];
     },
     enabled: !!user?.id,
@@ -76,10 +79,6 @@ export const useEnhancedBetTracking = () => {
         status,
         settled_at: status !== 'pending' && status !== 'in_progress' ? new Date().toISOString() : null
       };
-
-      if (actualPayout !== undefined) {
-        updateData.actual_payout = actualPayout;
-      }
 
       const { data, error } = await supabase
         .from('user_bets')
@@ -116,7 +115,6 @@ export const useEnhancedBetTracking = () => {
         .from('user_bets')
         .update({
           status: 'cashed_out',
-          actual_payout: cashOutValue,
           settled_at: new Date().toISOString()
         })
         .eq('id', betId)
@@ -131,7 +129,7 @@ export const useEnhancedBetTracking = () => {
       queryClient.invalidateQueries({ queryKey: ['enhanced_user_bets'] });
       toast({
         title: "Bet Cashed Out",
-        description: `Successfully cashed out for $${data.actual_payout}`,
+        description: `Successfully cashed out bet`,
       });
     }
   });
@@ -145,7 +143,7 @@ export const useEnhancedBetTracking = () => {
     const liveBets = bets.filter(bet => bet.is_live);
 
     const totalStaked = bets.reduce((sum, bet) => sum + bet.stake, 0);
-    const totalWinnings = wonBets.reduce((sum, bet) => sum + (bet.actual_payout || bet.potential_payout), 0);
+    const totalWinnings = wonBets.reduce((sum, bet) => sum + bet.potential_payout, 0);
     const totalProfit = totalWinnings - bets.filter(bet => bet.status !== 'pending').reduce((sum, bet) => sum + bet.stake, 0);
     const winRate = settledBets.length > 0 ? (wonBets.length / settledBets.length) * 100 : 0;
 
