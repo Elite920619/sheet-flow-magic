@@ -1,4 +1,3 @@
-
 import React from "react";
 import Header from "@/components/Header";
 import CanvasBackground from "@/components/CanvasBackground";
@@ -39,29 +38,55 @@ const LiveEvents = () => {
   const { upcomingEvents, isLoading: isLoadingUpcoming, isRefreshing: isRefreshingUpcoming, refreshEvents: refreshUpcomingEvents } = useUpcomingEvents();
   const { credits, deposit, isDepositing, checkSufficientFunds } = useEnhancedCredits();
   
-  // Get categories for the current active tab's events
+  // Get categories for the current active tab's events with proper filtering
   const currentEvents = activeTab === 'live' ? liveEvents : upcomingEvents;
   const { sportsCategories, getSportLabel } = useSportCategories(currentEvents);
 
-  // Filter and sort events based on active tab and selected category
+  // Enhanced filtering and sorting for events based on active tab and selected category
   const sortedEvents = currentEvents
     .filter((event) => {
+      // First ensure we're showing the right type of events
+      if (activeTab === 'upcoming') {
+        // For upcoming tab, only show truly upcoming events
+        if (event.isLive || event.timeLeft === 'LIVE' || 
+            event.timeLeft.includes('Q') || event.timeLeft.includes('H') ||
+            event.timeLeft.includes("'") || event.timeLeft.includes('P')) {
+          console.log(`🚫 Filtering out live event from upcoming tab: ${event.homeTeam || event.home_team} vs ${event.awayTeam || event.away_team}`);
+          return false;
+        }
+      } else {
+        // For live tab, only show live events
+        if (!event.isLive && event.timeLeft !== 'LIVE' && 
+            !event.timeLeft.includes('Q') && !event.timeLeft.includes('H') &&
+            !event.timeLeft.includes("'") && !event.timeLeft.includes('P')) {
+          return false;
+        }
+      }
+
+      // Then filter by selected category
       if (selectedCategory === "all") return true;
       
-      // Ensure we're comparing the same format
       const eventSport = event.sport?.toLowerCase();
       const selectedSport = selectedCategory?.toLowerCase();
       
-      console.log(`🔍 Filtering event: ${event.homeTeam || event.home_team} vs ${event.awayTeam || event.away_team}, sport: "${eventSport}", selected: "${selectedSport}"`);
+      console.log(`🔍 Filtering ${activeTab} event: ${event.homeTeam || event.home_team} vs ${event.awayTeam || event.away_team}, sport: "${eventSport}", selected: "${selectedSport}"`);
       
       return eventSport === selectedSport;
     })
     .sort((a, b) => {
-      const timeA = a.timeLeft?.match(/\d+/)?.[0] || "0";
-      const timeB = b.timeLeft?.match(/\d+/)?.[0] || "0";
-      const timeDiff = parseInt(timeA) - parseInt(timeB);
-      if (timeDiff !== 0) return timeDiff;
-      return (a.league || "").localeCompare(b.league || "");
+      if (activeTab === 'upcoming') {
+        // Sort upcoming events by commence time
+        const timeA = new Date(a.commenceTime || a.commence_time || 0).getTime();
+        const timeB = new Date(b.commenceTime || b.commence_time || 0).getTime();
+        return timeA - timeB;
+      } else {
+        // Sort live events by time left
+        const timeA = a.timeLeft?.match(/\d+/)?.[0] || "0";
+        const timeB = b.timeLeft?.match(/\d+/)?.[0] || "0";
+        const timeDiff = parseInt(timeA) - parseInt(timeB);
+        if (timeDiff !== 0) return timeDiff;
+        return (a.league || "").localeCompare(b.league || "");
+      }
     });
 
   const availableMarkets = sortedEvents.filter((e) => e.betStatus === "Available").length;

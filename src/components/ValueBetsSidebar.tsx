@@ -18,9 +18,9 @@ interface ValueBetsSidebarProps {
 
 const ValueBetsSidebar = ({ sportsCategories, selectedCategory, onCategorySelect }: ValueBetsSidebarProps) => {
   return (
-    <div className="w-32 bg-transparent border-r border-slate-800/50 shadow-2xl shadow-black/60 backdrop-blur-sm h-full">
+    <div className="w-32 bg-transparent border-r border-slate-800/50 shadow-2xl shadow-black/60 backdrop-blur-sm h-[calc(100vh-12rem)]">
       <ScrollArea className="h-full" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-        <div className="p-1.5 space-y-0.5 min-h-full flex flex-col" style={{ scrollbarWidth: 'none' }}>
+        <div className="p-1.5 space-y-0.5 h-full flex flex-col" style={{ scrollbarWidth: 'none' }}>
           {sportsCategories.map((category) => (
             <button
               key={category.value}
@@ -50,8 +50,8 @@ const ValueBetsSidebar = ({ sportsCategories, selectedCategory, onCategorySelect
               </Badge>
             </button>
           ))}
-          {/* Spacer to stretch sidebar to full height */}
-          <div className="flex-1" />
+          {/* Spacer to stretch sidebar to full height and push content to bottom */}
+          <div className="flex-1 min-h-0" />
         </div>
       </ScrollArea>
     </div>
