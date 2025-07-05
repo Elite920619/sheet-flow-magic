@@ -1,14 +1,12 @@
 
 import { useState, useEffect } from 'react';
-import { UpcomingEventsService } from '@/services/upcomingEvents/upcomingEventsService';
+import { enhancedUpcomingEventsService } from '@/services/upcomingEvents/enhancedUpcomingEventsService';
 
 export const useUpcomingEvents = () => {
   const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
-
-  const upcomingEventsService = new UpcomingEventsService();
 
   const fetchUpcomingEvents = async (isManualRefresh: boolean = false) => {
     if (isManualRefresh) {
@@ -19,7 +17,8 @@ export const useUpcomingEvents = () => {
     }
 
     try {
-      const events = await upcomingEventsService.fetchUpcomingEvents(
+      console.log('🚀 GET->DETECT->SHOW: Fetching comprehensive upcoming events...');
+      const events = await enhancedUpcomingEventsService.fetchUpcomingEventsComprehensive(
         isManualRefresh, 
         upcomingEvents
       );

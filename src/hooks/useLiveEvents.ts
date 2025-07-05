@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { oddsService } from '@/services/oddsService';
+import { enhancedOddsService } from '@/services/odds/enhancedOddsService';
 import { useCachedLiveEvents } from './useCachedLiveEvents';
 import { MockDataProvider } from '@/services/odds/mockDataProvider';
 
@@ -42,7 +42,7 @@ export const useLiveEvents = (region: string = 'all', eventType: 'live' | 'upcom
     }
     
     try {
-      console.log(`🚀 Starting parallel ${eventType} events fetch with Get->Detect->Show...`);
+      console.log(`🚀 GET->DETECT->SHOW: Starting comprehensive ${eventType} events fetch...`);
       
       const accumulatedEvents = new Map<string, any>();
       
@@ -68,7 +68,7 @@ export const useLiveEvents = (region: string = 'all', eventType: 'live' | 'upcom
           }
         });
         
-        // Add new events to accumulated map (this will update existing ones or add new ones)
+        // Add new events to accumulated map
         filteredEvents.forEach(event => {
           accumulatedEvents.set(event.id, {
             ...event,
@@ -89,9 +89,16 @@ export const useLiveEvents = (region: string = 'all', eventType: 'live' | 'upcom
       let events;
       
       if (region === 'all') {
-        events = await oddsService.fetchLiveEventsProgressive(onRegionComplete);
+        if (eventType === 'live') {
+          events = await enhancedOddsService.fetchLiveEventsProgressive(onRegionComplete);
+        } else {
+          events = await enhancedOddsService.fetchUpcomingEvents();
+        }
       } else {
-        events = await oddsService.fetchLiveEventsByRegion(region);
+        events = await enhancedOddsService.fetchEventsByFilters({
+          type: eventType,
+          region: region
+        });
         
         // Apply same filtering for single region
         const filteredEvents = events.filter(event => {
@@ -113,10 +120,10 @@ export const useLiveEvents = (region: string = 'all', eventType: 'live' | 'upcom
         setLiveEvents(Array.from(accumulatedEvents.values()));
       }
       
-      console.log(`✅ Parallel ${eventType} events fetch complete: ${events?.length || 0} total events`);
+      console.log(`✅ SHOW: Comprehensive ${eventType} events fetch complete: ${events?.length || 0} total events`);
       
     } catch (error) {
-      console.error(`💥 Error in parallel ${eventType} event fetch:`, error);
+      console.error(`💥 Error in comprehensive ${eventType} event fetch:`, error);
       
       // Only generate fallback if we don't have existing data
       if (!isManualRefresh || liveEvents.length === 0) {
@@ -152,10 +159,10 @@ export const useLiveEvents = (region: string = 'all', eventType: 'live' | 'upcom
     }
   };
 
-  // Initial load with parallel processing
+  // Initial load with comprehensive processing
   useEffect(() => {
     if (!initialLoadComplete) {
-      console.log('🎬 Starting initial parallel live events load...');
+      console.log('🎬 Starting initial comprehensive live events load...');
       fetchParallelEvents();
       setInitialLoadComplete(true);
     }
@@ -166,9 +173,9 @@ export const useLiveEvents = (region: string = 'all', eventType: 'live' | 'upcom
     if (!initialLoadComplete) return;
     
     const interval = setInterval(() => {
-      console.log('🔄 Scheduled 5-minute parallel refresh...');
+      console.log('🔄 Scheduled 5-minute comprehensive refresh...');
       fetchParallelEvents(true);
-    }, 300000); // 5 minutes (300,000 milliseconds)
+    }, 300000); // 5 minutes
     
     return () => clearInterval(interval);
   }, [initialLoadComplete, eventType]);
