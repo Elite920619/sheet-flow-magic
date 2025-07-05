@@ -21,16 +21,91 @@ import {
   RefreshCw,
   Eye,
 } from "lucide-react";
-import { useAIInsights } from "@/hooks/useAIInsights";
 
 const AIInsights = () => {
-  const { insights, isLoading, refreshInsights, statistics } = useAIInsights();
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
 
   const handleRefreshInsights = async () => {
-    await refreshInsights();
+    setIsAnalyzing(true);
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    setIsAnalyzing(false);
     setLastUpdated(new Date());
   };
+
+  const aiInsights = [
+    {
+      id: 1,
+      type: "opportunity",
+      priority: "high",
+      title: "NBA Over/Under Value Detected",
+      description: "Lakers vs Warriors total points showing 8.2% edge over market odds",
+      confidence: 87,
+      expectedValue: "+$45",
+      timeLeft: "2h 30m",
+      icon: <Target className="h-4 w-4" />,
+    },
+    {
+      id: 2,
+      type: "warning",
+      priority: "medium",
+      title: "Betting Pattern Alert",
+      description: "You've been favoring home teams 73% of the time this week",
+      confidence: 92,
+      recommendation: "Consider analyzing away team value",
+      icon: <AlertTriangle className="h-4 w-4" />,
+    },
+    {
+      id: 3,
+      type: "success",
+      priority: "low",
+      title: "Model Performance Update",
+      description: "Your NBA predictions are outperforming the market by 12%",
+      confidence: 94,
+      streak: "7 wins",
+      icon: <CheckCircle className="h-4 w-4" />,
+    },
+    {
+      id: 4,
+      type: "opportunity",
+      priority: "high",
+      title: "Live Arbitrage Opportunity",
+      description: "NFL spread arbitrage detected across 3 sportsbooks",
+      confidence: 96,
+      expectedValue: "+$78",
+      timeLeft: "45m",
+      icon: <Zap className="h-4 w-4" />,
+    },
+  ];
+
+  const modelPerformance = [
+    { sport: "NBA", accuracy: 78, profit: 1240, trend: "up" },
+    { sport: "NFL", accuracy: 71, profit: 980, trend: "up" },
+    { sport: "MLB", accuracy: 69, profit: 650, trend: "down" },
+    { sport: "NHL", accuracy: 74, profit: 820, trend: "up" },
+  ];
+
+  const marketTrends = [
+    {
+      title: "Sharp Money Movement",
+      description: "Heavy action on NBA unders this week",
+      impact: "High",
+      timeframe: "Last 7 days",
+    },
+    {
+      title: "Public Betting Patterns",
+      description: "85% of bets on Chiefs -7.5 vs Ravens",
+      impact: "Medium",
+      timeframe: "Today",
+    },
+    {
+      title: "Line Movement Alert",
+      description: "Lakers spread moved 2.5 points in 30 minutes",
+      impact: "High",
+      timeframe: "Live",
+    },
+  ];
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -63,7 +138,6 @@ const AIInsights = () => {
       <CanvasBackground />
       <Header />
 
-<<<<<<< HEAD
       <div className="relative z-10 max-w-12xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -71,90 +145,79 @@ const AIInsights = () => {
             <Brain className="h-6 w-6 text-blue-400" />
             <div>
               <h1 className="text-2xl font-bold text-slate-200">AI Insights</h1>
-=======
-      <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 h-screen flex flex-col overflow-hidden">
-        {/* Header */}
-        <div className="bg-slate-900/50 backdrop-blur-sm border-b border-slate-800/50 p-3 shadow-sm mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center space-x-2">
-              <Brain className="h-5 w-5 text-blue-400" />
-              <h1 className="text-xl font-bold text-slate-200">AI Insights</h1>
-            </div>
-            <div className="flex items-center space-x-3">
-              <Badge className="bg-gradient-to-r from-green-400 to-green-500 text-white animate-pulse px-2 py-1 text-xs">
-                <Activity className="h-3 w-3 mr-1" />
-                Live Analysis
-              </Badge>
-              <Button
-                onClick={handleRefreshInsights}
-                disabled={isLoading}
-                size="sm"
-                className="bg-blue-500 hover:bg-blue-600 text-white h-7 text-xs px-2"
-              >
-                <RefreshCw
-                  className={`h-3 w-3 mr-1 ${isLoading ? "animate-spin" : ""}`}
-                />
-                Refresh
-              </Button>
->>>>>>> 230264f55ce72b0307a451caba59ad78c583f581
             </div>
           </div>
-
-          {/* AI Performance Overview */}
-          <div className="grid grid-cols-4 gap-3">
-            <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
-              <CardContent className="p-2.5 text-center">
-                <div className="flex items-center justify-center mb-1">
-                  <Brain className="h-3 w-3 text-blue-400 mr-1.5" />
-                  <div className="text-base font-bold text-blue-400">{statistics.accuracy}%</div>
-                </div>
-                <div className="text-blue-400 text-xs">Model Accuracy</div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
-              <CardContent className="p-2.5 text-center">
-                <div className="flex items-center justify-center mb-1">
-                  <Target className="h-3 w-3 text-green-400 mr-1.5" />
-                  <div className="text-base font-bold text-green-400">{statistics.opportunities}</div>
-                </div>
-                <div className="text-green-400 text-xs">Active Opportunities</div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
-              <CardContent className="p-2.5 text-center">
-                <div className="flex items-center justify-center mb-1">
-                  <Trophy className="h-3 w-3 text-yellow-400 mr-1.5" />
-                  <div className="text-base font-bold text-yellow-400">{statistics.winRate}%</div>
-                </div>
-                <div className="text-yellow-400 text-xs">Win Rate (7 days)</div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
-              <CardContent className="p-2.5 text-center">
-                <div className="flex items-center justify-center mb-1">
-                  <Zap className="h-3 w-3 text-purple-400 mr-1.5" />
-                  <div className="text-base font-bold text-purple-400">{statistics.analysisSpeed}s</div>
-                </div>
-                <div className="text-purple-400 text-xs">Analysis Speed</div>
-              </CardContent>
-            </Card>
+          <div className="flex items-center space-x-3">
+            <Badge className="bg-gradient-to-r from-green-400 to-green-500 text-white px-2 py-1 text-xs">
+              <Activity className="h-3 w-3 mr-1" />
+              Live Analysis
+            </Badge>
+            <Button
+              onClick={handleRefreshInsights}
+              disabled={isAnalyzing}
+              size="sm"
+              className="bg-blue-500 hover:bg-blue-600 text-white h-7 text-xs px-2"
+            >
+              <RefreshCw
+                className={`h-3 w-3 mr-1 ${isAnalyzing ? "animate-spin" : ""}`}
+              />
+              Refresh
+            </Button>
           </div>
         </div>
 
-        {/* Main Content - Fixed Height */}
-        <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-6 overflow-hidden">
+        {/* AI Performance Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <Card className="bg-slate-900/50 backdrop-blur-sm border-slate-800/50">
+            <CardContent className="p-4 text-center">
+              <div className="flex items-center justify-center mb-2">
+                <Brain className="h-4 w-4 text-blue-400 mr-2" />
+                <div className="text-xl font-bold text-blue-400">94.2%</div>
+              </div>
+              <div className="text-slate-400 text-xs">Model Accuracy</div>
+              <Progress value={94.2} className="h-1.5 mt-2 bg-slate-800" />
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-900/50 backdrop-blur-sm border-slate-800/50">
+            <CardContent className="p-4 text-center">
+              <div className="flex items-center justify-center mb-2">
+                <Target className="h-4 w-4 text-green-400 mr-2" />
+                <div className="text-xl font-bold text-green-400">23</div>
+              </div>
+              <div className="text-slate-400 text-xs">Active Opportunities</div>
+              <Progress value={78} className="h-1.5 mt-2 bg-slate-800" />
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-900/50 backdrop-blur-sm border-slate-800/50">
+            <CardContent className="p-4 text-center">
+              <div className="flex items-center justify-center mb-2">
+                <Trophy className="h-4 w-4 text-yellow-400 mr-2" />
+                <div className="text-xl font-bold text-yellow-400">87%</div>
+              </div>
+              <div className="text-slate-400 text-xs">Win Rate (7 days)</div>
+              <Progress value={87} className="h-1.5 mt-2 bg-slate-800" />
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-900/50 backdrop-blur-sm border-slate-800/50">
+            <CardContent className="p-4 text-center">
+              <div className="flex items-center justify-center mb-2">
+                <Zap className="h-4 w-4 text-purple-400 mr-2" />
+                <div className="text-xl font-bold text-purple-400">1.2s</div>
+              </div>
+              <div className="text-slate-400 text-xs">Analysis Speed</div>
+              <Progress value={95} className="h-1.5 mt-2 bg-slate-800" />
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* AI Insights Feed */}
           <div className="lg:col-span-2">
-<<<<<<< HEAD
             <Card className="bg-slate-900/50 backdrop-blur-sm border-slate-800/50 max-h-full">
               <CardHeader className="pb-3">
-=======
-            <Card className="bg-slate-900/50 backdrop-blur-sm border-slate-800/50 h-full flex flex-col">
-              <CardHeader className="pb-3 flex-shrink-0">
->>>>>>> 230264f55ce72b0307a451caba59ad78c583f581
                 <CardTitle className="flex items-center justify-between text-slate-200 text-base">
                   <div className="flex items-center">
                     <Eye className="mr-2 h-4 w-4 text-blue-400" />
@@ -165,10 +228,10 @@ const AIInsights = () => {
                   </Badge>
                 </CardTitle>
               </CardHeader>
-              <CardContent className="flex-1 overflow-hidden">
-                <ScrollArea className="h-full pr-3">
+              <CardContent>
+                <ScrollArea className="h-96 pr-3">
                   <div className="space-y-3">
-                    {insights.map((insight) => (
+                    {aiInsights.map((insight) => (
                       <div
                         key={insight.id}
                         className={`p-3 rounded-lg border ${getTypeColor(
@@ -214,6 +277,12 @@ const AIInsights = () => {
                                 {insight.timeLeft}
                               </div>
                             )}
+                            {insight.streak && (
+                              <div className="flex items-center text-blue-400 text-xs">
+                                <Star className="h-3 w-3 mr-1" />
+                                {insight.streak}
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -225,7 +294,7 @@ const AIInsights = () => {
           </div>
 
           {/* Right Sidebar */}
-          <div className="space-y-6 overflow-y-auto">
+          <div className="space-y-6">
             {/* Model Performance */}
             <Card className="bg-slate-900/50 backdrop-blur-sm border-slate-800/50">
               <CardHeader className="pb-3">
@@ -235,7 +304,7 @@ const AIInsights = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {statistics.modelPerformance.map((model) => (
+                  {modelPerformance.map((model) => (
                     <div
                       key={model.sport}
                       className="flex items-center justify-between p-2 bg-slate-800/30 rounded-lg"
@@ -276,7 +345,7 @@ const AIInsights = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {statistics.marketTrends.map((trend, index) => (
+                  {marketTrends.map((trend, index) => (
                     <div
                       key={index}
                       className="p-2 bg-slate-800/30 rounded-lg border-l-2 border-blue-400"
