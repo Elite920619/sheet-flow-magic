@@ -5,7 +5,6 @@ import LiveEventsTabsHeader from "./LiveEventsTabsHeader";
 import LiveEventsCardGrid from "./LiveEventsCardGrid";
 import LiveEventsEmptyState from "./LiveEventsEmptyState";
 import LiveEventsLoadingState from "./LiveEventsLoadingState";
-import UpcomingEventsLoadingState from "./UpcomingEventsLoadingState";
 import BettingOptionsModal from "./BettingOptionsModal";
 import { useLiveEventsFiltering } from "@/hooks/useLiveEventsFiltering";
 import { useScrollHandler } from "@/hooks/useScrollHandler";
@@ -197,16 +196,16 @@ const LiveEventsContent = ({
           )}
         </TabsContent>
 
-        {/* Upcoming Games Tab */}
+        {/* Upcoming Games Tab - Now uses the same card grid layout */}
         <TabsContent value="upcoming" className="flex-1">
           {/* Show loading state during initial load */}
           {isLoadingUpcoming && (
             <div className="flex flex-col">
-              <UpcomingEventsLoadingState />
+              <LiveEventsLoadingState />
             </div>
           )}
 
-          {/* Show upcoming events grid when we have events */}
+          {/* Show upcoming events grid using the same card grid component */}
           {!isLoadingUpcoming && filteredUpcomingEventsByRegion.length > 0 && (
             <LiveEventsCardGrid
               displayedEvents={displayedUpcomingEvents}

@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
-import { Clock, Activity, Target, Users, MapPin, Thermometer, TrendingUp, BarChart3, Zap, Star, Calculator, Home, Plane, Handshake, Trophy } from 'lucide-react';
+import { Clock, Activity, Target, Users, MapPin, Thermometer, TrendingUp, BarChart3, Zap, Star, Calculator, Home, Plane, Handshake, Trophy, Calendar } from 'lucide-react';
 
 interface LiveEventCardProps {
   event: any;
@@ -66,6 +66,11 @@ const LiveEventCard: React.FC<LiveEventCardProps> = ({
     // Do nothing - card clicks are disabled
   };
 
+  // Check if this is a live event or upcoming event
+  const isLiveEvent = event.isLive || event.timeLeft === 'LIVE' || 
+                     event.timeLeft.includes('Q') || event.timeLeft.includes('H') ||
+                     event.timeLeft.includes("'") || event.timeLeft.includes('P');
+
   // Check if this is a playoff game
   const isPlayoffGame = event.gameType && event.gameType !== 'Regular Season';
   
@@ -98,9 +103,18 @@ const LiveEventCard: React.FC<LiveEventCardProps> = ({
               </Badge>
             )}
           </div>
-          <Badge className={`${getStatusColor(event.betStatus)} text-white text-xs px-2 py-0.5 animate-pulse border-0 shadow-lg`}>
-            <Activity className="h-2.5 w-2.5 mr-1" />
-            Live
+          <Badge className={`${isLiveEvent ? getStatusColor(event.betStatus) + ' animate-pulse' : 'bg-gradient-to-r from-indigo-600/90 to-purple-600/90'} text-white text-xs px-2 py-0.5 border-0 shadow-lg`}>
+            {isLiveEvent ? (
+              <>
+                <Activity className="h-2.5 w-2.5 mr-1" />
+                Live
+              </>
+            ) : (
+              <>
+                <Calendar className="h-2.5 w-2.5 mr-1" />
+                Upcoming
+              </>
+            )}
           </Badge>
         </div>
 
@@ -113,7 +127,9 @@ const LiveEventCard: React.FC<LiveEventCardProps> = ({
               </div>
               {event.awayTeam}
             </span>
-            <span className="text-sm font-bold text-blue-400 bg-slate-950/70 px-1.5 py-0.5 rounded border border-slate-800/50">{event.awayScore}</span>
+            {isLiveEvent && (
+              <span className="text-sm font-bold text-blue-400 bg-slate-950/70 px-1.5 py-0.5 rounded border border-slate-800/50">{event.awayScore}</span>
+            )}
           </div>
           <div className="flex items-center justify-between p-1.5 rounded-md bg-slate-950/50 group-hover:bg-slate-900/60 transition-all duration-300 border border-slate-800/30">
             <span className="text-xs font-medium text-slate-200 truncate flex items-center">
@@ -122,7 +138,9 @@ const LiveEventCard: React.FC<LiveEventCardProps> = ({
               </div>
               {event.homeTeam}
             </span>
-            <span className="text-sm font-bold text-blue-400 bg-slate-950/70 px-1.5 py-0.5 rounded border border-slate-800/50">{event.homeScore}</span>
+            {isLiveEvent && (
+              <span className="text-sm font-bold text-blue-400 bg-slate-950/70 px-1.5 py-0.5 rounded border border-slate-800/50">{event.homeScore}</span>
+            )}
           </div>
         </div>
 
@@ -169,9 +187,9 @@ const LiveEventCard: React.FC<LiveEventCardProps> = ({
             <span className="font-medium text-slate-300 text-xs">{event.region}</span>
           </div>
           <div className="flex items-center space-x-0.5">
-            <Badge className={`text-xs px-2 py-0.5 ${getConfidenceColor(event.analysis.confidence)} border-0`}>
+            <Badge className={`text-xs px-2 py-0.5 ${getConfidenceColor(event.analysis?.confidence || 75)} border-0`}>
               <Star className="h-2.5 w-2.5 mr-0.5" />
-              {event.analysis.confidence}%
+              {event.analysis?.confidence || 75}%
             </Badge>
           </div>
         </div>
