@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -65,110 +66,110 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground relative">
+    <div className="h-screen bg-transparent text-foreground relative overflow-hidden">
       <CanvasBackground />
       <Header />
       
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-slate-200 mb-2">
             Sports Betting Dashboard
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-slate-400 text-sm">
             Your complete betting analytics and performance overview
           </p>
         </div>
 
         {/* Key Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-card/80 backdrop-blur-sm border-border shadow-sm hover:shadow-md transition-shadow">
-            <CardContent className="p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <Card className="bg-slate-900/50 backdrop-blur-sm border-slate-800/50 shadow-sm hover:shadow-md transition-shadow">
+            <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-muted-foreground text-sm">Total Profit</p>
-                  <p className="text-2xl font-bold text-green-600 dark:text-green-400">$8,725</p>
-                  <p className="text-green-600 dark:text-green-400 text-sm">+12.5% from last month</p>
+                  <p className="text-slate-400 text-xs">Total Profit</p>
+                  <p className="text-xl font-bold text-green-400">$8,725</p>
+                  <p className="text-green-400 text-xs">+12.5% from last month</p>
                 </div>
-                <TrendingUp className="h-8 w-8 text-green-600 dark:text-green-400" />
+                <TrendingUp className="h-6 w-6 text-green-400" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-card/80 backdrop-blur-sm border-border shadow-sm hover:shadow-md transition-shadow">
-            <CardContent className="p-6">
+          <Card className="bg-slate-900/50 backdrop-blur-sm border-slate-800/50 shadow-sm hover:shadow-md transition-shadow">
+            <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-muted-foreground text-sm">Win Rate</p>
-                  <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">73.2%</p>
-                  <p className="text-blue-600 dark:text-blue-400 text-sm">+2.1% from last month</p>
+                  <p className="text-slate-400 text-xs">Win Rate</p>
+                  <p className="text-xl font-bold text-blue-400">73.2%</p>
+                  <p className="text-blue-400 text-xs">+2.1% from last month</p>
                 </div>
-                <Target className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+                <Target className="h-6 w-6 text-blue-400" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-card/80 backdrop-blur-sm border-border shadow-sm hover:shadow-md transition-shadow">
-            <CardContent className="p-6">
+          <Card className="bg-slate-900/50 backdrop-blur-sm border-slate-800/50 shadow-sm hover:shadow-md transition-shadow">
+            <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-muted-foreground text-sm">Active Bets</p>
-                  <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">12</p>
-                  <p className="text-amber-600 dark:text-amber-400 text-sm">$1,250 at risk</p>
+                  <p className="text-slate-400 text-xs">Active Bets</p>
+                  <p className="text-xl font-bold text-amber-400">12</p>
+                  <p className="text-amber-400 text-xs">$1,250 at risk</p>
                 </div>
-                <Activity className="h-8 w-8 text-amber-600 dark:text-amber-400" />
+                <Activity className="h-6 w-6 text-amber-400" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-card/80 backdrop-blur-sm border-border shadow-sm hover:shadow-md transition-shadow">
-            <CardContent className="p-6">
+          <Card className="bg-slate-900/50 backdrop-blur-sm border-slate-800/50 shadow-sm hover:shadow-md transition-shadow">
+            <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-muted-foreground text-sm">ROI</p>
-                  <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">15.8%</p>
-                  <p className="text-purple-600 dark:text-purple-400 text-sm">Above average</p>
+                  <p className="text-slate-400 text-xs">ROI</p>
+                  <p className="text-xl font-bold text-purple-400">15.8%</p>
+                  <p className="text-purple-400 text-xs">Above average</p>
                 </div>
-                <DollarSign className="h-8 w-8 text-purple-600 dark:text-purple-400" />
+                <DollarSign className="h-6 w-6 text-purple-400" />
               </div>
             </CardContent>
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           {/* Performance Overview */}
-          <Card className="bg-card/80 backdrop-blur-sm border-border shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-foreground">Performance Overview</CardTitle>
+          <Card className="bg-slate-900/50 backdrop-blur-sm border-slate-800/50 shadow-sm">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-slate-200 text-base">Performance Overview</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="h-64">
+              <div className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={performanceData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
                     <XAxis 
                       dataKey="month" 
-                      stroke="hsl(var(--muted-foreground))"
-                      fontSize={12}
+                      stroke="#94a3b8"
+                      fontSize={11}
                     />
                     <YAxis 
-                      stroke="hsl(var(--muted-foreground))"
-                      fontSize={12}
+                      stroke="#94a3b8"
+                      fontSize={11}
                     />
                     <Tooltip 
                       contentStyle={{ 
-                        backgroundColor: 'hsl(var(--card))', 
-                        border: '1px solid hsl(var(--border))',
+                        backgroundColor: '#1e293b', 
+                        border: '1px solid #334155',
                         borderRadius: '8px',
-                        color: 'hsl(var(--foreground))'
+                        color: '#e2e8f0'
                       }}
                     />
                     <Line 
                       type="monotone" 
                       dataKey="profit" 
                       stroke="#3b82f6" 
-                      strokeWidth={3}
-                      dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
+                      strokeWidth={2}
+                      dot={{ fill: '#3b82f6', strokeWidth: 2, r: 3 }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
@@ -177,20 +178,20 @@ const Dashboard = () => {
           </Card>
 
           {/* Betting Distribution */}
-          <Card className="bg-card/80 backdrop-blur-sm border-border shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-foreground">Betting Distribution</CardTitle>
+          <Card className="bg-slate-900/50 backdrop-blur-sm border-slate-800/50 shadow-sm">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-slate-200 text-base">Betting Distribution</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="h-64">
+              <div className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
                       data={pieData}
                       cx="50%"
                       cy="50%"
-                      innerRadius={60}
-                      outerRadius={100}
+                      innerRadius={40}
+                      outerRadius={80}
                       paddingAngle={5}
                       dataKey="value"
                     >
@@ -200,23 +201,23 @@ const Dashboard = () => {
                     </Pie>
                     <Tooltip 
                       contentStyle={{ 
-                        backgroundColor: 'hsl(var(--card))', 
-                        border: '1px solid hsl(var(--border))',
+                        backgroundColor: '#1e293b', 
+                        border: '1px solid #334155',
                         borderRadius: '8px',
-                        color: 'hsl(var(--foreground))'
+                        color: '#e2e8f0'
                       }}
                     />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
-              <div className="flex justify-center space-x-4 mt-4">
+              <div className="flex justify-center space-x-3 mt-3">
                 {pieData.map((item, index) => (
                   <div key={index} className="flex items-center">
                     <div 
-                      className="w-3 h-3 rounded-full mr-2" 
+                      className="w-2 h-2 rounded-full mr-1.5" 
                       style={{ backgroundColor: item.color }}
                     ></div>
-                    <span className="text-sm text-muted-foreground">{item.name} ({item.value}%)</span>
+                    <span className="text-xs text-slate-400">{item.name} ({item.value}%)</span>
                   </div>
                 ))}
               </div>
@@ -225,33 +226,33 @@ const Dashboard = () => {
         </div>
 
         {/* Sports Performance */}
-        <Card className="mb-8 bg-card/80 backdrop-blur-sm border-border shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-foreground">Sports Performance</CardTitle>
+        <Card className="mb-6 bg-slate-900/50 backdrop-blur-sm border-slate-800/50 shadow-sm">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-slate-200 text-base">Sports Performance</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-64">
+            <div className="h-48">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={bettingData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
                   <XAxis 
                     dataKey="sport" 
-                    stroke="hsl(var(--muted-foreground))"
-                    fontSize={12}
+                    stroke="#94a3b8"
+                    fontSize={11}
                   />
                   <YAxis 
-                    stroke="hsl(var(--muted-foreground))"
-                    fontSize={12}
+                    stroke="#94a3b8"
+                    fontSize={11}
                   />
                   <Tooltip 
                     contentStyle={{ 
-                      backgroundColor: 'hsl(var(--card))', 
-                      border: '1px solid hsl(var(--border))',
+                      backgroundColor: '#1e293b', 
+                      border: '1px solid #334155',
                       borderRadius: '8px',
-                      color: 'hsl(var(--foreground))'
+                      color: '#e2e8f0'
                     }}
                   />
-                  <Bar dataKey="profit" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="profit" fill="#3b82f6" radius={[3, 3, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -259,46 +260,46 @@ const Dashboard = () => {
         </Card>
 
         {/* Recent Bets */}
-        <Card className="bg-card/80 backdrop-blur-sm border-border shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-foreground">Recent Bets</CardTitle>
+        <Card className="bg-slate-900/50 backdrop-blur-sm border-slate-800/50 shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between pb-3">
+            <CardTitle className="text-slate-200 text-base">Recent Bets</CardTitle>
             <Link to="/my-bets">
-              <Button variant="outline" size="sm" className="border-border text-foreground hover:bg-muted">
+              <Button variant="outline" size="sm" className="border-slate-700/50 text-slate-300 hover:bg-slate-800/50 text-xs h-7">
                 View All
               </Button>
             </Link>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
               {recentBets.map((bet) => (
-                <div key={bet.id} className="bg-muted/50 rounded-lg p-4 border border-border">
+                <div key={bet.id} className="bg-slate-800/50 rounded-lg p-3 border border-slate-700/50">
                   <div className="flex items-center justify-between mb-2">
-                    <h4 className="font-semibold text-foreground text-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                    <h4 className="font-semibold text-slate-200 text-xs whitespace-nowrap overflow-hidden text-ellipsis">
                       {bet.event}
                     </h4>
-                    <Badge className={`${getStatusColor(bet.status)} text-white text-xs`}>
+                    <Badge className={`${getStatusColor(bet.status)} text-white text-xs px-1.5 py-0.5`}>
                       {bet.status}
                     </Badge>
                   </div>
-                  <div className="grid grid-cols-3 gap-2 text-sm">
+                  <div className="grid grid-cols-3 gap-2 text-xs">
                     <div>
-                      <p className="text-muted-foreground text-xs">Type</p>
-                      <p className="text-foreground font-medium text-xs">{bet.type}</p>
+                      <p className="text-slate-400 text-xs">Type</p>
+                      <p className="text-slate-200 font-medium text-xs">{bet.type}</p>
                     </div>
                     <div>
-                      <p className="text-muted-foreground text-xs">Odds</p>
-                      <Badge className={`${getOddsColor(bet.odds)} text-xs`}>
+                      <p className="text-slate-400 text-xs">Odds</p>
+                      <Badge className={`${getOddsColor(bet.odds)} text-xs px-1 py-0`}>
                         {bet.odds}
                       </Badge>
                     </div>
                     <div>
-                      <p className="text-muted-foreground text-xs">Stake</p>
-                      <p className="text-foreground font-medium text-xs">${bet.stake}</p>
+                      <p className="text-slate-400 text-xs">Stake</p>
+                      <p className="text-slate-200 font-medium text-xs">${bet.stake}</p>
                     </div>
                   </div>
                   {bet.profit !== null && (
                     <div className="mt-2 text-right">
-                      <span className={`text-sm font-semibold ${bet.profit >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                      <span className={`text-xs font-semibold ${bet.profit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                         {bet.profit >= 0 ? '+' : ''}${bet.profit}
                       </span>
                     </div>

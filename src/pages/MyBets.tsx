@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import CanvasBackground from '@/components/CanvasBackground';
@@ -22,7 +21,6 @@ const MyBets = () => {
     setIsUpdatingStatuses(true);
     try {
       await checkBetStatuses();
-      // Refresh the page or trigger a re-fetch
       window.location.reload();
     } catch (error) {
       console.error('Error updating bet statuses:', error);
@@ -154,14 +152,14 @@ const MyBets = () => {
 
   if (isLoading) {
     return (
-      <div className="h-screen bg-background text-foreground relative overflow-hidden">
+      <div className="h-screen bg-transparent text-foreground relative overflow-hidden">
         <CanvasBackground />
         <Header />
         
         <div className="relative z-10 h-[calc(100vh-4rem)] flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent mx-auto"></div>
-            <p className="mt-4 text-muted-foreground">Loading your bets...</p>
+            <p className="mt-4 text-slate-400">Loading your bets...</p>
           </div>
         </div>
       </div>
@@ -169,20 +167,20 @@ const MyBets = () => {
   }
 
   return (
-    <div className="h-screen bg-background text-foreground relative overflow-hidden">
+    <div className="h-screen bg-transparent text-foreground relative overflow-hidden">
       <CanvasBackground />
       <Header />
       
       <div className="relative z-10 h-[calc(100vh-4rem)] flex flex-col">
         {/* Top Status Section */}
-        <div className="bg-card/90 backdrop-blur-sm border-b border-border p-4 shadow-sm">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-3">
-              <Wallet className="h-6 w-6 text-blue-500" />
-              <h1 className="text-2xl font-bold text-foreground">My Bets</h1>
+        <div className="bg-slate-900/50 backdrop-blur-sm border-b border-slate-800/50 p-3 shadow-sm">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center space-x-2">
+              <Wallet className="h-5 w-5 text-blue-400" />
+              <h1 className="text-xl font-bold text-slate-200">My Bets</h1>
             </div>
-            <div className="flex items-center gap-3">
-              <Badge className="bg-gradient-to-r from-green-400 to-green-500 text-white px-3 py-1">
+            <div className="flex items-center gap-2">
+              <Badge className="bg-gradient-to-r from-green-400 to-green-500 text-white px-2 py-1 text-xs">
                 <Activity className="h-3 w-3 mr-1" />
                 {filteredBets.length} Bets
               </Badge>
@@ -191,30 +189,30 @@ const MyBets = () => {
                   onClick={handleUpdateBetStatuses}
                   disabled={isUpdatingStatuses}
                   size="sm"
-                  className="bg-orange-500 hover:bg-orange-600"
+                  className="bg-orange-500 hover:bg-orange-600 h-7 text-xs px-2"
                 >
-                  <RefreshCw className={`h-4 w-4 mr-2 ${isUpdatingStatuses ? 'animate-spin' : ''}`} />
-                  Update Statuses ({pendingBetsCount})
+                  <RefreshCw className={`h-3 w-3 mr-1 ${isUpdatingStatuses ? 'animate-spin' : ''}`} />
+                  Update ({pendingBetsCount})
                 </Button>
               )}
             </div>
           </div>
 
           {/* Status Categories */}
-          <div className="flex items-center space-x-3 mb-4">
+          <div className="flex items-center space-x-2 mb-3">
             {statusCategories.map((category) => (
               <button
                 key={category.value}
                 onClick={() => setSelectedStatus(category.value)}
-                className={`px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-2 ${
+                className={`px-3 py-1.5 rounded-lg transition-all duration-200 flex items-center space-x-1.5 text-xs ${
                   selectedStatus === category.value 
                     ? 'bg-gradient-to-r from-blue-400 to-blue-500 text-white shadow-md transform scale-105' 
-                    : 'bg-card hover:bg-muted text-muted-foreground hover:text-blue-400 border border-border'
+                    : 'bg-slate-800/50 hover:bg-slate-700/50 text-slate-300 hover:text-blue-400 border border-slate-700/50'
                 }`}
               >
                 {category.icon}
-                <span className="text-sm font-medium">{category.label}</span>
-                <Badge className={`text-xs ${
+                <span className="font-medium">{category.label}</span>
+                <Badge className={`text-xs px-1 py-0 ${
                   selectedStatus === category.value 
                     ? 'bg-white/20 text-white' 
                     : 'bg-blue-500/20 text-blue-400'
@@ -226,34 +224,34 @@ const MyBets = () => {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-4">
-            <Card className="bg-card/80 backdrop-blur-sm border-border hover:shadow-lg transition-shadow">
-              <CardContent className="p-3 text-center">
+          <div className="grid grid-cols-3 gap-3">
+            <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 hover:shadow-lg transition-shadow">
+              <CardContent className="p-2.5 text-center">
                 <div className="flex items-center justify-center mb-1">
-                  <TrendingUp className="h-4 w-4 text-green-500 mr-2" />
-                  <div className="text-lg font-bold text-green-500">{totalProfit >= 0 ? '+' : ''}${totalProfit.toFixed(2)}</div>
+                  <TrendingUp className="h-3 w-3 text-green-400 mr-1.5" />
+                  <div className="text-base font-bold text-green-400">{totalProfit >= 0 ? '+' : ''}${totalProfit.toFixed(2)}</div>
                 </div>
-                <div className="text-green-500 text-xs">Net Profit</div>
+                <div className="text-green-400 text-xs">Net Profit</div>
               </CardContent>
             </Card>
             
-            <Card className="bg-card/80 backdrop-blur-sm border-border hover:shadow-lg transition-shadow">
-              <CardContent className="p-3 text-center">
+            <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 hover:shadow-lg transition-shadow">
+              <CardContent className="p-2.5 text-center">
                 <div className="flex items-center justify-center mb-1">
-                  <Target className="h-4 w-4 text-orange-500 mr-2" />
-                  <div className="text-lg font-bold text-orange-500">{winRate.toFixed(1)}%</div>
+                  <Target className="h-3 w-3 text-orange-400 mr-1.5" />
+                  <div className="text-base font-bold text-orange-400">{winRate.toFixed(1)}%</div>
                 </div>
-                <div className="text-orange-500 text-xs">Win Rate</div>
+                <div className="text-orange-400 text-xs">Win Rate</div>
               </CardContent>
             </Card>
 
-            <Card className="bg-card/80 backdrop-blur-sm border-border hover:shadow-lg transition-shadow">
-              <CardContent className="p-3 text-center">
+            <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 hover:shadow-lg transition-shadow">
+              <CardContent className="p-2.5 text-center">
                 <div className="flex items-center justify-center mb-1">
-                  <Wallet className="h-4 w-4 text-blue-500 mr-2" />
-                  <div className="text-lg font-bold text-blue-500">${totalStaked.toFixed(2)}</div>
+                  <Wallet className="h-3 w-3 text-blue-400 mr-1.5" />
+                  <div className="text-base font-bold text-blue-400">${totalStaked.toFixed(2)}</div>
                 </div>
-                <div className="text-blue-500 text-xs">Total Staked</div>
+                <div className="text-blue-400 text-xs">Total Staked</div>
               </CardContent>
             </Card>
           </div>
@@ -262,27 +260,27 @@ const MyBets = () => {
         {/* Main Content */}
         <div className="flex-1 flex overflow-hidden">
           {/* Left Sidebar - Sports Categories Only */}
-          <div className="w-48 bg-card/95 backdrop-blur-sm border-r border-border shadow-sm">
+          <div className="w-40 bg-slate-900/50 backdrop-blur-sm border-r border-slate-800/50 shadow-sm">
             <ScrollArea className="h-full" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-              <div className="p-2 space-y-1" style={{ scrollbarWidth: 'none' }}>
+              <div className="p-1.5 space-y-0.5" style={{ scrollbarWidth: 'none' }}>
                 {sportsCategories.map((category) => (
                   <button
                     key={category.value}
                     onClick={() => setSelectedCategory(category.value)}
-                    className={`w-full text-left p-2 rounded-lg transition-all duration-200 flex items-center justify-between text-sm ${
+                    className={`w-full text-left p-1.5 rounded-lg transition-all duration-200 flex items-center justify-between text-xs ${
                       selectedCategory === category.value 
                         ? 'bg-gradient-to-r from-blue-400 to-blue-500 text-white shadow-sm' 
-                        : 'hover:bg-muted text-muted-foreground hover:text-blue-400'
+                        : 'hover:bg-slate-800/50 text-slate-300 hover:text-blue-400'
                     }`}
                   >
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-1.5">
                       <span className="text-xs">{category.icon}</span>
                       <span className="font-medium">{category.label}</span>
                     </div>
-                    <Badge className={`text-xs px-1.5 py-0.5 ${
+                    <Badge className={`text-xs px-1 py-0 ${
                       selectedCategory === category.value 
                         ? 'bg-white/20 text-white' 
-                        : 'bg-muted text-foreground'
+                        : 'bg-slate-700/50 text-slate-300'
                     }`}>
                       {category.count}
                     </Badge>
@@ -295,7 +293,7 @@ const MyBets = () => {
           {/* Right Content Area */}
           <div className="flex-1 overflow-hidden">
             {filteredBets.length > 0 ? (
-              <ScrollArea className="h-full p-4" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+              <ScrollArea className="h-full p-3" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                 <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3">
                   {filteredBets.map((bet) => (
                     <BetCard key={bet.id} bet={bet} />
@@ -304,10 +302,10 @@ const MyBets = () => {
               </ScrollArea>
             ) : (
               <div className="flex items-center justify-center h-full">
-                <Card className="p-8 text-center bg-card/80 backdrop-blur-sm border-border shadow-sm">
-                  <Wallet className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-foreground mb-2">No Bets Found</h3>
-                  <p className="text-muted-foreground mb-4">
+                <Card className="p-6 text-center bg-slate-900/50 backdrop-blur-sm border-slate-800/50 shadow-sm">
+                  <Wallet className="h-10 w-10 text-slate-400 mx-auto mb-3" />
+                  <h3 className="text-base font-medium text-slate-200 mb-2">No Bets Found</h3>
+                  <p className="text-slate-400 mb-3 text-sm">
                     {transformedBets.length === 0 
                       ? "You haven't placed any bets yet. Visit Live Events to start betting!"
                       : "No bets match your current filters."

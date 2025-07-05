@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Star, Target, Zap } from "lucide-react";
@@ -12,34 +13,34 @@ const ValueBetsStatsCards = ({
   avgConfidence,
 }: ValueBetsStatsCardsProps) => {
   return (
-    <div className="grid grid-cols-3 gap-4">
-      {" "}
-      <Card className="bg-card/80 backdrop-blur-sm border-border hover:shadow-lg transition-shadow">
-        <CardContent className="p-3 text-center">
+    <div className="grid grid-cols-3 gap-3">
+      <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 hover:shadow-lg transition-shadow">
+        <CardContent className="p-2.5 text-center">
           <div className="flex items-center justify-center mb-1">
-            <Star className="h-4 w-4 text-emerald-500 mr-2" />
-            <div className="text-lg font-bold text-emerald-500">{highValueBets}</div>
+            <Star className="h-3 w-3 text-emerald-400 mr-1.5" />
+            <div className="text-base font-bold text-emerald-400">{highValueBets}</div>
           </div>
-          <div className="text-emerald-500 text-xs">High Value Bets</div>
+          <div className="text-emerald-400 text-xs">High Value Bets</div>
         </CardContent>
       </Card>
-      <Card className="bg-card/80 backdrop-blur-sm border-border hover:shadow-lg transition-shadow">        <CardContent className="p-3 text-center">
+      <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 hover:shadow-lg transition-shadow">
+        <CardContent className="p-2.5 text-center">
           <div className="flex items-center justify-center mb-1">
-            <Target className="h-4 w-4 text-orange-500 mr-2" />
-            <div className="text-lg font-bold text-orange-500">
+            <Target className="h-3 w-3 text-orange-400 mr-1.5" />
+            <div className="text-base font-bold text-orange-400">
               {avgConfidence.toFixed(1)}%
             </div>
           </div>
-          <div className="text-orange-500 text-xs">Avg Confidence</div>
+          <div className="text-orange-400 text-xs">Avg Confidence</div>
         </CardContent>
       </Card>
-      <Card className="bg-card/80 backdrop-blur-sm border-border hover:shadow-lg transition-shadow">
-        <CardContent className="p-3 text-center">
+      <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 hover:shadow-lg transition-shadow">
+        <CardContent className="p-2.5 text-center">
           <div className="flex items-center justify-center mb-1">
-            <Zap className="h-4 w-4 text-blue-500 mr-2" />
-            <div className="text-lg font-bold text-blue-500">1.8s</div>
+            <Zap className="h-3 w-3 text-blue-400 mr-1.5" />
+            <div className="text-base font-bold text-blue-400">1.8s</div>
           </div>
-          <div className="text-blue-500 text-xs">Analysis Speed</div>
+          <div className="text-blue-400 text-xs">Analysis Speed</div>
         </CardContent>
       </Card>
     </div>

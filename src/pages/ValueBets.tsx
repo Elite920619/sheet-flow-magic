@@ -37,12 +37,12 @@ const ValueBets = () => {
   const avgConfidence = foundValueBets.length > 0 ? foundValueBets.reduce((sum, bet) => sum + parseInt(bet.confidence), 0) / foundValueBets.length : 0;
 
   return (
-    <div className="h-screen bg-background text-foreground relative overflow-hidden">
+    <div className="h-screen bg-transparent text-foreground relative overflow-hidden">
       <CanvasBackground />
       <Header />
       
       <div className="relative z-10 h-[calc(100vh-4rem)] flex flex-col">
-        <div className="bg-card/90 backdrop-blur-sm border-b border-border p-4 shadow-sm">
+        <div className="bg-slate-900/50 backdrop-blur-sm border-b border-slate-800/50 p-3 shadow-sm">
           <ValueBetsHeader filteredBetsCount={foundValueBets.length} />
           <ValueBetsStatsCards 
             highValueBets={highValueBets}
