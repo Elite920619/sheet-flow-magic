@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import LiveEventsTabsHeader from "./LiveEventsTabsHeader";
@@ -47,8 +48,7 @@ const LiveEventsContent = ({
   const [showBettingModal, setShowBettingModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [selectedBetType, setSelectedBetType] = useState<string>("");
-  const [showingProgressiveResults, setShowingProgressiveResults] =
-    useState(false);
+  const [showingProgressiveResults, setShowingProgressiveResults] = useState(false);
 
   // Initialize bet status updater and odds sync
   const { checkBetStatuses, pendingBetsCount } = useBetStatusUpdater();
@@ -83,27 +83,18 @@ const LiveEventsContent = ({
     isLoadingMore: isLoadingMoreUpcoming,
     handleLoadMore: handleLoadMoreUpcoming,
   } = useLiveEventsFiltering({
-    sortedEvents: activeTab === "upcoming" ? sortedEvents : [],
+    sortedEvents: activeTab === "upcoming" ? upcomingEvents : [],
     selectedCategory,
     selectedRegion,
   });
 
   // Scroll handler for active tab
   useScrollHandler({
-    hasMoreEvents:
-      activeTab === "live" ? hasMoreLiveEvents : hasMoreUpcomingEvents,
-    isLoadingMore:
-      activeTab === "live" ? isLoadingMoreLive : isLoadingMoreUpcoming,
-    displayedCount:
-      activeTab === "live"
-        ? displayedLiveEvents.length
-        : displayedUpcomingEvents.length,
-    filteredEventsLength:
-      activeTab === "live"
-        ? filteredLiveEventsByRegion.length
-        : filteredUpcomingEventsByRegion.length,
-    onLoadMore:
-      activeTab === "live" ? handleLoadMoreLive : handleLoadMoreUpcoming,
+    hasMoreEvents: activeTab === "live" ? hasMoreLiveEvents : hasMoreUpcomingEvents,
+    isLoadingMore: activeTab === "live" ? isLoadingMoreLive : isLoadingMoreUpcoming,
+    displayedCount: activeTab === "live" ? displayedLiveEvents.length : displayedUpcomingEvents.length,
+    filteredEventsLength: activeTab === "live" ? filteredLiveEventsByRegion.length : filteredUpcomingEventsByRegion.length,
+    onLoadMore: activeTab === "live" ? handleLoadMoreLive : handleLoadMoreUpcoming,
   });
 
   // Monitor progressive results for live events
@@ -117,19 +108,10 @@ const LiveEventsContent = ({
         selectedRegion,
       });
     }
-  }, [
-    isLoading,
-    sortedEvents,
-    displayedLiveEvents,
-    selectedCategory,
-    selectedRegion,
-    activeTab,
-  ]);
+  }, [isLoading, sortedEvents, displayedLiveEvents, selectedCategory, selectedRegion, activeTab]);
 
   const handleRefresh = () => {
-    console.log(
-      `Refreshing ${activeTab} events data with progressive updates...`
-    );
+    console.log(`Refreshing ${activeTab} events data with progressive updates...`);
     if (activeTab === "live") {
       onRefresh();
     } else {
@@ -158,31 +140,17 @@ const LiveEventsContent = ({
 
   // Get current data and unique sports based on active tab
   const currentEvents = activeTab === "live" ? sortedEvents : upcomingEvents;
-  const currentFilteredEvents =
-    activeTab === "live"
-      ? filteredLiveEventsByRegion
-      : filteredUpcomingEventsByRegion;
-  const currentDisplayedEvents =
-    activeTab === "live" ? displayedLiveEvents : displayedUpcomingEvents;
+  const currentFilteredEvents = activeTab === "live" ? filteredLiveEventsByRegion : filteredUpcomingEventsByRegion;
+  const currentDisplayedEvents = activeTab === "live" ? displayedLiveEvents : displayedUpcomingEvents;
   const currentIsLoading = activeTab === "live" ? isLoading : isLoadingUpcoming;
-  const currentIsRefreshing =
-    activeTab === "live" ? isRefreshing : isRefreshingUpcoming;
-  const currentHasMoreEvents =
-    activeTab === "live" ? hasMoreLiveEvents : hasMoreUpcomingEvents;
-  const currentIsLoadingMore =
-    activeTab === "live" ? isLoadingMoreLive : isLoadingMoreUpcoming;
-  const currentUniqueSportsLength =
-    activeTab === "live"
-      ? uniqueSportsLength
-      : [...new Set(upcomingEvents.map((event) => event.sport))].length;
+  const currentIsRefreshing = activeTab === "live" ? isRefreshing : isRefreshingUpcoming;
+  const currentHasMoreEvents = activeTab === "live" ? hasMoreLiveEvents : hasMoreUpcomingEvents;
+  const currentIsLoadingMore = activeTab === "live" ? isLoadingMoreLive : isLoadingMoreUpcoming;
+  const currentUniqueSportsLength = activeTab === "live" ? uniqueSportsLength : [...new Set(upcomingEvents.map((event) => event.sport))].length;
 
   return (
     <div className="flex flex-col">
-      <Tabs
-        value={activeTab}
-        onValueChange={onTabChange}
-        className="flex flex-col"
-      >
+      <Tabs value={activeTab} onValueChange={onTabChange} className="flex flex-col">
         {/* Always show tabs header regardless of loading state or events */}
         <LiveEventsTabsHeader
           isRefreshing={currentIsRefreshing}
@@ -218,21 +186,26 @@ const LiveEventsContent = ({
           )}
 
           {/* Show empty state only when no events after loading is complete */}
-          {!isLoading &&
-            !showingProgressiveResults &&
-            filteredLiveEventsByRegion.length === 0 && (
-              <LiveEventsEmptyState
-                selectedCategory={selectedCategory}
-                selectedRegion={selectedRegion}
-                getSportLabel={getSportLabel}
-                onRefresh={handleRefresh}
-                isRefreshing={isRefreshing}
-              />
-            )}
+          {!isLoading && !showingProgressiveResults && filteredLiveEventsByRegion.length === 0 && (
+            <LiveEventsEmptyState
+              selectedCategory={selectedCategory}
+              selectedRegion={selectedRegion}
+              getSportLabel={getSportLabel}
+              onRefresh={handleRefresh}
+              isRefreshing={isRefreshing}
+            />
+          )}
         </TabsContent>
 
         {/* Upcoming Games Tab */}
         <TabsContent value="upcoming" className="flex-1">
+          {/* Show loading state during initial load */}
+          {isLoadingUpcoming && (
+            <div className="flex flex-col">
+              <UpcomingEventsLoadingState />
+            </div>
+          )}
+
           {/* Show upcoming events grid when we have events */}
           {!isLoadingUpcoming && filteredUpcomingEventsByRegion.length > 0 && (
             <LiveEventsCardGrid
@@ -249,16 +222,15 @@ const LiveEventsContent = ({
           )}
 
           {/* Show empty state when no upcoming events */}
-          {!isLoadingUpcoming &&
-            filteredUpcomingEventsByRegion.length === 0 && (
-              <LiveEventsEmptyState
-                selectedCategory={selectedCategory}
-                selectedRegion={selectedRegion}
-                getSportLabel={getSportLabel}
-                onRefresh={handleRefresh}
-                isRefreshing={isRefreshingUpcoming}
-              />
-            )}
+          {!isLoadingUpcoming && filteredUpcomingEventsByRegion.length === 0 && (
+            <LiveEventsEmptyState
+              selectedCategory={selectedCategory}
+              selectedRegion={selectedRegion}
+              getSportLabel={getSportLabel}
+              onRefresh={handleRefresh}
+              isRefreshing={isRefreshingUpcoming}
+            />
+          )}
         </TabsContent>
       </Tabs>
 
