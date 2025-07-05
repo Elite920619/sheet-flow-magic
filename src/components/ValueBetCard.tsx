@@ -62,84 +62,84 @@ const ValueBetCard = ({
 
   return (
     <Card 
-      className="bg-card/95 backdrop-blur-sm border-border hover:border-blue-500/50 hover:shadow-lg transition-all duration-200 cursor-pointer transform hover:scale-[1.02]"
+      className="bg-slate-900/50 backdrop-blur-sm border-slate-800/50 hover:border-blue-500/50 hover:shadow-lg transition-all duration-200 cursor-pointer transform hover:scale-[1.02]"
       onClick={handleCardClick}
     >
-      <CardContent className="p-4">
+      <CardContent className="p-3">
         {/* Header */}
-        <div className="flex justify-between items-start mb-3">
+        <div className="flex justify-between items-start mb-2">
           <div className="flex-1 min-w-0">
-            <div className="flex items-center space-x-2 mb-2">
-              <Badge className="bg-gradient-to-r from-blue-400 to-blue-500 text-white text-xs px-2 py-0.5">
+            <div className="flex items-center space-x-2 mb-1.5">
+              <Badge className="bg-gradient-to-r from-blue-400 to-blue-500 text-white text-xs px-1.5 py-0.5">
                 {league}
               </Badge>
-              <div className="flex items-center text-muted-foreground text-xs">
-                <Clock className="h-3 w-3 mr-1" />
+              <div className="flex items-center text-slate-400 text-xs">
+                <Clock className="h-2.5 w-2.5 mr-1" />
                 <span>{timeLeft}</span>
               </div>
             </div>
-            <h3 className="text-sm font-bold text-foreground mb-1 text-center">
+            <h3 className="text-xs font-bold text-slate-200 mb-1 text-center">
               {team1} vs {team2}
             </h3>
-            <p className="text-xs text-muted-foreground text-center">{betType}</p>
+            <p className="text-xs text-slate-400 text-center">{betType}</p>
           </div>
-          <div className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-bold ml-2 border ${getValueColor(value)}`}>
-            <Star className="h-3 w-3" />
+          <div className={`flex items-center space-x-1 px-1.5 py-0.5 rounded-full text-xs font-bold ml-2 border ${getValueColor(value)}`}>
+            <Star className="h-2.5 w-2.5" />
             <span>{value}</span>
           </div>
         </div>
 
         {/* Core Metrics */}
-        <div className="grid grid-cols-3 gap-3 mb-3">
+        <div className="grid grid-cols-3 gap-2 mb-2">
           <div className="text-center">
-            <div className="text-xs text-muted-foreground mb-1">Odds</div>
-            <Badge className={`${getOddsColor(odds)} text-white text-xs px-2 py-1 font-bold`}>
+            <div className="text-xs text-slate-400 mb-1">Odds</div>
+            <Badge className={`${getOddsColor(odds)} text-white text-xs px-1.5 py-0.5 font-bold`}>
               {odds}
             </Badge>
           </div>
           
           <div className="text-center">
-            <div className="text-xs text-muted-foreground mb-1">AI Prob</div>
-            <div className="text-foreground font-bold text-xs">{aiProb}</div>
+            <div className="text-xs text-slate-400 mb-1">AI Prob</div>
+            <div className="text-slate-200 font-bold text-xs">{aiProb}</div>
           </div>
           
           <div className="text-center">
-            <div className="text-xs text-muted-foreground mb-1">Conf</div>
-            <Badge className={`${getConfidenceColor(confidence)} text-white text-xs px-2 py-1`}>
+            <div className="text-xs text-slate-400 mb-1">Conf</div>
+            <Badge className={`${getConfidenceColor(confidence)} text-white text-xs px-1.5 py-0.5`}>
               {confidence}%
             </Badge>
           </div>
         </div>
 
         {/* Integrated Analysis Section */}
-        <div className="bg-muted/30 p-3 rounded-lg border border-border/50">
-          <div className="flex items-center justify-between mb-2">
+        <div className="bg-slate-950/30 p-2 rounded-lg border border-slate-800/50">
+          <div className="flex items-center justify-between mb-1.5">
             <div className="flex items-center space-x-1">
-              <Target className="h-3 w-3 text-blue-500" />
-              <span className="text-xs font-bold text-foreground">Quick Analysis</span>
+              <Target className="h-2.5 w-2.5 text-blue-500" />
+              <span className="text-xs font-bold text-slate-200">Quick Analysis</span>
             </div>
-            <TrendingUp className="h-3 w-3 text-green-500" />
+            <TrendingUp className="h-2.5 w-2.5 text-green-500" />
           </div>
           
-          <div className="grid grid-cols-2 gap-3 text-xs">
+          <div className="grid grid-cols-2 gap-2 text-xs">
             <div className="space-y-1">
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Value Edge:</span>
+                <span className="text-slate-400">Value Edge:</span>
                 <span className="font-bold text-green-400">{value}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Implied:</span>
-                <span className="font-medium text-foreground">{impliedProb}</span>
+                <span className="text-slate-400">Implied:</span>
+                <span className="font-medium text-slate-200">{impliedProb}</span>
               </div>
             </div>
             <div className="space-y-1">
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Confidence:</span>
+                <span className="text-slate-400">Confidence:</span>
                 <span className="font-bold text-orange-400">{confidence}%</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Source:</span>
-                <span className="font-medium text-foreground text-xs truncate">{sportsbook}</span>
+                <span className="text-slate-400">Source:</span>
+                <span className="font-medium text-slate-200 text-xs truncate">{sportsbook}</span>
               </div>
             </div>
           </div>

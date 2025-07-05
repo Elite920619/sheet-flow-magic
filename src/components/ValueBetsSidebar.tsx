@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -17,29 +18,34 @@ interface ValueBetsSidebarProps {
 
 const ValueBetsSidebar = ({ sportsCategories, selectedCategory, onCategorySelect }: ValueBetsSidebarProps) => {
   return (
-    <div className="w-48 bg-card/95 backdrop-blur-sm border-r border-border shadow-sm">
-     
+    <div className="w-32 bg-transparent border-r border-slate-800/50 shadow-2xl shadow-black/60 backdrop-blur-sm">
       <ScrollArea className="h-full" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-        <div className="p-2 space-y-1" style={{ scrollbarWidth: 'none' }}>
+        <div className="p-1.5 space-y-0.5" style={{ scrollbarWidth: 'none' }}>
           {sportsCategories.map((category) => (
             <button
               key={category.value}
               onClick={() => onCategorySelect(category.value)}
-              className={`w-full text-left p-2 rounded-lg transition-all duration-200 flex items-center justify-between text-sm ${
-                selectedCategory === category.value 
-                  ? 'bg-gradient-to-r from-blue-400 to-blue-500 text-white shadow-sm' 
-                  : 'hover:bg-muted text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400'
+              className={`w-full text-left p-1.5 rounded-md transition-all duration-300 flex items-center justify-between text-xs group ${
+                selectedCategory === category.value
+                  ? "bg-gradient-to-r from-blue-600/90 to-indigo-600/90 text-white shadow-lg shadow-blue-600/30 border border-blue-500/50"
+                  : "hover:bg-slate-900/50 text-slate-300 hover:text-white hover:shadow-md hover:shadow-black/40 border border-slate-800/30 hover:border-slate-700/50"
               }`}
             >
-              <div className="flex items-center space-x-2">
-                <span className="text-xs">{category.icon}</span>
-                <span className="font-medium">{category.label}</span>
+              <div className="flex items-center space-x-1.5">
+                <span className={`text-xs transition-transform duration-300 ${
+                  selectedCategory === category.value ? "scale-110" : "group-hover:scale-105"
+                }`}>
+                  {category.icon}
+                </span>
+                <span className="font-medium text-xs">{category.label}</span>
               </div>
-              <Badge className={`text-xs px-1.5 py-0.5 ${
-                selectedCategory === category.value 
-                  ? 'bg-white/20 text-white' 
-                  : 'bg-muted text-foreground'
-              }`}>
+              <Badge
+                className={`text-xs px-1 py-0 font-medium border-0 transition-all duration-300 ${
+                  selectedCategory === category.value
+                    ? "bg-white/20 text-white shadow-sm"
+                    : "bg-slate-800/70 text-slate-300 group-hover:bg-slate-700/70 group-hover:text-white"
+                }`}
+              >
                 {category.count}
               </Badge>
             </button>

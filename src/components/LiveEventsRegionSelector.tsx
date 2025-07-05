@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { 
@@ -36,14 +37,18 @@ const LiveEventsRegionSelector: React.FC<LiveEventsRegionSelectorProps> = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="bg-blur/90 border-border">
-          <Globe className="h-4 w-4 mr-2" />
+        <Button variant="outline" size="sm" className="bg-slate-900/50 border-slate-800/50 text-slate-300 hover:bg-slate-800/50 hover:text-slate-100 text-xs px-2 py-1 h-7">
+          <Globe className="h-3 w-3 mr-1" />
           {currentRegion?.flag} {currentRegion?.label}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent className="bg-slate-900/95 border-slate-800/50 backdrop-blur-sm">
         {regions.map((region) => (
-          <DropdownMenuItem key={region.value} onClick={() => onRegionChange(region.value)}>
+          <DropdownMenuItem 
+            key={region.value} 
+            onClick={() => onRegionChange(region.value)}
+            className="text-slate-300 hover:bg-slate-800/50 hover:text-slate-100 text-xs"
+          >
             {region.flag} {region.label}
           </DropdownMenuItem>
         ))}

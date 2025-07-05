@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Loader2 } from 'lucide-react';
 import LiveEventCard from './LiveEventCard';
@@ -38,8 +39,8 @@ const LiveEventsCardGrid: React.FC<LiveEventsCardGridProps> = ({
   };
 
   return (
-    <div className="p-4">
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+    <div className="p-3 bg-transparent">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3">
         {displayedEvents.map((event, index) => (
           <LiveEventCard
             key={`${event.id}-${index}`}
@@ -55,9 +56,9 @@ const LiveEventsCardGrid: React.FC<LiveEventsCardGridProps> = ({
 
       {/* Auto-loading indicator */}
       {isLoadingMore && (
-        <div className="flex items-center justify-center py-8">
-          <div className="flex items-center text-sm text-muted-foreground">
-            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+        <div className="flex items-center justify-center py-6">
+          <div className="flex items-center text-sm text-slate-400">
+            <Loader2 className="h-3 w-3 mr-2 animate-spin" />
             Loading more events...
           </div>
         </div>
