@@ -1,292 +1,113 @@
 
-import React, { useState, useEffect } from 'react';
-import Header from '@/components/Header';
-import CanvasBackground from '@/components/CanvasBackground';
-import BetCard from '@/components/BetCard';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Card, CardContent } from '@/components/ui/card';
-import { Wallet, TrendingUp, Target, Activity, CheckCircle, Clock, XCircle, RefreshCw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useEnhancedBetTracking } from '@/hooks/useEnhancedBetTracking';
+import React, { useState, useEffect } from "react";
+import Header from "@/components/Header";
+import CanvasBackground from "@/components/CanvasBackground";
+import BetCard from "@/components/BetCard";
+import BetStatsCards from "@/components/BetStatsCards";
+import BetPerformanceSummary from "@/components/BetPerformanceSummary";
+import MyBetsSkeletonGrid from "@/components/MyBetsSkeletonGrid";
+import { useUserBets } from "@/hooks/useUserBets";
+import { useEnhancedBetTracking } from "@/hooks/useEnhancedBetTracking";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 
 const MyBets = () => {
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedStatus, setSelectedStatus] = useState('all');
+  const [selectedFilter, setSelectedFilter] = useState("all");
   const { 
-    bets, 
-    isLoading, 
-    statistics, 
-    updateBetStatus, 
-    isUpdating, 
-    refetch 
+    userBets, 
+    isLoading: isLoadingUserBets, 
+    refreshBets,
+    getBetsByStatus 
+  } = useUserBets();
+  
+  const { 
+    enhancedBets, 
+    isLoading: isLoadingEnhanced, 
+    refreshEnhancedBets 
   } = useEnhancedBetTracking();
 
-  // Enhanced sport detection function
-  const detectSport = (league: string, eventName: string, teams: string) => {
-    const text = `${league} ${eventName} ${teams}`.toLowerCase();
-    
-    if (text.includes('nfl') || text.includes('football') || text.includes('chiefs') || text.includes('bills') || text.includes('cowboys') || text.includes('patriots')) {
-      return 'football';
-    }
-    if (text.includes('nba') || text.includes('basketball') || text.includes('lakers') || text.includes('warriors') || text.includes('celtics') || text.includes('knicks')) {
-      return 'basketball';
-    }
-    if (text.includes('mlb') || text.includes('baseball') || text.includes('yankees') || text.includes('dodgers') || text.includes('red sox') || text.includes('mets')) {
-      return 'baseball';
-    }
-    if (text.includes('nhl') || text.includes('hockey') || text.includes('rangers') || text.includes('bruins') || text.includes('blackhawks')) {
-      return 'hockey';
-    }
-    if (text.includes('soccer') || text.includes('epl') || text.includes('premier league') || text.includes('uefa') || text.includes('fifa') || text.includes('mls')) {
-      return 'soccer';
-    }
-    return 'other';
+  // Combined loading state
+  const isLoading = isLoadingUserBets || isLoadingEnhanced;
+
+  useEffect(() => {
+    refreshBets();
+    refreshEnhancedBets();
+  }, []);
+
+  const filteredBets = selectedFilter === "all" 
+    ? userBets 
+    : getBetsByStatus(selectedFilter);
+
+  const getBetCountByStatus = (status: string) => {
+    return status === "all" ? userBets.length : getBetsByStatus(status).length;
   };
-
-  // Transform bets to match BetCard interface
-  const transformedBets = bets.map(bet => ({
-    id: bet.id,
-    event: bet.event_name,
-    betType: bet.bet_type,
-    odds: bet.odds,
-    stake: Number(bet.stake),
-    potentialPayout: Number(bet.potential_payout),
-    actualPayout: bet.actual_payout ? Number(bet.actual_payout) : null,
-    status: bet.status,
-    placedAt: bet.placed_at,
-    settledAt: bet.settled_at || null,
-    league: bet.league || 'N/A',
-    sport: detectSport(bet.league || '', bet.event_name, bet.teams || ''),
-    confidence: 85,
-    aiRecommended: true,
-    profit: bet.status === 'won' ? Number(bet.actual_payout || bet.potential_payout) - Number(bet.stake) :
-            bet.status === 'lost' ? -Number(bet.stake) : 0,
-    timeLeft: bet.is_live ? '2h 45m' : undefined,
-    teams: bet.teams
-  }));
-
-  // Generate sports categories dynamically
-  const generateSportsCategories = () => {
-    const sportCounts = transformedBets.reduce((acc, bet) => {
-      acc[bet.sport] = (acc[bet.sport] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-
-    const sportMapping = {
-      football: { label: 'Football', icon: '🏈' },
-      basketball: { label: 'Basketball', icon: '🏀' },
-      baseball: { label: 'Baseball', icon: '⚾' },
-      hockey: { label: 'Hockey', icon: '🏒' },
-      soccer: { label: 'Soccer', icon: '⚽' },
-      other: { label: 'Other', icon: '🏆' }
-    };
-
-    const categories = [
-      { value: 'all', label: 'All Sports', icon: '🏆', count: transformedBets.length }
-    ];
-
-    Object.entries(sportCounts).forEach(([sport, count]) => {
-      if (count > 0) {
-        const mapping = sportMapping[sport as keyof typeof sportMapping];
-        categories.push({
-          value: sport,
-          label: mapping?.label || sport.charAt(0).toUpperCase() + sport.slice(1),
-          icon: mapping?.icon || '🏆',
-          count
-        });
-      }
-    });
-
-    return categories;
-  };
-
-  const sportsCategories = generateSportsCategories();
-
-  const statusCategories = [
-    { value: 'all', label: 'All Status', icon: <Activity className="h-4 w-4" />, count: transformedBets.length, color: 'bg-gradient-to-r from-blue-400 to-blue-500' },
-    { value: 'won', label: 'Won', icon: <CheckCircle className="h-4 w-4" />, count: transformedBets.filter(b => b.status === 'won').length, color: 'bg-gradient-to-r from-green-400 to-green-500' },
-    { value: 'in_progress', label: 'Live', icon: <Clock className="h-4 w-4" />, count: transformedBets.filter(b => b.status === 'in_progress').length, color: 'bg-gradient-to-r from-orange-400 to-orange-500' },
-    { value: 'pending', label: 'Pending', icon: <Clock className="h-4 w-4" />, count: transformedBets.filter(b => b.status === 'pending').length, color: 'bg-gradient-to-r from-yellow-400 to-yellow-500' },
-    { value: 'lost', label: 'Lost', icon: <XCircle className="h-4 w-4" />, count: transformedBets.filter(b => b.status === 'lost').length, color: 'bg-gradient-to-r from-red-400 to-red-500' }
-  ];
-
-  const filteredBets = transformedBets.filter(bet => {
-    const matchesSport = selectedCategory === 'all' || bet.sport === selectedCategory;
-    const matchesStatus = selectedStatus === 'all' || bet.status === selectedStatus;
-    return matchesSport && matchesStatus;
-  });
-
-  const handleRefreshBets = async () => {
-    await refetch();
-  };
-
-  if (isLoading) {
-    return (
-      <div className="h-screen bg-transparent text-foreground relative overflow-hidden">
-        <CanvasBackground />
-        <Header />
-        
-        <div className="relative z-10 h-[calc(100vh-4rem)] flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent mx-auto"></div>
-            <p className="mt-4 text-slate-400">Loading your bets...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="h-screen bg-transparent text-foreground relative overflow-hidden">
+    <div className="min-h-screen text-foreground relative" style={{ background: 'linear-gradient(135deg, rgb(2 6 23) 0%, rgb(15 23 42) 50%, rgb(30 41 59) 100%)' }}>
       <CanvasBackground />
       <Header />
       
-      <div className="relative z-10 h-[calc(100vh-4rem)] flex flex-col">
-        {/* Top Status Section */}
-        <div className="bg-slate-900/50 backdrop-blur-sm border-b border-slate-800/50 p-3 shadow-sm">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center space-x-2">
-              <Wallet className="h-5 w-5 text-blue-400" />
-              <h1 className="text-xl font-bold text-slate-200">My Bets</h1>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge className="bg-gradient-to-r from-green-400 to-green-500 text-white px-2 py-1 text-xs">
-                <Activity className="h-3 w-3 mr-1" />
-                {filteredBets.length} Bets
-              </Badge>
-              {statistics.liveBets > 0 && (
-                <Button 
-                  onClick={handleRefreshBets}
-                  disabled={isUpdating}
-                  size="sm"
-                  className="bg-orange-500 hover:bg-orange-600 h-7 text-xs px-2"
-                >
-                  <RefreshCw className={`h-3 w-3 mr-1 ${isUpdating ? 'animate-spin' : ''}`} />
-                  Update ({statistics.liveBets})
-                </Button>
-              )}
-            </div>
-          </div>
-
-          {/* Status Categories */}
-          <div className="flex items-center space-x-2 mb-3">
-            {statusCategories.map((category) => (
-              <button
-                key={category.value}
-                onClick={() => setSelectedStatus(category.value)}
-                className={`px-3 py-1.5 rounded-lg transition-all duration-200 flex items-center space-x-1.5 text-xs ${
-                  selectedStatus === category.value 
-                    ? 'bg-gradient-to-r from-blue-400 to-blue-500 text-white shadow-md transform scale-105' 
-                    : 'bg-slate-800/50 hover:bg-slate-700/50 text-slate-300 hover:text-blue-400 border border-slate-700/50'
-                }`}
-              >
-                {category.icon}
-                <span className="font-medium">{category.label}</span>
-                <Badge className={`text-xs px-1 py-0 ${
-                  selectedStatus === category.value 
-                    ? 'bg-white/20 text-white' 
-                    : 'bg-blue-500/20 text-blue-400'
-                }`}>
-                  {category.count}
-                </Badge>
-              </button>
-            ))}
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-3">
-            <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 hover:shadow-lg transition-shadow">
-              <CardContent className="p-2.5 text-center">
-                <div className="flex items-center justify-center mb-1">
-                  <TrendingUp className="h-3 w-3 text-green-400 mr-1.5" />
-                  <div className="text-base font-bold text-green-400">{statistics.totalProfit >= 0 ? '+' : ''}${statistics.totalProfit.toFixed(2)}</div>
-                </div>
-                <div className="text-green-400 text-xs">Net Profit</div>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 hover:shadow-lg transition-shadow">
-              <CardContent className="p-2.5 text-center">
-                <div className="flex items-center justify-center mb-1">
-                  <Target className="h-3 w-3 text-orange-400 mr-1.5" />
-                  <div className="text-base font-bold text-orange-400">{statistics.winRate.toFixed(1)}%</div>
-                </div>
-                <div className="text-orange-400 text-xs">Win Rate</div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 hover:shadow-lg transition-shadow">
-              <CardContent className="p-2.5 text-center">
-                <div className="flex items-center justify-center mb-1">
-                  <Wallet className="h-3 w-3 text-blue-400 mr-1.5" />
-                  <div className="text-base font-bold text-blue-400">${statistics.totalStaked.toFixed(2)}</div>
-                </div>
-                <div className="text-blue-400 text-xs">Total Staked</div>
-              </CardContent>
-            </Card>
-          </div>
+      <div className="relative z-10 container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">My Bets</h1>
+          <p className="text-slate-400">Track your betting performance and history</p>
         </div>
 
-        {/* Main Content */}
-        <div className="flex-1 flex overflow-hidden">
-          {/* Left Sidebar - Sports Categories */}
-          <div className="w-40 bg-slate-900/50 backdrop-blur-sm border-r border-slate-800/50 shadow-sm">
-            <ScrollArea className="h-full" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-              <div className="p-1.5 space-y-0.5" style={{ scrollbarWidth: 'none' }}>
-                {sportsCategories.map((category) => (
-                  <button
-                    key={category.value}
-                    onClick={() => setSelectedCategory(category.value)}
-                    className={`w-full text-left p-1.5 rounded-lg transition-all duration-200 flex items-center justify-between text-xs ${
-                      selectedCategory === category.value 
-                        ? 'bg-gradient-to-r from-blue-400 to-blue-500 text-white shadow-sm' 
-                        : 'hover:bg-slate-800/50 text-slate-300 hover:text-blue-400'
-                    }`}
-                  >
-                    <div className="flex items-center space-x-1.5">
-                      <span className="text-xs">{category.icon}</span>
-                      <span className="font-medium">{category.label}</span>
-                    </div>
-                    <Badge className={`text-xs px-1 py-0 ${
-                      selectedCategory === category.value 
-                        ? 'bg-white/20 text-white' 
-                        : 'bg-slate-700/50 text-slate-300'
-                    }`}>
-                      {category.count}
+        {/* Show skeleton during loading */}
+        {isLoading ? (
+          <MyBetsSkeletonGrid />
+        ) : (
+          <>
+            <BetStatsCards userBets={userBets} />
+            <BetPerformanceSummary userBets={userBets} />
+
+            <div className="mt-8">
+              <Tabs value={selectedFilter} onValueChange={setSelectedFilter} className="w-full">
+                <TabsList className="grid w-full grid-cols-4 bg-slate-900/50 border-slate-800/50">
+                  <TabsTrigger value="all" className="text-xs">
+                    All Bets
+                    <Badge variant="secondary" className="ml-2 bg-slate-700 text-slate-200">
+                      {getBetCountByStatus("all")}
                     </Badge>
-                  </button>
-                ))}
-              </div>
-            </ScrollArea>
-          </div>
+                  </TabsTrigger>
+                  <TabsTrigger value="pending" className="text-xs">
+                    Pending
+                    <Badge variant="secondary" className="ml-2 bg-slate-700 text-slate-200">
+                      {getBetCountByStatus("pending")}
+                    </Badge>
+                  </TabsTrigger>
+                  <TabsTrigger value="won" className="text-xs">
+                    Won
+                    <Badge variant="secondary" className="ml-2 bg-slate-700 text-slate-200">
+                      {getBetCountByStatus("won")}
+                    </Badge>
+                  </TabsTrigger>
+                  <TabsTrigger value="lost" className="text-xs">
+                    Lost
+                    <Badge variant="secondary" className="ml-2 bg-slate-700 text-slate-200">
+                      {getBetCountByStatus("lost")}
+                    </Badge>
+                  </TabsTrigger>
+                </TabsList>
 
-          {/* Right Content Area */}
-          <div className="flex-1 overflow-hidden">
-            {filteredBets.length > 0 ? (
-              <ScrollArea className="h-full p-3" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3">
-                  {filteredBets.map((bet) => (
-                    <BetCard key={bet.id} bet={bet} />
-                  ))}
-                </div>
-              </ScrollArea>
-            ) : (
-              <div className="flex items-center justify-center h-full">
-                <Card className="p-6 text-center bg-slate-900/50 backdrop-blur-sm border-slate-800/50 shadow-sm">
-                  <Wallet className="h-10 w-10 text-slate-400 mx-auto mb-3" />
-                  <h3 className="text-base font-medium text-slate-200 mb-2">No Bets Found</h3>
-                  <p className="text-slate-400 mb-3 text-sm">
-                    {transformedBets.length === 0 
-                      ? "You haven't placed any bets yet. Visit Live Events to start betting!"
-                      : "No bets match your current filters."
-                    }
-                  </p>
-                </Card>
-              </div>
-            )}
-          </div>
-        </div>
+                <TabsContent value={selectedFilter} className="mt-6">
+                  {filteredBets.length === 0 ? (
+                    <div className="text-center py-12">
+                      <p className="text-slate-400 text-lg">No bets found for this category</p>
+                      <p className="text-slate-500 text-sm mt-2">Place some bets to see them here!</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {filteredBets.map((bet) => (
+                        <BetCard key={bet.id} bet={bet} />
+                      ))}
+                    </div>
+                  )}
+                </TabsContent>
+              </Tabs>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

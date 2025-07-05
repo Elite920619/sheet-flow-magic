@@ -41,16 +41,21 @@ const LiveEvents = () => {
   // Get categories for live events
   const { sportsCategories: liveSportsCategories, getSportLabel } = useSportCategories(liveEvents);
   
-  // Get categories for upcoming events
+  // Get categories for upcoming events - THIS IS THE KEY FIX
   const { sportsCategories: upcomingSportsCategories } = useSportCategories(upcomingEvents);
 
-  // Use the correct categories based on active tab
+  // Use the correct categories based on active tab - THIS ENSURES PROPER COUNTING
   const currentCategories = activeTab === 'live' ? liveSportsCategories : upcomingSportsCategories;
 
-  // Filter and sort events based on active tab
+  // Filter and sort events based on active tab - THIS ENSURES PROPER FILTERING
   const currentEvents = activeTab === 'live' ? liveEvents : upcomingEvents;
   const sortedEvents = currentEvents
-    .filter((event) => selectedCategory === "all" || event.sport === selectedCategory)
+    .filter((event) => {
+      if (selectedCategory === "all") return true;
+      const eventSport = event.sport?.toLowerCase();
+      const selectedSport = selectedCategory.toLowerCase();
+      return eventSport === selectedSport;
+    })
     .sort((a, b) => {
       const timeA = a.timeLeft?.match(/\d+/)?.[0] || "0";
       const timeB = b.timeLeft?.match(/\d+/)?.[0] || "0";
@@ -59,10 +64,21 @@ const LiveEvents = () => {
       return (a.league || "").localeCompare(b.league || "");
     });
 
+  console.log('🎮 LiveEvents render state:', {
+    activeTab,
+    selectedCategory,
+    currentEventsCount: currentEvents.length,
+    sortedEventsCount: sortedEvents.length,
+    categoriesCount: currentCategories.length,
+    liveEventsCount: liveEvents.length,
+    upcomingEventsCount: upcomingEvents.length
+  });
+
   const availableMarkets = sortedEvents.filter((e) => e.betStatus === "Available").length;
   const uniqueSportsLength = [...new Set(currentEvents.map(event => event.sport))].length;
 
   const handleTabChange = (tab: 'live' | 'upcoming') => {
+    console.log('🔄 Tab changing to:', tab);
     setActiveTab(tab);
     // Reset category to 'all' when switching tabs to ensure valid selection
     handleCategorySelect('all');

@@ -1,10 +1,14 @@
 
 import { useMemo } from 'react';
 
-export const useSportCategories = (liveEvents: any[]) => {
+export const useSportCategories = (events: any[]) => {
   const getSportCount = (sport: string) => {
-    if (sport === 'all') return liveEvents.length;
-    return liveEvents.filter(event => event.sport === sport).length;
+    if (sport === 'all') return events.length;
+    return events.filter(event => {
+      const eventSport = event.sport?.toLowerCase();
+      const targetSport = sport.toLowerCase();
+      return eventSport === targetSport;
+    }).length;
   };
 
   const getSportIcon = (sport: string) => {
@@ -58,8 +62,8 @@ export const useSportCategories = (liveEvents: any[]) => {
   };
 
   const uniqueSports = useMemo(() => 
-    [...new Set(liveEvents.map(event => event.sport))], 
-    [liveEvents]
+    [...new Set(events.map(event => event.sport?.toLowerCase()).filter(Boolean))], 
+    [events]
   );
 
   // Use consistent sport categories across all pages
@@ -71,6 +75,12 @@ export const useSportCategories = (liveEvents: any[]) => {
   ];
 
   const sportsCategories = useMemo(() => {
+    console.log('🏆 Building sport categories from events:', {
+      totalEvents: events.length,
+      uniqueSports: uniqueSports,
+      sampleEvents: events.slice(0, 3).map(e => ({ sport: e.sport }))
+    });
+
     const categories = [
       { value: 'all', label: 'All Sports', icon: '🏆', count: getSportCount('all') }
     ];
@@ -85,11 +95,13 @@ export const useSportCategories = (liveEvents: any[]) => {
           icon: getSportIcon(sport),
           count: count
         });
+        console.log(`✅ Added category: ${sport} (${count} events)`);
       }
     });
 
+    console.log('🎯 Final categories:', categories.map(c => `${c.label}: ${c.count}`));
     return categories;
-  }, [liveEvents]);
+  }, [events]);
 
   return {
     uniqueSports,
