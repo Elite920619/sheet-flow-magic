@@ -1,330 +1,140 @@
-
 export class MockDataProvider {
-  // Enhanced regional team assignments with completely separate rosters
-  private static regionalTeams: Record<string, Record<string, string[]>> = {
-    soccer: {
-      US: ['LA Galaxy', 'LAFC', 'Seattle Sounders', 'Portland Timbers', 'Atlanta United', 'Orlando City', 'NYC FC', 'NY Red Bulls', 'Inter Miami', 'Chicago Fire'],
-      UK: ['Manchester United', 'Liverpool', 'Arsenal', 'Chelsea', 'Manchester City', 'Tottenham', 'Newcastle United', 'Brighton', 'West Ham', 'Leeds United'],
-      EU: ['Bayern Munich', 'Borussia Dortmund', 'Real Madrid', 'Barcelona', 'PSG', 'Marseille', 'Juventus', 'AC Milan', 'Ajax', 'Porto'],
-      AU: ['Melbourne Victory', 'Sydney FC', 'Perth Glory', 'Adelaide United', 'Western United', 'Melbourne City', 'Central Coast Mariners', 'Western Sydney', 'Brisbane Roar', 'Wellington Phoenix']
-    },
-    basketball: {
-      US: ['Lakers', 'Warriors', 'Celtics', 'Heat', 'Bulls', 'Knicks', 'Nets', 'Rockets', 'Spurs', 'Clippers'],
-      UK: ['London Lions', 'Leicester Riders', 'Newcastle Eagles', 'Plymouth Raiders', 'Sheffield Sharks', 'Manchester Giants', 'Bristol Flyers', 'Cheshire Phoenix'],
-      EU: ['Barcelona', 'Real Madrid', 'CSKA Moscow', 'Fenerbahce', 'Panathinaikos', 'Olympiacos', 'Zalgiris', 'Maccabi Tel Aviv'],
-      AU: ['Sydney Kings', 'Melbourne United', 'Perth Wildcats', 'Adelaide 36ers', 'Cairns Taipans', 'Illawarra Hawks', 'Brisbane Bullets', 'South East Melbourne Phoenix']
-    },
-    football: {
-      US: ['Cowboys', 'Patriots', 'Packers', 'Steelers', '49ers', 'Giants', 'Chiefs', 'Ravens', 'Bengals', 'Bills'],
-      UK: ['London Warriors', 'Birmingham Bulls', 'Manchester Titans', 'Edinburgh Wolves', 'Cardiff Dragons', 'Leeds Rhinos'],
-      EU: ['Frankfurt Galaxy', 'Berlin Thunder', 'Hamburg Sea Devils', 'Cologne Centurions', 'Vienna Vikings', 'Barcelona Dragons'],
-      AU: ['Sydney Swans', 'Melbourne Demons', 'Brisbane Lions', 'Adelaide Crows', 'Fremantle Dockers', 'West Coast Eagles']
-    },
-    baseball: {
-      US: ['Yankees', 'Red Sox', 'Dodgers', 'Giants', 'Cubs', 'Cardinals', 'Astros', 'Braves', 'Mets', 'Phillies'],
-      UK: ['London Mets', 'Essex Redbacks', 'Liverpool Trojans', 'Birmingham Barons', 'Manchester Storm', 'Leeds Pirates'],
-      EU: ['Amsterdam Pirates', 'Berlin Sluggers', 'Paris Universe', 'Rome Capitals', 'Madrid Kings', 'Barcelona Eagles'],
-      AU: ['Melbourne Aces', 'Sydney Blue Sox', 'Perth Heat', 'Adelaide Bite', 'Brisbane Bandits', 'Canberra Cavalry']
-    },
-    hockey: {
-      US: ['Rangers', 'Bruins', 'Penguins', 'Blackhawks', 'Red Wings', 'Maple Leafs', 'Kings', 'Sharks', 'Lightning', 'Avalanche'],
-      UK: ['Belfast Giants', 'Cardiff Devils', 'Sheffield Steelers', 'Nottingham Panthers', 'Glasgow Clan', 'Dundee Stars'],
-      EU: ['SKA St. Petersburg', 'Dynamo Moscow', 'Jokerit Helsinki', 'Zurich Lions', 'Vienna Capitals', 'Berlin Eisbären'],
-      AU: ['Sydney Bears', 'Melbourne Mustangs', 'Adelaide Adrenaline', 'Perth Thunder', 'Brisbane Blaze', 'Newcastle Northstars']
-    },
-    rugby: {
-      US: ['USA Eagles', 'Chicago Lions', 'New York Rugby', 'Austin Huns', 'San Diego Legion', 'Seattle Seawolves'],
-      UK: ['Leicester Tigers', 'Bath Rugby', 'Exeter Chiefs', 'Harlequins', 'Saracens', 'Northampton Saints'],
-      EU: ['Toulouse', 'Leinster', 'Munster', 'Racing 92', 'La Rochelle', 'Ulster'],
-      AU: ['Queensland Reds', 'NSW Waratahs', 'ACT Brumbies', 'Melbourne Rebels', 'Western Force', 'Fijian Drua']
-    }
-  };
+  private static usedTeams = new Set<string>();
 
-  // Sports that support draw outcomes
-  private static sportsWithDraws = ['soccer', 'rugby', 'hockey'];
-
-  // Enhanced playoff game types with proper weights
-  private static playoffGameTypes = {
-    'Grand Final': 0.05,      // 5% chance - most rare
-    'Championship': 0.05,     // 5% chance
-    'Cup Final': 0.08,        // 8% chance
-    'Semi-Final': 0.12,       // 12% chance
-    'Quarter-Final': 0.15,    // 15% chance
-    'Playoff Final': 0.10     // 10% chance
-  };
-
-  // Global team usage tracker with region tracking
-  private static usedTeamsByRegion = new Map<string, Set<string>>();
-
-  // Initialize region trackers
   static resetTeamUsage() {
-    this.usedTeamsByRegion.clear();
-    ['us', 'uk', 'eu', 'au'].forEach(region => {
-      this.usedTeamsByRegion.set(region, new Set<string>());
-    });
-    console.log('🔄 Team usage reset - all regions cleared');
+    this.usedTeams.clear();
   }
 
-  // Generate events for a specific region with enhanced playoff logic
-  static generateRegionEvents(region: string, eventCount: number = 10): any[] {
-    const sports = ['soccer', 'basketball', 'football', 'baseball', 'hockey', 'rugby'];
-    const events: any[] = [];
-    const regionKey = region.toUpperCase();
+  static getLeagueForSport(sport: string): string {
+    const leagueMap: { [key: string]: string[] } = {
+      'football': ['NFL', 'NCAA Football', 'CFL'],
+      'basketball': ['NBA', 'NCAA Basketball', 'EuroLeague'],
+      'soccer': ['Premier League', 'La Liga', 'Bundesliga', 'Serie A', 'MLS'],
+      'baseball': ['MLB', 'NPB', 'KBO'],
+      'hockey': ['NHL', 'KHL', 'SHL'],
+      'tennis': ['ATP Tour', 'WTA Tour', 'Grand Slam'],
+      'golf': ['PGA Tour', 'European Tour', 'LIV Golf'],
+      'boxing': ['Heavyweight', 'Middleweight', 'Welterweight'],
+      'mma': ['UFC', 'Bellator', 'ONE Championship'],
+      'cricket': ['IPL', 'The Hundred', 'Big Bash']
+    };
     
-    // Ensure region tracker exists
-    if (!this.usedTeamsByRegion.has(region)) {
-      this.usedTeamsByRegion.set(region, new Set<string>());
+    const leagues = leagueMap[sport] || ['Professional League'];
+    return leagues[Math.floor(Math.random() * leagues.length)];
+  }
+
+  static getRandomTeam(sport: string, region: string): string {
+    const teamsByRegion: { [key: string]: { [key: string]: string[] } } = {
+      'us': {
+        'football': ['Patriots', 'Cowboys', 'Packers', 'Steelers', 'Giants', 'Eagles', 'Chiefs', 'Rams'],
+        'basketball': ['Lakers', 'Warriors', 'Celtics', 'Heat', 'Bulls', 'Knicks', 'Nets', 'Spurs'],
+        'baseball': ['Yankees', 'Red Sox', 'Dodgers', 'Giants', 'Cubs', 'Cardinals', 'Astros', 'Braves'],
+        'hockey': ['Rangers', 'Bruins', 'Blackhawks', 'Kings', 'Penguins', 'Capitals', 'Lightning', 'Sharks'],
+        'soccer': ['LAFC', 'Atlanta United', 'Seattle Sounders', 'Portland Timbers', 'NYC FC', 'Inter Miami'],
+        'tennis': ['Serena Williams', 'Venus Williams', 'Andy Roddick', 'John Isner'],
+        'golf': ['Tiger Woods', 'Phil Mickelson', 'Jordan Spieth', 'Justin Thomas'],
+        'boxing': ['Floyd Mayweather', 'Manny Pacquiao', 'Canelo Alvarez', 'Gennady Golovkin'],
+        'mma': ['Jon Jones', 'Daniel Cormier', 'Stipe Miocic', 'Francis Ngannou'],
+        'cricket': ['Team USA', 'American Eagles', 'Liberty Stars', 'Freedom Fighters']
+      },
+      'uk': {
+        'football': ['Manchester United', 'Liverpool', 'Chelsea', 'Arsenal', 'Tottenham', 'Manchester City'],
+        'basketball': ['London Lions', 'Newcastle Eagles', 'Leicester Riders', 'Sheffield Sharks'],
+        'soccer': ['Manchester United', 'Liverpool', 'Chelsea', 'Arsenal', 'Tottenham', 'Manchester City'],
+        'cricket': ['England', 'Yorkshire', 'Lancashire', 'Surrey', 'Essex', 'Kent'],
+        'tennis': ['Andy Murray', 'Emma Raducanu', 'Dan Evans', 'Cameron Norrie'],
+        'golf': ['Rory McIlroy', 'Justin Rose', 'Paul Casey', 'Tommy Fleetwood'],
+        'boxing': ['Anthony Joshua', 'Tyson Fury', 'Amir Khan', 'Carl Froch'],
+        'hockey': ['Sheffield Steelers', 'Nottingham Panthers', 'Cardiff Devils', 'Belfast Giants']
+      },
+      'eu': {
+        'soccer': ['Barcelona', 'Real Madrid', 'Bayern Munich', 'PSG', 'Juventus', 'AC Milan'],
+        'basketball': ['Real Madrid', 'Barcelona', 'CSKA Moscow', 'Fenerbahce', 'Olympiacos'],
+        'tennis': ['Rafael Nadal', 'Novak Djokovic', 'Alexander Zverev', 'Stefanos Tsitsipas'],
+        'golf': ['Jon Rahm', 'Viktor Hovland', 'Rory McIlroy', 'Francesco Molinari'],
+        'hockey': ['SKA St. Petersburg', 'CSKA Moscow', 'Jokerit Helsinki', 'Dynamo Moscow']
+      },
+      'au': {
+        'cricket': ['Australia', 'Sydney Sixers', 'Melbourne Stars', 'Perth Scorchers'],
+        'tennis': ['Nick Kyrgios', 'Ash Barty', 'Alex de Minaur', 'Thanasi Kokkinakis'],
+        'soccer': ['Sydney FC', 'Melbourne Victory', 'Perth Glory', 'Adelaide United'],
+        'basketball': ['Sydney Kings', 'Melbourne United', 'Perth Wildcats', 'Adelaide 36ers']
+      }
+    };
+
+    const availableTeams = teamsByRegion[region]?.[sport] || ['Team A', 'Team B', 'Team C', 'Team D'];
+    const unusedTeams = availableTeams.filter(team => !this.usedTeams.has(`${sport}_${region}_${team}`));
+    
+    if (unusedTeams.length === 0) {
+      // Reset if all teams used
+      availableTeams.forEach(team => this.usedTeams.delete(`${sport}_${region}_${team}`));
+      return availableTeams[Math.floor(Math.random() * availableTeams.length)];
     }
     
-    console.log(`🎯 Generating ${eventCount} events for ${regionKey} region with enhanced playoff logic`);
+    const selectedTeam = unusedTeams[Math.floor(Math.random() * unusedTeams.length)];
+    this.usedTeams.add(`${sport}_${region}_${selectedTeam}`);
+    return selectedTeam;
+  }
 
-    for (let i = 0; i < eventCount; i++) {
-      const sport = sports[i % sports.length];
-      const sportTeams = this.regionalTeams[sport]?.[regionKey] || [];
-      
-      if (sportTeams.length < 2) {
-        console.warn(`⚠️ Not enough teams for ${sport} in ${regionKey}`);
-        continue;
-      }
-      
-      // Get unique team pair for this region
-      const teamPair = this.getUniqueTeamPairForRegion(sportTeams, sport, region);
-      if (!teamPair) {
-        console.warn(`⚠️ No unique team pair available for ${sport} in ${regionKey}`);
-        continue;
-      }
-      
-      const { homeTeam, awayTeam } = teamPair;
-      
-      // Enhanced playoff determination logic
-      const gameTypeInfo = this.determineGameType();
-      const oddsData = this.generateRealisticOdds(sport, gameTypeInfo.isPlayoff);
-      const leagueName = this.getLeagueName(sport, region, gameTypeInfo.type);
+  static generateOdds(): string {
+    const odds = Math.floor(Math.random() * 600) + 100;
+    return Math.random() > 0.5 ? `+${odds}` : `-${odds}`;
+  }
 
-      const event = {
-        id: `${region.toLowerCase()}_${sport}_${Date.now()}_${i}`,
+  
+  static generateRegionEvents(region: string, count: number = 10): any[] {
+    const sports = ['football', 'basketball', 'soccer', 'baseball', 'hockey', 'tennis', 'golf', 'boxing', 'mma', 'cricket'];
+    const events: any[] = [];
+    
+    for (let i = 0; i < count; i++) {
+      const sport = sports[Math.floor(Math.random() * sports.length)];
+      const homeTeam = this.getRandomTeam(sport, region);
+      const awayTeam = this.getRandomTeam(sport, region);
+      
+      events.push({
+        id: `${region}_${sport}_${i}`,
         sport: sport,
-        league: leagueName,
-        gameType: gameTypeInfo.type,
+        league: this.getLeagueForSport(sport),
         homeTeam: homeTeam,
         awayTeam: awayTeam,
-        homeScore: Math.floor(Math.random() * 4),
-        awayScore: Math.floor(Math.random() * 4),
+        homeScore: Math.floor(Math.random() * 100),
+        awayScore: Math.floor(Math.random() * 100),
         timeLeft: this.generateTimeLeft(),
         betStatus: 'Available',
-        region: regionKey,
-        moneylineHome: oddsData.moneylineHome,
-        moneylineAway: oddsData.moneylineAway,
-        moneylineDraw: oddsData.moneylineDraw,
-        spread: oddsData.spread,
-        total: oddsData.total,
+        region: region.toUpperCase(),
+        moneylineHome: this.generateOdds(),
+        moneylineAway: this.generateOdds(),
+        moneylineDraw: sport === 'soccer' ? this.generateOdds() : null,
+        spread: this.generateSpread(),
+        total: this.generateTotal(),
         venue: `${homeTeam} Stadium`,
-        attendance: `${Math.floor(Math.random() * 50000 + 20000).toLocaleString()}`,
-        temperature: `${Math.floor(Math.random() * 30 + 10)}°C`,
+        commenceTime: new Date().toISOString(),
+        isLive: true,
+        gameType: 'Regular Season',
         analysis: {
-          confidence: Math.floor(Math.random() * 30) + 70,
-          prediction: 'Live betting available',
+          confidence: Math.floor(Math.random() * 20) + 60,
+          prediction: 'Analysis available',
           momentum: Math.random() > 0.5 ? 'Home' : 'Away'
         },
         homeLogo: '🏠',
         awayLogo: '✈️'
-      };
-
-      events.push(event);
+      });
     }
-
-    console.log(`✅ Generated ${events.length} unique events for ${regionKey} with ${events.filter(e => e.gameType !== 'Regular Season').length} playoff games`);
+    
     return events;
   }
 
-  // Enhanced game type determination with weighted distribution
-  private static determineGameType(): { type: string, isPlayoff: boolean } {
-    const random = Math.random();
-    
-    // 25% chance for playoff games (more realistic)
-    if (random < 0.25) {
-      // Weighted selection of playoff types
-      const playoffRandom = Math.random();
-      let cumulativeWeight = 0;
-      
-      for (const [gameType, weight] of Object.entries(this.playoffGameTypes)) {
-        cumulativeWeight += weight;
-        if (playoffRandom <= cumulativeWeight) {
-          return { type: gameType, isPlayoff: true };
-        }
-      }
-      
-      // Fallback to Semi-Final if no match
-      return { type: 'Semi-Final', isPlayoff: true };
-    }
-    
-    return { type: 'Regular Season', isPlayoff: false };
-  }
-
-  // Get unique team pair for specific region with strict tracking
-  private static getUniqueTeamPairForRegion(teams: string[], sport: string, region: string): { homeTeam: string, awayTeam: string } | null {
-    const maxAttempts = 100;
-    let attempts = 0;
-    const regionTracker = this.usedTeamsByRegion.get(region)!;
-    
-    while (attempts < maxAttempts) {
-      const homeIndex = Math.floor(Math.random() * teams.length);
-      let awayIndex = Math.floor(Math.random() * teams.length);
-      
-      // Ensure different teams
-      while (awayIndex === homeIndex) {
-        awayIndex = Math.floor(Math.random() * teams.length);
-      }
-      
-      const homeTeam = teams[homeIndex];
-      const awayTeam = teams[awayIndex];
-      
-      // Check if either team is already used in this region
-      if (!regionTracker.has(homeTeam) && !regionTracker.has(awayTeam)) {
-        // Mark teams as used in this region only
-        regionTracker.add(homeTeam);
-        regionTracker.add(awayTeam);
-        
-        console.log(`✅ Unique team pair for ${region.toUpperCase()}: ${awayTeam} @ ${homeTeam} (${sport})`);
-        return { homeTeam, awayTeam };
-      }
-      
-      attempts++;
-    }
-    
-    console.warn(`❌ No unique team pair found for ${sport} in ${region.toUpperCase()} after ${maxAttempts} attempts`);
-    return null;
-  }
-
-  private static getLeagueName(sport: string, region: string, gameType: string): string {
-    const leagueNames: Record<string, Record<string, string>> = {
-      soccer: {
-        US: 'MLS',
-        UK: 'Premier League',
-        EU: 'Champions League',
-        AU: 'A-League'
-      },
-      basketball: {
-        US: 'NBA',
-        UK: 'BBL',
-        EU: 'EuroLeague',
-        AU: 'NBL'
-      },
-      football: {
-        US: 'NFL',
-        UK: 'BAFA',
-        EU: 'ELF',
-        AU: 'GFA'
-      },
-      baseball: {
-        US: 'MLB',
-        UK: 'BBF',
-        EU: 'CEB',
-        AU: 'ABL'
-      },
-      hockey: {
-        US: 'NHL',
-        UK: 'EIHL',
-        EU: 'KHL',
-        AU: 'AIHL'
-      },
-      rugby: {
-        US: 'MLR',
-        UK: 'Premiership',
-        EU: 'Champions Cup',
-        AU: 'Super Rugby'
-      }
-    };
-
-    const baseName = leagueNames[sport]?.[region.toUpperCase()] || `${region.toUpperCase()} ${sport.charAt(0).toUpperCase() + sport.slice(1)} League`;
-    
-    // Don't append game type to league name - it's handled separately in the UI
-    return baseName;
-  }
-
-  getMockLiveEventsByRegion(region: string): any[] {
-    const eventCount = Math.floor(Math.random() * 3) + 8; // 8-10 events per region
-    return MockDataProvider.generateRegionEvents(region, eventCount);
-  }
-
-  getMockSports(): any[] {
-    return [
-      { key: 'soccer', title: 'Soccer', active: true, has_odds: true },
-      { key: 'basketball', title: 'Basketball', active: true, has_odds: true },
-      { key: 'football', title: 'American Football', active: true, has_odds: true },
-      { key: 'baseball', title: 'Baseball', active: true, has_odds: true },
-      { key: 'hockey', title: 'Ice Hockey', active: true, has_odds: true },
-      { key: 'rugby', title: 'Rugby', active: true, has_odds: true }
-    ];
-  }
-
-  private static generateRealisticOdds(sport: string, isPlayoffGame: boolean = false): {
-    moneylineHome: string,
-    moneylineAway: string,
-    moneylineDraw: string | null,
-    spread: string,
-    total: string
-  } {
-    const homeOdds = Math.random() > 0.5 
-      ? Math.floor(Math.random() * 300) + 105
-      : -(Math.floor(Math.random() * 250) + 110);
-    
-    const awayOdds = Math.random() > 0.5 
-      ? Math.floor(Math.random() * 350) + 120
-      : -(Math.floor(Math.random() * 200) + 115);
-    
-    const drawOdds = Math.floor(Math.random() * 200) + 220;
-    
-    // Determine if sport supports draws AND it's not a playoff game
-    const supportsDraws = this.sportsWithDraws.includes(sport) && !isPlayoffGame;
-    
-    let spread, total;
-    switch (sport) {
-      case 'football':
-        spread = `${Math.random() > 0.5 ? '+' : '-'}${(Math.random() * 14 + 1).toFixed(1)} (${this.formatOdds(Math.floor(Math.random() * 40) - 120)})`;
-        total = `${(42 + Math.random() * 16).toFixed(1)}`;
-        break;
-      case 'basketball':
-        spread = `${Math.random() > 0.5 ? '+' : '-'}${(Math.random() * 12 + 1).toFixed(1)} (${this.formatOdds(Math.floor(Math.random() * 40) - 120)})`;
-        total = `${(205 + Math.random() * 30).toFixed(1)}`;
-        break;
-      case 'baseball':
-        spread = `${Math.random() > 0.5 ? '+' : '-'}1.5 (${this.formatOdds(Math.floor(Math.random() * 60) - 130)})`;
-        total = `${(8 + Math.random() * 4).toFixed(1)}`;
-        break;
-      case 'hockey':
-        spread = `${Math.random() > 0.5 ? '+' : '-'}1.5 (${this.formatOdds(Math.floor(Math.random() * 80) - 140)})`;
-        total = `${(5.5 + Math.random() * 2).toFixed(1)}`;
-        break;
-      case 'soccer':
-        spread = 'N/A';
-        total = `${(2.5 + Math.random() * 2).toFixed(1)}`;
-        break;
-      case 'rugby':
-        spread = `${Math.random() > 0.5 ? '+' : '-'}${(Math.random() * 20 + 5).toFixed(1)} (${this.formatOdds(Math.floor(Math.random() * 40) - 120)})`;
-        total = `${(35 + Math.random() * 20).toFixed(1)}`;
-        break;
-      default:
-        spread = `${Math.random() > 0.5 ? '+' : '-'}${(Math.random() * 10).toFixed(1)} (${this.formatOdds(Math.floor(Math.random() * 40) - 120)})`;
-        total = `${(40 + Math.random() * 20).toFixed(1)}`;
-    }
-    
-    return {
-      moneylineHome: this.formatOdds(homeOdds),
-      moneylineAway: this.formatOdds(awayOdds),
-      moneylineDraw: supportsDraws && Math.random() > 0.3 ? this.formatOdds(drawOdds) : null,
-      spread,
-      total
-    };
-  }
-
-  private static formatOdds(odds: number): string {
-    if (!odds || odds === 0) return 'N/A';
-    return odds > 0 ? `+${odds}` : `${odds}`;
-  }
-
   private static generateTimeLeft(): string {
-    const liveStatuses = ['LIVE', '1Q', '2Q', '3Q', '4Q', '1H', '2H', 'OT'];
-    return liveStatuses[Math.floor(Math.random() * liveStatuses.length)];
+    const options = ['Q1 12:45', 'Q2 8:30', 'Q3 15:20', 'Q4 5:10', 'LIVE', '2H 25:30', '1H 40:15'];
+    return options[Math.floor(Math.random() * options.length)];
+  }
+
+  private static generateSpread(): string {
+    const spread = (Math.random() * 14 + 1).toFixed(1);
+    return Math.random() > 0.5 ? `+${spread}` : `-${spread}`;
+  }
+
+  private static generateTotal(): string {
+    return (Math.random() * 50 + 150).toFixed(1);
   }
 }

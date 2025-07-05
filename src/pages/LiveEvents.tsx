@@ -1,3 +1,4 @@
+
 import React from "react";
 import Header from "@/components/Header";
 import CanvasBackground from "@/components/CanvasBackground";
@@ -38,17 +39,11 @@ const LiveEvents = () => {
   const { upcomingEvents } = useUpcomingEvents();
   const { credits, deposit, isDepositing, checkSufficientFunds } = useEnhancedCredits();
   
-  // Get categories for live events
-  const { sportsCategories: liveSportsCategories, getSportLabel } = useSportCategories(liveEvents);
-  
-  // Get categories for upcoming events
-  const { sportsCategories: upcomingSportsCategories } = useSportCategories(upcomingEvents);
-
-  // Use the correct categories based on active tab
-  const currentCategories = activeTab === 'live' ? liveSportsCategories : upcomingSportsCategories;
-
-  // Filter and sort events based on active tab
+  // Get categories for the current active tab's events
   const currentEvents = activeTab === 'live' ? liveEvents : upcomingEvents;
+  const { sportsCategories, getSportLabel } = useSportCategories(currentEvents);
+
+  // Filter and sort events based on active tab and selected category
   const sortedEvents = currentEvents
     .filter((event) => selectedCategory === "all" || event.sport === selectedCategory)
     .sort((a, b) => {
@@ -69,13 +64,11 @@ const LiveEvents = () => {
   };
 
   const handlePlaceBet = (betData: any) => {
-    // Check if this is an insufficient funds case
     if (betData.insufficientFunds) {
       handleInsufficientFunds(betData.stake || 50);
       return;
     }
 
-    // Check sufficient funds with the actual stake amount
     const stakeAmount = betData.stake || 50;
     if (!checkSufficientFunds(stakeAmount)) {
       handleInsufficientFunds(stakeAmount);
@@ -100,7 +93,7 @@ const LiveEvents = () => {
         
         <div className="flex">
           <LiveEventsSidebar
-            categoryFilters={currentCategories}
+            categoryFilters={sportsCategories}
             selectedCategory={selectedCategory}
             onCategorySelect={handleCategorySelect}
           />
@@ -117,7 +110,7 @@ const LiveEvents = () => {
               onPlaceBet={handlePlaceBet}
               onRefresh={refreshEvents}
               onCategoryChange={handleCategorySelect}
-              upcomingSportsCategories={upcomingSportsCategories}
+              upcomingSportsCategories={sportsCategories}
               activeTab={activeTab}
               onTabChange={handleTabChange}
             />
