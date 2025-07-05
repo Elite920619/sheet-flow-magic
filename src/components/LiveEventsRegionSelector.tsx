@@ -36,7 +36,7 @@ const LiveEventsRegionSelector: React.FC<LiveEventsRegionSelectorProps> = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="bg-blur/80">
+        <Button variant="outline" size="sm" className="bg-blur/90 border-border">
           <Globe className="h-4 w-4 mr-2" />
           {currentRegion?.flag} {currentRegion?.label}
         </Button>

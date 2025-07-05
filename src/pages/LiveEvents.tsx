@@ -91,7 +91,7 @@ const LiveEvents = () => {
       <CanvasBackground />
       <Header />
 
-      <div className="relative z-10 h-[calc(100vh-4rem)] flex flex-col">
+      <div className="relative z-10 h-[calc(100vh-8rem)] flex flex-col bg-blur/80">
         <LiveEventsHeader
           sortedEventsLength={sortedEvents.length}
           availableMarkets={availableMarkets}
@@ -105,7 +105,7 @@ const LiveEvents = () => {
             onCategorySelect={handleCategorySelect}
           />
 
-          <div className="flex-1 max-h-[calc(100vh-8rem)] overflow-y-auto">
+          <div className="flex-1 max-h-[calc(100vh-12rem)] overflow-y-auto">
             <LiveEventsContent
               isLoading={isLoading}
               isRefreshing={isRefreshing}

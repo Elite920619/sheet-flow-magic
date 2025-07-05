@@ -23,7 +23,7 @@ const LiveEventsTabsHeader: React.FC<LiveEventsTabsHeaderProps> = ({
   onTabChange
 }) => {
   return (
-    <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-sm p-4 border-b">
+    <div className="sticky top-0 z-20 bg-background/5 backdrop-blur-sm p-4 border-b">
       <div className="flex items-center justify-between mb-4">
         <TabsList className="grid w-full grid-cols-2 max-w-md">
           <TabsTrigger 
@@ -45,7 +45,6 @@ const LiveEventsTabsHeader: React.FC<LiveEventsTabsHeaderProps> = ({
         <div className="flex items-center gap-3">
           {pendingBetsCount > 0 && (
             <div className="flex items-center gap-2 text-sm text-blue-500">
-              <Bell className="h-4 w-4" />
               <Badge variant="outline" className="border-blue-500 text-blue-500">
                 {pendingBetsCount} pending bets
               </Badge>
