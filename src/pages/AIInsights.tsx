@@ -44,7 +44,7 @@ const AIInsights = () => {
       confidence: 87,
       expectedValue: "+$45",
       timeLeft: "2h 30m",
-      icon: <Target className="h-4 w-4" />,
+      icon: <Target className="h-3 w-3" />,
     },
     {
       id: 2,
@@ -54,7 +54,7 @@ const AIInsights = () => {
       description: "You've been favoring home teams 73% of the time this week",
       confidence: 92,
       recommendation: "Consider analyzing away team value",
-      icon: <AlertTriangle className="h-4 w-4" />,
+      icon: <AlertTriangle className="h-3 w-3" />,
     },
     {
       id: 3,
@@ -64,7 +64,7 @@ const AIInsights = () => {
       description: "Your NBA predictions are outperforming the market by 12%",
       confidence: 94,
       streak: "7 wins",
-      icon: <CheckCircle className="h-4 w-4" />,
+      icon: <CheckCircle className="h-3 w-3" />,
     },
     {
       id: 4,
@@ -75,7 +75,28 @@ const AIInsights = () => {
       confidence: 96,
       expectedValue: "+$78",
       timeLeft: "45m",
-      icon: <Zap className="h-4 w-4" />,
+      icon: <Zap className="h-3 w-3" />,
+    },
+    {
+      id: 5,
+      type: "opportunity",
+      priority: "medium",
+      title: "Sharp Money Movement",
+      description: "Heavy action detected on Ravens +3.5",
+      confidence: 89,
+      expectedValue: "+$32",
+      timeLeft: "1h 15m",
+      icon: <TrendingUp className="h-3 w-3" />,
+    },
+    {
+      id: 6,
+      type: "warning",
+      priority: "low",
+      title: "Streak Analysis",
+      description: "Your soccer bets are on a 3-game losing streak",
+      confidence: 85,
+      recommendation: "Consider reducing soccer bet sizes",
+      icon: <AlertTriangle className="h-3 w-3" />,
     },
   ];
 
@@ -213,82 +234,75 @@ const AIInsights = () => {
           </Card>
         </div>
 
-        {/* Main Content - Three sections in one row */}
+        {/* Main Content - Compact Live AI Insights */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0">
-          {/* Live AI Insights */}
-          <Card className="bg-slate-900/50 backdrop-blur-sm border-slate-800/50 flex flex-col">
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center justify-between text-slate-200 text-base">
+          {/* Compact Live AI Insights */}
+          <Card className="bg-slate-900/50 backdrop-blur-sm border-slate-800/50 flex flex-col lg:col-span-2">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center justify-between text-slate-200 text-sm">
                 <div className="flex items-center">
-                  <Eye className="mr-2 h-4 w-4 text-blue-400" />
+                  <Eye className="mr-2 h-3 w-3 text-blue-400" />
                   Live AI Insights
                 </div>
-                <Badge className="text-xs px-1.5 py-0.5 bg-slate-700/50 text-slate-300">
-                  Last updated: {lastUpdated.toLocaleTimeString()}
+                <Badge className="text-xs px-1 py-0.5 bg-slate-700/50 text-slate-300">
+                  Updated: {lastUpdated.toLocaleTimeString()}
                 </Badge>
               </CardTitle>
             </CardHeader>
-            <CardContent className="flex-1 min-h-0">
-              <ScrollArea className="h-full pr-3">
-                <div className="space-y-3">
-                  {aiInsights.map((insight) => (
-                    <div
-                      key={insight.id}
-                      className={`p-3 rounded-lg border ${getTypeColor(
-                        insight.type
-                      )} transition-all hover:shadow-md`}
-                    >
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex items-center space-x-2">
-                          <div className="text-slate-200">{insight.icon}</div>
-                          <div>
-                            <h4 className="font-semibold text-slate-200 text-sm">
-                              {insight.title}
-                            </h4>
-                            <div className="flex items-center space-x-2 mt-1">
-                              <div
-                                className={`w-2 h-2 rounded-full ${getPriorityColor(
-                                  insight.priority
-                                )}`}
-                              ></div>
-                              <span className="text-xs text-slate-400 capitalize">
-                                {insight.priority} Priority
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        <Badge className="bg-slate-700/50 text-slate-300 text-xs px-1.5 py-0.5">
-                          {insight.confidence}% confident
-                        </Badge>
-                      </div>
-                      <p className="text-slate-300 text-sm mb-2">
-                        {insight.description}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          {insight.expectedValue && (
-                            <span className="text-green-400 font-medium text-xs">
-                              {insight.expectedValue}
-                            </span>
-                          )}
-                          {insight.timeLeft && (
-                            <div className="flex items-center text-orange-400 text-xs">
-                              <Clock className="h-3 w-3 mr-1" />
-                              {insight.timeLeft}
-                            </div>
-                          )}
-                          {insight.streak && (
-                            <div className="flex items-center text-blue-400 text-xs">
-                              <Star className="h-3 w-3 mr-1" />
-                              {insight.streak}
-                            </div>
-                          )}
+            <CardContent className="flex-1 min-h-0 p-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 h-full">
+                {aiInsights.map((insight) => (
+                  <div
+                    key={insight.id}
+                    className={`p-2 rounded border ${getTypeColor(
+                      insight.type
+                    )} transition-all hover:shadow-sm`}
+                  >
+                    <div className="flex items-start justify-between mb-1">
+                      <div className="flex items-center space-x-1">
+                        <div className="text-slate-200">{insight.icon}</div>
+                        <div className="flex items-center space-x-1">
+                          <div
+                            className={`w-1.5 h-1.5 rounded-full ${getPriorityColor(
+                              insight.priority
+                            )}`}
+                          ></div>
+                          <Badge className="bg-slate-700/50 text-slate-300 text-xs px-1 py-0">
+                            {insight.confidence}%
+                          </Badge>
                         </div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              </ScrollArea>
+                    <h4 className="font-medium text-slate-200 text-xs mb-1">
+                      {insight.title}
+                    </h4>
+                    <p className="text-slate-300 text-xs mb-1 line-clamp-2">
+                      {insight.description}
+                    </p>
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center space-x-2">
+                        {insight.expectedValue && (
+                          <span className="text-green-400 font-medium">
+                            {insight.expectedValue}
+                          </span>
+                        )}
+                        {insight.timeLeft && (
+                          <div className="flex items-center text-orange-400">
+                            <Clock className="h-2 w-2 mr-1" />
+                            {insight.timeLeft}
+                          </div>
+                        )}
+                        {insight.streak && (
+                          <div className="flex items-center text-blue-400">
+                            <Star className="h-2 w-2 mr-1" />
+                            {insight.streak}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
 
@@ -330,45 +344,39 @@ const AIInsights = () => {
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
 
-          {/* Market Trends */}
-          <Card className="bg-slate-900/50 backdrop-blur-sm border-slate-800/50 flex flex-col">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-slate-200 text-base">
-                Market Trends
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="flex-1">
-              <div className="space-y-3">
-                {marketTrends.map((trend, index) => (
-                  <div
-                    key={index}
-                    className="p-2 bg-slate-800/30 rounded-lg border-l-2 border-blue-400"
-                  >
-                    <div className="flex items-center justify-between mb-1">
-                      <h4 className="font-medium text-slate-200 text-sm">
-                        {trend.title}
-                      </h4>
-                      <Badge
-                        className={`text-xs px-1.5 py-0.5 ${
-                          trend.impact === "High"
-                            ? "bg-red-500/20 text-red-400"
-                            : "bg-yellow-500/20 text-yellow-400"
-                        }`}
-                      >
-                        {trend.impact}
-                      </Badge>
+              {/* Market Trends - Compact */}
+              <div className="mt-6">
+                <h3 className="text-slate-200 text-sm font-medium mb-3">Market Trends</h3>
+                <div className="space-y-2">
+                  {marketTrends.map((trend, index) => (
+                    <div
+                      key={index}
+                      className="p-2 bg-slate-800/30 rounded border-l-2 border-blue-400"
+                    >
+                      <div className="flex items-center justify-between mb-1">
+                        <h4 className="font-medium text-slate-200 text-xs">
+                          {trend.title}
+                        </h4>
+                        <Badge
+                          className={`text-xs px-1 py-0 ${
+                            trend.impact === "High"
+                              ? "bg-red-500/20 text-red-400"
+                              : "bg-yellow-500/20 text-yellow-400"
+                          }`}
+                        >
+                          {trend.impact}
+                        </Badge>
+                      </div>
+                      <p className="text-slate-300 text-xs mb-1">
+                        {trend.description}
+                      </p>
+                      <div className="text-xs text-slate-400">
+                        {trend.timeframe}
+                      </div>
                     </div>
-                    <p className="text-slate-300 text-xs mb-1">
-                      {trend.description}
-                    </p>
-                    <div className="text-xs text-slate-400">
-                      {trend.timeframe}
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </CardContent>
           </Card>
