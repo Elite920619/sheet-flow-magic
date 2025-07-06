@@ -13,26 +13,32 @@ import { Badge } from "@/components/ui/badge";
 
 const MyBets = () => {
   const [selectedFilter, setSelectedFilter] = useState("all");
+  
   const { 
-    userBets, 
+    bets: userBets, 
     isLoading: isLoadingUserBets, 
-    refreshBets,
-    getBetsByStatus 
+    error: userBetsError
   } = useUserBets();
   
   const { 
-    enhancedBets, 
+    bets: enhancedBets, 
     isLoading: isLoadingEnhanced, 
-    refreshEnhancedBets 
+    error: enhancedError,
+    statistics,
+    refetch: refreshEnhancedBets 
   } = useEnhancedBetTracking();
 
   // Combined loading state
   const isLoading = isLoadingUserBets || isLoadingEnhanced;
 
   useEffect(() => {
-    refreshBets();
     refreshEnhancedBets();
-  }, []);
+  }, [refreshEnhancedBets]);
+
+  // Helper function to get bets by status
+  const getBetsByStatus = (status: string) => {
+    return userBets.filter(bet => bet.status === status);
+  };
 
   const filteredBets = selectedFilter === "all" 
     ? userBets 
@@ -41,6 +47,27 @@ const MyBets = () => {
   const getBetCountByStatus = (status: string) => {
     return status === "all" ? userBets.length : getBetsByStatus(status).length;
   };
+
+  // Transform user bets for BetCard component
+  const transformBetForCard = (bet: any) => ({
+    id: bet.id,
+    event: bet.event_name,
+    betType: bet.bet_type,
+    odds: bet.odds,
+    stake: bet.stake,
+    potentialPayout: bet.potential_payout,
+    actualPayout: bet.status === 'won' ? bet.potential_payout : bet.status === 'lost' ? 0 : null,
+    status: bet.status,
+    placedAt: bet.placed_at,
+    settledAt: bet.settled_at,
+    league: bet.league || 'Unknown League',
+    sport: 'Sports',
+    confidence: 75, // Default confidence
+    aiRecommended: false,
+    profit: bet.status === 'won' ? bet.potential_payout - bet.stake : 
+            bet.status === 'lost' ? -bet.stake : 0,
+    teams: bet.teams
+  });
 
   return (
     <div className="min-h-screen text-foreground relative" style={{ background: 'linear-gradient(135deg, rgb(2 6 23) 0%, rgb(15 23 42) 50%, rgb(30 41 59) 100%)' }}>
@@ -58,8 +85,16 @@ const MyBets = () => {
           <MyBetsSkeletonGrid />
         ) : (
           <>
-            <BetStatsCards userBets={userBets} />
-            <BetPerformanceSummary userBets={userBets} />
+            <BetStatsCards 
+              totalBets={statistics.totalBets}
+              totalProfit={statistics.totalProfit}
+              winRate={statistics.winRate}
+              pendingBets={statistics.pendingBets}
+            />
+            <BetPerformanceSummary 
+              totalStaked={statistics.totalStaked}
+              totalProfit={statistics.totalProfit}
+            />
 
             <div className="mt-8">
               <Tabs value={selectedFilter} onValueChange={setSelectedFilter} className="w-full">
@@ -99,7 +134,7 @@ const MyBets = () => {
                   ) : (
                     <div className="space-y-4">
                       {filteredBets.map((bet) => (
-                        <BetCard key={bet.id} bet={bet} />
+                        <BetCard key={bet.id} bet={transformBetForCard(bet)} />
                       ))}
                     </div>
                   )}
