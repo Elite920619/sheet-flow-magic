@@ -6,11 +6,9 @@ import { Label } from '@/components/ui/label';
 import { Brain } from 'lucide-react';
 
 interface ValueBetsInputFormProps {
-  selectedSport: string;
   bookmakerOdds: string;
   estimatedWinPercent: string;
   isAnalyzing: boolean;
-  onSportChange: (value: string) => void;
   onOddsChange: (value: string) => void;
   onWinPercentChange: (value: string) => void;
   onAnalyze: () => void;
