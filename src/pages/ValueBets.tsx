@@ -5,7 +5,6 @@ import CanvasBackground from '@/components/CanvasBackground';
 import ValueBetsHeader from '@/components/ValueBetsHeader';
 import ValueBetsStatsCards from '@/components/ValueBetsStatsCards';
 import ValueBetsInputForm from '@/components/ValueBetsInputForm';
-import ValueBetsSidebar from '@/components/ValueBetsSidebar';
 import ValueBetsGrid from '@/components/ValueBetsGrid';
 import ValueBetsSkeletonGrid from '@/components/ValueBetsSkeletonGrid';
 import ValueBetsEmptyState from '@/components/ValueBetsEmptyState';
@@ -30,7 +29,6 @@ const ValueBets = () => {
   const [selectedValue, setSelectedValue] = useState('all');
   const [minOdds, setMinOdds] = useState('');
   const [maxOdds, setMaxOdds] = useState('');
-  const [showInputForm, setShowInputForm] = useState(false);
   const [bookmakerOdds, setBookmakerOdds] = useState('');
   const [estimatedWinPercent, setEstimatedWinPercent] = useState('');
 
@@ -64,26 +62,10 @@ const ValueBets = () => {
       (!maxOdds || oddsNum <= parseFloat(maxOdds));
 
     const matchesFilters = selectedFilters.length === 0 || 
-      selectedFilters.some(filter => bet.sport.toLowerCase().includes(filter.toLowerCase()));
+      selectedFilters.some(filter => bet.sport?.toLowerCase().includes(filter.toLowerCase()));
 
     return matchesConfidence && matchesValue && matchesOdds && matchesFilters;
   });
-
-  const handleFilterChange = (filter: string) => {
-    setSelectedFilters(prev => 
-      prev.includes(filter) 
-        ? prev.filter(f => f !== filter)
-        : [...prev, filter]
-    );
-  };
-
-  const clearAllFilters = () => {
-    setSelectedFilters([]);
-    setSelectedConfidence('all');
-    setSelectedValue('all');
-    setMinOdds('');
-    setMaxOdds('');
-  };
 
   const handleAnalyze = async () => {
     if (!bookmakerOdds || !estimatedWinPercent) return;
@@ -150,128 +132,102 @@ const ValueBets = () => {
     }
   };
 
-  // Create sport categories for sidebar
-  const sportsCategories = [
-    { value: 'all', label: 'All Sports', icon: '🏆', count: foundValueBets.length },
-    { value: 'football', label: 'Football', icon: '🏈', count: foundValueBets.filter(bet => bet.sport.includes('football')).length },
-    { value: 'basketball', label: 'Basketball', icon: '🏀', count: foundValueBets.filter(bet => bet.sport.includes('basketball')).length },
-    { value: 'baseball', label: 'Baseball', icon: '⚾', count: foundValueBets.filter(bet => bet.sport.includes('baseball')).length },
-    { value: 'soccer', label: 'Soccer', icon: '⚽', count: foundValueBets.filter(bet => bet.sport.includes('soccer')).length },
-  ];
-
-  const selectedCategory = selectedFilters.length > 0 ? selectedFilters[0] : 'all';
-
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 relative">
       <CanvasBackground />
       <Header />
       
       <div className="relative z-10 container mx-auto px-4 py-8">
-        <div className="flex gap-6">
-          <ValueBetsSidebar
-            sportsCategories={sportsCategories}
-            selectedCategory={selectedCategory}
-            onCategorySelect={(category) => {
-              if (category === 'all') {
-                setSelectedFilters([]);
-              } else {
-                setSelectedFilters([category]);
-              }
-            }}
-          />
-          
-          <div className="flex-1">
-            <ValueBetsHeader 
-              filteredBetsCount={filteredBets.length}
-            />
-            
-            <ValueBetsStatsCards 
-              highValueBets={filteredBets.filter(bet => parseFloat(bet.value.replace('%', '').replace('+', '')) >= 15).length}
-              avgConfidence={filteredBets.length > 0 ? filteredBets.reduce((sum, bet) => sum + parseFloat(bet.confidence), 0) / filteredBets.length : 0}
-            />
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-slate-100 mb-2 text-center">Value Bets</h1>
+          <p className="text-slate-400 text-center">Find the best betting opportunities with AI analysis</p>
+        </div>
+        
+        <ValueBetsStatsCards 
+          highValueBets={filteredBets.filter(bet => parseFloat(bet.value.replace('%', '').replace('+', '')) >= 15).length}
+          avgConfidence={filteredBets.length > 0 ? filteredBets.reduce((sum, bet) => sum + parseFloat(bet.confidence), 0) / filteredBets.length : 0}
+        />
 
-            <ValueBetsInputForm 
-              bookmakerOdds={bookmakerOdds}
-              estimatedWinPercent={estimatedWinPercent}
-              isAnalyzing={isAnalyzing}
-              onOddsChange={setBookmakerOdds}
-              onWinPercentChange={setEstimatedWinPercent}
-              onAnalyze={handleAnalyze}
-              onReset={handleReset}
-            />
+        <ValueBetsInputForm 
+          bookmakerOdds={bookmakerOdds}
+          estimatedWinPercent={estimatedWinPercent}
+          isAnalyzing={isAnalyzing}
+          onOddsChange={setBookmakerOdds}
+          onWinPercentChange={setEstimatedWinPercent}
+          onAnalyze={handleAnalyze}
+          onReset={handleReset}
+        />
 
-            <div className="mt-8">
-              {isAnalyzing ? (
-                <ValueBetsSkeletonGrid />
-              ) : filteredBets.length === 0 ? (
-                <ValueBetsEmptyState />
-              ) : (
-                <Card className="bg-slate-900/80 border-slate-700">
-                  <CardHeader>
-                    <CardTitle className="text-slate-100">Value Betting Opportunities</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="overflow-x-auto">
-                      <Table>
-                        <TableHeader>
-                          <TableRow className="border-slate-700 hover:bg-slate-800/50">
-                            <TableHead className="text-slate-300">Event</TableHead>
-                            <TableHead className="text-slate-300">Type</TableHead>
-                            <TableHead className="text-slate-300">Odds</TableHead>
-                            <TableHead className="text-slate-300">AI Prob</TableHead>
-                            <TableHead className="text-slate-300">Implied Prob</TableHead>
-                            <TableHead className="text-slate-300">Value</TableHead>
-                            <TableHead className="text-slate-300">Confidence</TableHead>
-                            <TableHead className="text-slate-300">League</TableHead>
-                            <TableHead className="text-slate-300">Time Left</TableHead>
-                            <TableHead className="text-slate-300">Action</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {filteredBets.map((bet) => (
-                            <TableRow key={bet.id} className="border-slate-700 hover:bg-slate-800/50">
-                              <TableCell className="text-slate-100 font-medium">
-                                <div>
-                                  <div className="font-semibold">{bet.team1} vs {bet.team2}</div>
-                                  <div className="text-sm text-slate-400">{bet.sportsbook}</div>
-                                </div>
-                              </TableCell>
-                              <TableCell className="text-slate-300">{bet.betType}</TableCell>
-                              <TableCell className="text-slate-300 font-semibold">{bet.odds}</TableCell>
-                              <TableCell className="text-slate-300">{bet.aiProb}</TableCell>
-                              <TableCell className="text-slate-300">{bet.impliedProb}</TableCell>
-                              <TableCell className="text-slate-300">
-                                <Badge className={getValueBadge(bet.value)}>
-                                  {bet.value}
-                                </Badge>
-                              </TableCell>
-                              <TableCell className="text-slate-300">
-                                <Badge className={getConfidenceBadge(bet.confidence)}>
-                                  {bet.confidence}%
-                                </Badge>
-                              </TableCell>
-                              <TableCell className="text-slate-400">{bet.league}</TableCell>
-                              <TableCell className="text-slate-400">{bet.timeLeft}</TableCell>
-                              <TableCell>
-                                <Button
-                                  onClick={() => handleTrackBet(bet)}
-                                  size="sm"
-                                  className="bg-blue-600 hover:bg-blue-700 text-white"
-                                  disabled={placeBetMutation.isPending}
-                                >
-                                  {placeBetMutation.isPending ? 'Tracking...' : 'Track'}
-                                </Button>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
-          </div>
+        <div className="mt-8">
+          {isAnalyzing ? (
+            <ValueBetsSkeletonGrid />
+          ) : filteredBets.length === 0 ? (
+            <ValueBetsEmptyState />
+          ) : (
+            <Card className="bg-slate-900/80 backdrop-blur-sm border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-slate-100">Value Betting Opportunities</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-slate-700 hover:bg-slate-800/50">
+                        <TableHead className="text-slate-300">Event</TableHead>
+                        <TableHead className="text-slate-300">Type</TableHead>
+                        <TableHead className="text-slate-300">Odds</TableHead>
+                        <TableHead className="text-slate-300">AI Prob</TableHead>
+                        <TableHead className="text-slate-300">Implied Prob</TableHead>
+                        <TableHead className="text-slate-300">Value</TableHead>
+                        <TableHead className="text-slate-300">Confidence</TableHead>
+                        <TableHead className="text-slate-300">League</TableHead>
+                        <TableHead className="text-slate-300">Time Left</TableHead>
+                        <TableHead className="text-slate-300">Action</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredBets.map((bet) => (
+                        <TableRow key={bet.id} className="border-slate-700 hover:bg-slate-800/50">
+                          <TableCell className="text-slate-100 font-medium">
+                            <div>
+                              <div className="font-semibold">{bet.team1} vs {bet.team2}</div>
+                              <div className="text-sm text-slate-400">{bet.sportsbook}</div>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-slate-300">{bet.betType}</TableCell>
+                          <TableCell className="text-slate-300 font-semibold">{bet.odds}</TableCell>
+                          <TableCell className="text-slate-300">{bet.aiProb}</TableCell>
+                          <TableCell className="text-slate-300">{bet.impliedProb}</TableCell>
+                          <TableCell className="text-slate-300">
+                            <Badge className={getValueBadge(bet.value)}>
+                              {bet.value}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-slate-300">
+                            <Badge className={getConfidenceBadge(bet.confidence)}>
+                              {bet.confidence}%
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-slate-400">{bet.league}</TableCell>
+                          <TableCell className="text-slate-400">{bet.timeLeft}</TableCell>
+                          <TableCell>
+                            <Button
+                              onClick={() => handleTrackBet(bet)}
+                              size="sm"
+                              className="bg-blue-600 hover:bg-blue-700 text-white"
+                              disabled={placeBetMutation.isPending}
+                            >
+                              {placeBetMutation.isPending ? 'Tracking...' : 'Track'}
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </div>

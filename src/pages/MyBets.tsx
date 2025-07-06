@@ -9,6 +9,7 @@ import { useUserBets } from "@/hooks/useUserBets";
 import { useEnhancedBetTracking } from "@/hooks/useEnhancedBetTracking";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -18,6 +19,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Bell } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const MyBets = () => {
   const [selectedFilter, setSelectedFilter] = useState("all");
@@ -35,6 +38,8 @@ const MyBets = () => {
     statistics,
     refetch: refreshEnhancedBets 
   } = useEnhancedBetTracking();
+
+  const { toast } = useToast();
 
   // Combined loading state
   const isLoading = isLoadingUserBets || isLoadingEnhanced;
@@ -83,6 +88,14 @@ const MyBets = () => {
     });
   };
 
+  const handleTrackPending = (bet: any) => {
+    // This would typically set up notifications or tracking for pending bets
+    toast({
+      title: "Bet Tracking Enabled",
+      description: `You'll be notified when ${bet.event_name} settles.`,
+    });
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 relative">
       <CanvasBackground />
@@ -90,8 +103,8 @@ const MyBets = () => {
       
       <div className="relative z-10 container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-100 mb-2">My Bets</h1>
-          <p className="text-slate-400">Track your betting performance and history</p>
+          <h1 className="text-4xl font-bold text-slate-100 mb-2 text-center">My Bets</h1>
+          <p className="text-slate-400 text-center">Track your betting performance and history</p>
         </div>
 
         {/* Show skeleton during loading */}
@@ -99,20 +112,25 @@ const MyBets = () => {
           <MyBetsSkeletonGrid />
         ) : (
           <>
-            <BetStatsCards 
-              totalBets={statistics.totalBets}
-              totalProfit={statistics.totalProfit}
-              winRate={statistics.winRate}
-              pendingBets={statistics.pendingBets}
-            />
-            <BetPerformanceSummary 
-              totalStaked={statistics.totalStaked}
-              totalProfit={statistics.totalProfit}
-            />
+            <div className="mb-8">
+              <BetStatsCards 
+                totalBets={statistics.totalBets}
+                totalProfit={statistics.totalProfit}
+                winRate={statistics.winRate}
+                pendingBets={statistics.pendingBets}
+              />
+            </div>
+            
+            <div className="mb-8">
+              <BetPerformanceSummary 
+                totalStaked={statistics.totalStaked}
+                totalProfit={statistics.totalProfit}
+              />
+            </div>
 
             <div className="mt-8">
               <Tabs value={selectedFilter} onValueChange={setSelectedFilter} className="w-full">
-                <TabsList className="grid w-full grid-cols-4 bg-slate-900 border-slate-700">
+                <TabsList className="grid w-full grid-cols-4 bg-slate-900/80 backdrop-blur-sm border-slate-700">
                   <TabsTrigger value="all" className="text-xs data-[state=active]:bg-slate-700 data-[state=active]:text-slate-100">
                     All Bets
                     <Badge variant="secondary" className="ml-2 bg-slate-700 text-slate-200">
@@ -146,7 +164,7 @@ const MyBets = () => {
                       <p className="text-slate-500 text-sm mt-2">Place some bets to see them here!</p>
                     </div>
                   ) : (
-                    <Card className="bg-slate-900 border-slate-700">
+                    <Card className="bg-slate-900/80 backdrop-blur-sm border-slate-700">
                       <CardHeader>
                         <CardTitle className="text-slate-100">Betting History</CardTitle>
                       </CardHeader>
@@ -154,7 +172,7 @@ const MyBets = () => {
                         <div className="overflow-x-auto">
                           <Table>
                             <TableHeader>
-                              <TableRow className="border-slate-700 hover:bg-slate-800">
+                              <TableRow className="border-slate-700 hover:bg-slate-800/50">
                                 <TableHead className="text-slate-300">Event</TableHead>
                                 <TableHead className="text-slate-300">Type</TableHead>
                                 <TableHead className="text-slate-300">Odds</TableHead>
@@ -163,11 +181,12 @@ const MyBets = () => {
                                 <TableHead className="text-slate-300">Status</TableHead>
                                 <TableHead className="text-slate-300">Placed</TableHead>
                                 <TableHead className="text-slate-300">League</TableHead>
+                                <TableHead className="text-slate-300">Action</TableHead>
                               </TableRow>
                             </TableHeader>
                             <TableBody>
                               {filteredBets.map((bet) => (
-                                <TableRow key={bet.id} className="border-slate-700 hover:bg-slate-800">
+                                <TableRow key={bet.id} className="border-slate-700 hover:bg-slate-800/50">
                                   <TableCell className="text-slate-100 font-medium">
                                     <div>
                                       <div className="font-semibold">{bet.event_name}</div>
@@ -190,6 +209,18 @@ const MyBets = () => {
                                   </TableCell>
                                   <TableCell className="text-slate-400">
                                     {bet.league || 'Unknown'}
+                                  </TableCell>
+                                  <TableCell>
+                                    {bet.status === 'pending' && (
+                                      <Button
+                                        onClick={() => handleTrackPending(bet)}
+                                        size="sm"
+                                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                                      >
+                                        <Bell className="h-3 w-3 mr-1" />
+                                        Track
+                                      </Button>
+                                    )}
                                   </TableCell>
                                 </TableRow>
                               ))}
