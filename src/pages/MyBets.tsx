@@ -97,14 +97,14 @@ const MyBets = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 relative">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 relative">
       <CanvasBackground />
       <Header />
       
       <div className="relative z-10 container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-100 mb-2 text-center">My Bets</h1>
-          <p className="text-slate-400 text-center">Track your betting performance and history</p>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2 text-center">My Bets</h1>
+          <p className="text-gray-600 text-center">Track your betting performance and history</p>
         </div>
 
         {/* Show skeleton during loading */}
@@ -130,28 +130,28 @@ const MyBets = () => {
 
             <div className="mt-8">
               <Tabs value={selectedFilter} onValueChange={setSelectedFilter} className="w-full">
-                <TabsList className="grid w-full grid-cols-4 bg-slate-900/80 backdrop-blur-sm border-slate-700">
-                  <TabsTrigger value="all" className="text-xs data-[state=active]:bg-slate-700 data-[state=active]:text-slate-100">
+                <TabsList className="grid w-full grid-cols-4 bg-white/80 backdrop-blur-sm border border-gray-200">
+                  <TabsTrigger value="all" className="text-xs data-[state=active]:bg-blue-100 data-[state=active]:text-blue-900">
                     All Bets
-                    <Badge variant="secondary" className="ml-2 bg-slate-700 text-slate-200">
+                    <Badge variant="secondary" className="ml-2 bg-gray-100 text-gray-700">
                       {getBetCountByStatus("all")}
                     </Badge>
                   </TabsTrigger>
-                  <TabsTrigger value="pending" className="text-xs data-[state=active]:bg-slate-700 data-[state=active]:text-slate-100">
+                  <TabsTrigger value="pending" className="text-xs data-[state=active]:bg-blue-100 data-[state=active]:text-blue-900">
                     Pending
-                    <Badge variant="secondary" className="ml-2 bg-slate-700 text-slate-200">
+                    <Badge variant="secondary" className="ml-2 bg-gray-100 text-gray-700">
                       {getBetCountByStatus("pending")}
                     </Badge>
                   </TabsTrigger>
-                  <TabsTrigger value="won" className="text-xs data-[state=active]:bg-slate-700 data-[state=active]:text-slate-100">
+                  <TabsTrigger value="won" className="text-xs data-[state=active]:bg-blue-100 data-[state=active]:text-blue-900">
                     Won
-                    <Badge variant="secondary" className="ml-2 bg-slate-700 text-slate-200">
+                    <Badge variant="secondary" className="ml-2 bg-gray-100 text-gray-700">
                       {getBetCountByStatus("won")}
                     </Badge>
                   </TabsTrigger>
-                  <TabsTrigger value="lost" className="text-xs data-[state=active]:bg-slate-700 data-[state=active]:text-slate-100">
+                  <TabsTrigger value="lost" className="text-xs data-[state=active]:bg-blue-100 data-[state=active]:text-blue-900">
                     Lost
-                    <Badge variant="secondary" className="ml-2 bg-slate-700 text-slate-200">
+                    <Badge variant="secondary" className="ml-2 bg-gray-100 text-gray-700">
                       {getBetCountByStatus("lost")}
                     </Badge>
                   </TabsTrigger>
@@ -160,54 +160,54 @@ const MyBets = () => {
                 <TabsContent value={selectedFilter} className="mt-6">
                   {filteredBets.length === 0 ? (
                     <div className="text-center py-12">
-                      <p className="text-slate-400 text-lg">No bets found for this category</p>
-                      <p className="text-slate-500 text-sm mt-2">Place some bets to see them here!</p>
+                      <p className="text-gray-600 text-lg">No bets found for this category</p>
+                      <p className="text-gray-500 text-sm mt-2">Place some bets to see them here!</p>
                     </div>
                   ) : (
-                    <Card className="bg-slate-900/80 backdrop-blur-sm border-slate-700">
+                    <Card className="bg-white/80 backdrop-blur-sm border border-gray-200">
                       <CardHeader>
-                        <CardTitle className="text-slate-100">Betting History</CardTitle>
+                        <CardTitle className="text-gray-900">Betting History</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="overflow-x-auto">
                           <Table>
                             <TableHeader>
-                              <TableRow className="border-slate-700 hover:bg-slate-800/50">
-                                <TableHead className="text-slate-300">Event</TableHead>
-                                <TableHead className="text-slate-300">Type</TableHead>
-                                <TableHead className="text-slate-300">Odds</TableHead>
-                                <TableHead className="text-slate-300">Stake</TableHead>
-                                <TableHead className="text-slate-300">Potential</TableHead>
-                                <TableHead className="text-slate-300">Status</TableHead>
-                                <TableHead className="text-slate-300">Placed</TableHead>
-                                <TableHead className="text-slate-300">League</TableHead>
-                                <TableHead className="text-slate-300">Action</TableHead>
+                              <TableRow className="border-gray-200 hover:bg-gray-50/50">
+                                <TableHead className="text-gray-700">Event</TableHead>
+                                <TableHead className="text-gray-700">Type</TableHead>
+                                <TableHead className="text-gray-700">Odds</TableHead>
+                                <TableHead className="text-gray-700">Stake</TableHead>
+                                <TableHead className="text-gray-700">Potential</TableHead>
+                                <TableHead className="text-gray-700">Status</TableHead>
+                                <TableHead className="text-gray-700">Placed</TableHead>
+                                <TableHead className="text-gray-700">League</TableHead>
+                                <TableHead className="text-gray-700">Action</TableHead>
                               </TableRow>
                             </TableHeader>
                             <TableBody>
                               {filteredBets.map((bet) => (
-                                <TableRow key={bet.id} className="border-slate-700 hover:bg-slate-800/50">
-                                  <TableCell className="text-slate-100 font-medium">
+                                <TableRow key={bet.id} className="border-gray-200 hover:bg-gray-50/50">
+                                  <TableCell className="text-gray-900 font-medium">
                                     <div>
                                       <div className="font-semibold">{bet.event_name}</div>
                                       {bet.teams && (
-                                        <div className="text-sm text-slate-400">{bet.teams}</div>
+                                        <div className="text-sm text-gray-600">{bet.teams}</div>
                                       )}
                                     </div>
                                   </TableCell>
-                                  <TableCell className="text-slate-300">{bet.bet_type}</TableCell>
-                                  <TableCell className="text-slate-300 font-semibold">{bet.odds}</TableCell>
-                                  <TableCell className="text-slate-300">{formatCurrency(bet.stake)}</TableCell>
-                                  <TableCell className="text-slate-300">{formatCurrency(bet.potential_payout)}</TableCell>
+                                  <TableCell className="text-gray-700">{bet.bet_type}</TableCell>
+                                  <TableCell className="text-gray-700 font-semibold">{bet.odds}</TableCell>
+                                  <TableCell className="text-gray-700">{formatCurrency(bet.stake)}</TableCell>
+                                  <TableCell className="text-gray-700">{formatCurrency(bet.potential_payout)}</TableCell>
                                   <TableCell>
                                     <Badge className={getStatusBadge(bet.status)}>
                                       {bet.status.toUpperCase()}
                                     </Badge>
                                   </TableCell>
-                                  <TableCell className="text-slate-400 text-sm">
+                                  <TableCell className="text-gray-600 text-sm">
                                     {formatDate(bet.placed_at)}
                                   </TableCell>
-                                  <TableCell className="text-slate-400">
+                                  <TableCell className="text-gray-600">
                                     {bet.league || 'Unknown'}
                                   </TableCell>
                                   <TableCell>
