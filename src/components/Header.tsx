@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -21,6 +20,7 @@ const Header = () => {
   // Removed Dashboard from navigation - clicking logo will go to dashboard
   const navigation = [
     { name: 'Live Events', href: '/live-events', icon: Activity },
+    { name: 'Upcoming Events', href: '/upcoming-events', icon: Target },
     { name: 'Value Bets', href: '/value-bets', icon: TrendingUp },
     { name: 'My Bets', href: '/my-bets', icon: Target },
     { name: 'AI Insights', href: '/ai-insights', icon: Target },

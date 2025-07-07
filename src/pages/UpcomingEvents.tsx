@@ -5,12 +5,12 @@ import LiveEventsContent from "@/components/LiveEventsContent";
 import LiveEventsHeader from "@/components/LiveEventsHeader";
 import LiveEventsSidebar from "@/components/LiveEventsSidebar";
 import LiveEventsModals from "@/components/LiveEventsModals";
-import { useLiveEvents } from "@/hooks/useLiveEvents";
+import { useUpcomingEvents } from "@/hooks/useUpcomingEvents";
 import { useEnhancedCredits } from "@/hooks/useEnhancedCredits";
 import { useSportCategories } from "@/hooks/useSportCategories";
 import { useLiveEventsState } from "@/hooks/useLiveEventsState";
 
-const LiveEvents = () => {
+const UpcomingEvents = () => {
   const {
     selectedBet,
     setSelectedBet,
@@ -31,11 +31,11 @@ const LiveEvents = () => {
     handleDepositModalOpen,
   } = useLiveEventsState();
 
-  const { liveEvents, isLoading, isRefreshing, refreshEvents } = useLiveEvents();
+  const { upcomingEvents, isLoading, isRefreshing, refreshEvents } = useUpcomingEvents();
   const { credits, deposit, isDepositing, checkSufficientFunds } = useEnhancedCredits();
-
+  
   // Filter events based on selected category and ensure unique events
-  const uniqueEvents = liveEvents.filter((event, index, self) =>
+  const uniqueEvents = upcomingEvents.filter((event, index, self) =>
     index === self.findIndex((e) => e.id === event.id)
   );
 
@@ -55,7 +55,7 @@ const LiveEvents = () => {
     });
 
   // Get categories and update counts
-  const { sportsCategories: allCategories, getSportLabel } = useSportCategories(liveEvents);
+  const { sportsCategories: allCategories, getSportLabel } = useSportCategories(upcomingEvents);
   
   // Update counts to match exactly with displayed cards
   const categoriesWithUpdatedCounts = allCategories.map(category => {
@@ -130,7 +130,7 @@ const LiveEvents = () => {
               onRefresh={refreshEvents}
               onCategoryChange={handleCategorySelect}
               upcomingSportsCategories={categoriesWithUpdatedCounts}
-              activeTab="live"
+              activeTab="upcoming"
               onTabChange={() => {}}
             />
           </div>
@@ -160,4 +160,4 @@ const LiveEvents = () => {
   );
 };
 
-export default LiveEvents;
+export default UpcomingEvents; 

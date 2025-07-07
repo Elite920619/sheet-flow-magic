@@ -136,7 +136,7 @@ const BettingOptionsModal = ({ isOpen, onClose, event, betType, onPlaceBet }: Be
 
         <div className="space-y-3">
           {/* Event Info */}
-          <Card className="bg-blur/80">
+          <Card className="bg-mute/20">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>

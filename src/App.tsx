@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
@@ -12,6 +11,7 @@ import Settings from '@/pages/Settings';
 import MyBets from '@/pages/MyBets';
 import ValueBets from '@/pages/ValueBets';
 import LiveEvents from '@/pages/LiveEvents';
+import UpcomingEvents from '@/pages/UpcomingEvents';
 import AIInsights from '@/pages/AIInsights';
 import Analytics from '@/pages/Analytics';
 import Notifications from '@/pages/Notifications';
@@ -65,6 +65,11 @@ function App() {
               <Route path="/live-events" element={
                 <ProtectedRoute>
                   <LiveEvents />
+                </ProtectedRoute>
+              } />
+              <Route path="/upcoming-events" element={
+                <ProtectedRoute>
+                  <UpcomingEvents />
                 </ProtectedRoute>
               } />
               <Route path="/ai-insights" element={

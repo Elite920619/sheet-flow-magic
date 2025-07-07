@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 
@@ -21,8 +20,8 @@ const LiveEventsSidebar: React.FC<LiveEventsSidebarProps> = ({
   onCategorySelect,
 }) => {
   return (
-    <div className="w-36 bg-transparent border-r border-slate-800/50 shadow-2xl shadow-black/60 backdrop-blur-sm">
-      <div className="p-1.5 space-y-0.5 max-h-[calc(100vh-10rem)] overflow-y-auto">
+    <div className="w-36 bg-transparent border-r border-slate-800/50 shadow-2xl shadow-black/60 backdrop-blur-sm h-full">
+      <div className="p-1.5 space-y-0.5 h-full overflow-y-auto">
         {categoryFilters.map((category) => (
           <button
             key={category.value}

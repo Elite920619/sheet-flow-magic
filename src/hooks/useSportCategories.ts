@@ -1,4 +1,3 @@
-
 import { useMemo } from 'react';
 
 export const useSportCategories = (events: any[]) => {
@@ -70,34 +69,51 @@ export const useSportCategories = (events: any[]) => {
   const allSportCategories = [
     'football', 'basketball', 'soccer', 'baseball', 'hockey', 
     'tennis', 'golf', 'boxing', 'mma', 'cricket', 'rugby', 
-    'aussie_rules', 'darts', 'snooker', 'motorsport', 'esports', 
-    'politics', 'awards', 'other'
+    'aussie_rules', 'darts', 'snooker', 'motorsport', 'esports'
   ];
 
   const sportsCategories = useMemo(() => {
     console.log('🏆 Building sport categories from events:', {
       totalEvents: events.length,
       uniqueSports: uniqueSports,
-      sampleEvents: events.slice(0, 3).map(e => ({ sport: e.sport }))
+      sampleEvents: events.slice(0, 3).map(e => ({ sport: e.sport, region: e.region }))
     });
 
+    // Get all available sports from current events
+    const availableSports = [...new Set(events.map(event => event.sport?.toLowerCase()).filter(Boolean))];
+    
+    // Start with All Sports category
     const categories = [
-      { value: 'all', label: 'All Sports', icon: '🏆', count: getSportCount('all') }
+      { value: 'all', label: 'All Sports', icon: '🏆', count: events.length }
     ];
 
-    // Add categories in consistent order, only if they have events
+    // Add all supported sports that are in our allSportCategories list
     allSportCategories.forEach(sport => {
-      const count = getSportCount(sport);
-      if (count > 0) {
+      if (availableSports.includes(sport)) {
         categories.push({
           value: sport,
           label: getSportLabel(sport),
           icon: getSportIcon(sport),
-          count: count
+          count: events.filter(event => event.sport?.toLowerCase() === sport).length
         });
-        console.log(`✅ Added category: ${sport} (${count} events)`);
+        console.log(`✅ Added category: ${sport}`);
       }
     });
+
+    // Add any new sports that aren't in our predefined list but exist in the data
+    availableSports
+      .filter(sport => !allSportCategories.includes(sport))
+      .forEach(sport => {
+        if (sport && !['politics', 'awards', 'other'].includes(sport)) {
+          categories.push({
+            value: sport,
+            label: getSportLabel(sport),
+            icon: getSportIcon(sport),
+            count: events.filter(event => event.sport?.toLowerCase() === sport).length
+          });
+          console.log(`✅ Added new sport category: ${sport}`);
+        }
+      });
 
     console.log('🎯 Final categories:', categories.map(c => `${c.label}: ${c.count}`));
     return categories;

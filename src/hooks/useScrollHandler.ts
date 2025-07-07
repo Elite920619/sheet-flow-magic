@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 
 interface UseScrollHandlerProps {
@@ -24,17 +23,26 @@ export const useScrollHandler = ({
       const isNearBottom = target.scrollTop + target.clientHeight >= target.scrollHeight - 200;
       
       if (isNearBottom && hasMoreEvents && !isLoadingMore) {
-        console.log('🔄 Loading more events...');
+        console.log('🔄 Loading more events...', {
+          scrollTop: target.scrollTop,
+          clientHeight: target.clientHeight,
+          scrollHeight: target.scrollHeight,
+          hasMoreEvents,
+          displayedCount,
+          filteredEventsLength
+        });
         onLoadMore();
       }
     };
 
-    // Find the scrollable container
-    const scrollContainer = document.querySelector('.flex-1.max-h-\\[calc\\(100vh-12rem\\)\\].overflow-y-auto');
+    // Find the scrollable container with the new class name
+    const scrollContainer = document.querySelector('.flex-1.overflow-y-auto');
     
     if (scrollContainer) {
       scrollContainer.addEventListener('scroll', handleScroll);
       return () => scrollContainer.removeEventListener('scroll', handleScroll);
+    } else {
+      console.warn('Scroll container not found');
     }
   }, [hasMoreEvents, isLoadingMore, displayedCount, filteredEventsLength, onLoadMore]);
 };
