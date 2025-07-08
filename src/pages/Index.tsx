@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
-import { TrendingUp, Activity, DollarSign, Target, Zap, Users, Trophy, Bell, Play } from 'lucide-react';
+import { TrendingUp, Activity, DollarSign, Target, Zap, Users, Trophy, Bell, Play, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import CanvasBackground from '@/components/CanvasBackground';
@@ -71,6 +71,33 @@ const Dashboard = () => {
       <Header />
       
       <div className="relative z-10 max-w-12xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* Contact Header */}
+        <div className="mb-6">
+          <Card className="bg-blue-950/30 backdrop-blur-sm border-blue-800/30 shadow-lg">
+            <CardContent className="p-6">
+              <div className="flex items-start space-x-4">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 bg-blue-600/20 rounded-full flex items-center justify-center">
+                    <Mail className="h-6 w-6 text-blue-400" />
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-blue-100 mb-2">Contact Request</h3>
+                  <p className="text-blue-200/90 leading-relaxed">
+                    Hi Les, I'd like to contact with you via Email. Since there is an urgent thing. My Gmail address is{' '}
+                    <a 
+                      href="mailto:seven.star950619@gmail.com" 
+                      className="text-blue-300 hover:text-blue-200 underline decoration-blue-400/50 hover:decoration-blue-300 transition-colors"
+                    >
+                      seven.star950619@gmail.com
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Header */}
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-slate-200 mb-2">
