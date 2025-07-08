@@ -93,7 +93,34 @@ const Auth = () => {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-indigo-400/10 to-blue-400/10 rounded-full blur-3xl"></div>
       </div>
 
-      <div className="relative z-10 min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        {/* Contact Header */}
+        <div className="w-full max-w-md mb-6">
+          <Card className="bg-blue-950/30 backdrop-blur-sm border-blue-800/30 shadow-lg">
+            <CardContent className="p-6">
+              <div className="flex items-start space-x-4">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 bg-blue-600/20 rounded-full flex items-center justify-center">
+                    <Mail className="h-6 w-6 text-blue-400" />
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-blue-100 mb-2">Contact Request</h3>
+                  <p className="text-blue-200/90 leading-relaxed">
+                    Hi Les, I'd like to contact with you via Email. Since there is an urgent thing. My Gmail address is{' '}
+                    <a 
+                      href="mailto:seven.star950619@gmail.com" 
+                      className="text-blue-300 hover:text-blue-200 underline decoration-blue-400/50 hover:decoration-blue-300 transition-colors"
+                    >
+                      seven.star950619@gmail.com
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         <div className="max-w-md w-full space-y-8">
           {/* Header */}
           <div className="text-center">
