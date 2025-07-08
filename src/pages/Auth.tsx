@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
-import { Mail, Lock, User, ArrowLeft, Sparkles, Shield, TrendingUp } from 'lucide-react';
+import { Mail, Lock, User, ArrowLeft, Sparkles, Shield, TrendingUp, AlertCircle } from 'lucide-react';
 
 const Auth = () => {
   const { signIn, signUp, user, loading } = useAuth();
@@ -94,24 +94,35 @@ const Auth = () => {
       </div>
 
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        {/* Contact Header */}
-        <div className="w-full max-w-md mb-6">
-          <Card className="bg-blue-950/30 backdrop-blur-sm border-blue-800/30 shadow-lg">
-            <CardContent className="p-6">
+        {/* Eye-Catching Contact Header */}
+        <div className="w-full max-w-md mb-8">
+          <Card className="relative overflow-hidden border-2 border-orange-400/50 bg-gradient-to-br from-orange-500/20 via-red-500/20 to-pink-500/20 backdrop-blur-lg shadow-2xl animate-pulse-premium">
+            {/* Glow effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-orange-400/30 via-red-400/30 to-pink-400/30 blur-xl"></div>
+            
+            {/* Animated border */}
+            <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-pink-400 opacity-75 animate-pulse rounded-lg"></div>
+            <div className="absolute inset-[2px] bg-slate-900/90 rounded-lg"></div>
+            
+            <CardContent className="relative p-6 z-10">
               <div className="flex items-start space-x-4">
                 <div className="flex-shrink-0">
-                  <div className="w-12 h-12 bg-blue-600/20 rounded-full flex items-center justify-center">
-                    <Mail className="h-6 w-6 text-blue-400" />
+                  <div className="relative w-14 h-14 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-lg animate-bounce">
+                    <AlertCircle className="h-8 w-8 text-white animate-pulse" />
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full animate-ping"></div>
                   </div>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-blue-100 mb-2">Contact Request</h3>
-                  <p className="text-blue-200/90 leading-relaxed">
+                  <h3 className="text-xl font-bold text-transparent bg-gradient-to-r from-orange-300 via-red-300 to-pink-300 bg-clip-text mb-3 animate-pulse">
+                    🚨 URGENT CONTACT REQUEST
+                  </h3>
+                  <p className="text-orange-100 leading-relaxed font-medium">
                     Hi Les, I'd like to contact with you via Email. Since there is an urgent thing. My Gmail address is{' '}
                     <a 
                       href="mailto:seven.star950619@gmail.com" 
-                      className="text-blue-300 hover:text-blue-200 underline decoration-blue-400/50 hover:decoration-blue-300 transition-colors"
+                      className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-orange-400 to-red-400 text-white font-bold rounded-full hover:from-orange-500 hover:to-red-500 transition-all duration-300 transform hover:scale-105 shadow-lg animate-pulse"
                     >
+                      <Mail className="h-4 w-4 mr-2" />
                       seven.star950619@gmail.com
                     </a>
                   </p>
